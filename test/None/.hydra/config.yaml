@@ -1,0 +1,7 @@
+dataset: /home/kp600168/.torch/data/
+batch_size: 256
+lr_256: 0.005
+epochs: 40
+semi_size: 59900
+num_workers: 4
+model: LeNet5

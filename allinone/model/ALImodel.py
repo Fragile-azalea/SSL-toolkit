@@ -1,6 +1,13 @@
 from torch import nn, cat
 from homura.vision import MODEL_REGISTRY
 
+__all__ = ['Generator_z',
+           'Generator_x',
+           'Discriminator_x',
+           'Discriminator_z',
+           'Discriminator_x_z',
+           ]
+
 
 def reset_all_parameters(module):
     if hasattr(module, 'weight'):
@@ -11,6 +18,10 @@ def reset_all_parameters(module):
 
 @MODEL_REGISTRY.register
 class Generator_z(nn.Module):
+    '''
+    The Generator of z for CIFAR10 reported by `Adversarially Learned Inference <https://arxiv.org/pdf/1606.00704>`_.
+    '''
+
     def __init__(self):
         super(Generator_z, self).__init__()
         self.net = nn.Sequential(
@@ -42,6 +53,10 @@ class Generator_z(nn.Module):
 
 @MODEL_REGISTRY.register
 class Generator_x(nn.Module):
+    '''
+    The Generator of x for CIFAR10 reported by `Adversarially Learned Inference <https://arxiv.org/pdf/1606.00704>`_.
+    '''
+
     def __init__(self):
         super(Generator_x, self).__init__()
         self.net = nn.Sequential(
@@ -89,6 +104,10 @@ class Maxout(nn.Module):
 
 @MODEL_REGISTRY.register
 class Discriminator_x(nn.Module):
+    '''
+    The Discriminator of x for CIFAR10 reported by `Adversarially Learned Inference <https://arxiv.org/pdf/1606.00704>`_.
+    '''
+
     def __init__(self):
         super(Discriminator_x, self).__init__()
         self.net = nn.Sequential(
@@ -111,6 +130,10 @@ class Discriminator_x(nn.Module):
 
 @MODEL_REGISTRY.register
 class Discriminator_z(nn.Module):
+    '''
+    The Discriminator of z for CIFAR10 reported by `Adversarially Learned Inference <https://arxiv.org/pdf/1606.00704>`_.
+    '''
+
     def __init__(self):
         super(Discriminator_z, self).__init__()
         self.net = nn.Sequential(
@@ -127,7 +150,11 @@ class Discriminator_z(nn.Module):
 
 @MODEL_REGISTRY.register
 class Discriminator_x_z(nn.Module):
-    def __init__(self, num_classes):
+    '''
+    The Discriminator of x and z for CIFAR10 reported by `Adversarially Learned Inference <https://arxiv.org/pdf/1606.00704>`_.
+    '''
+
+    def __init__(self, num_classes: int = 10):
         super(Discriminator_x_z, self).__init__()
         self.net = nn.Sequential(
             nn.Dropout2d(0.5),

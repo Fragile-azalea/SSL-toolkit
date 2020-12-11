@@ -9,4 +9,5 @@ while True:
     from .InterpolationConsistency import InterpolationConsistency
     from .AdversariallyLearnedInference import AdversariallyLearnedInference
     from .MixMatch import MixMatch
+    from .VariationalAutoEncoder import VariationalAutoEncoder
     break

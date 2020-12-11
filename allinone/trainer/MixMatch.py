@@ -1,6 +1,6 @@
 from homura.trainers import TrainerBase
 from typing import List, Callable, Optional, Tuple, Mapping, Any
-from torch import nn, Tensor, zeros, cat, randperm
+from torch import nn, Tensor, zeros, cat, randperm, no_grad
 from torch.optim import Optimizer
 from homura.reporters import _ReporterBase
 from copy import deepcopy
@@ -158,13 +158,13 @@ class MixMatch(TrainerBase):
     def generate_mixmatch(self, label_data, label_target, augment_unlabel_list):
         num_list = len(augment_unlabel_list)
         batch_size = label_data.size(0)
-        fake_target = sum([nn.Softmax(dim=1)(self.model(unlabel).detach())
+        fake_target = sum([nn.Softmax(dim=1)(self.model(unlabel))
                            for unlabel in augment_unlabel_list]) / num_list
         fake_target = fake_target ** self.temperature
         fake_target = fake_target / fake_target.sum(dim=1, keepdim=True)
         fake_target = fake_target.repeat(num_list, 1)
 
-        all_data = cat((label_data, cat(augment_unlabel_list, dim=0)), dim=0)
+        all_data = cat((label_data, *augment_unlabel_list), dim=0)
         '''
         change one-hot label_target to (batch_size, num_classes)
         combine one-hot label_target and fake_target 
@@ -190,8 +190,9 @@ class MixMatch(TrainerBase):
         if self.is_train:
             augment_unlabel_list = data[2:-1]
             num_list = len(augment_unlabel_list)
-            mix_input, mix_unlabel_list, mix_target, mix_fake_target_list = self.generate_mixmatch(
-                input, target, augment_unlabel_list)
+            with no_grad():
+                mix_input, mix_unlabel_list, mix_target, mix_fake_target_list = self.generate_mixmatch(
+                    input, target, augment_unlabel_list)
             output = nn.LogSoftmax(dim=1)(self.model(mix_input))
             loss = -(output * mix_target).sum(dim=1).mean()
             for mix_unlabel, mix_fake_target in zip(mix_unlabel_list, mix_fake_target_list):

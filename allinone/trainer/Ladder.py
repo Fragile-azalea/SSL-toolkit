@@ -9,6 +9,8 @@ import torch
 from . import SEMI_TRAINER_REGISTRY
 from homura.utils.containers import TensorTuple
 
+__all__ = ['Ladder']
+
 
 class _MemoryBatchNorm2d(nn.Module):
     def __init__(self, module, sigma, is_last):
@@ -221,6 +223,19 @@ class LadderTrainer(TrainerBase):
 
 @ SEMI_TRAINER_REGISTRY.register
 class Ladder(TrainerBase):
+    r'''
+    Reproduced trainer based on `Semi-Supervised Learning with Ladder Networks <https://arxiv.org/abs/1507.02672>`_.
+
+    Args:
+        model: The backbone model of trainer.
+        optimizer: The optimizer of trainer. 
+        loss_f: The classfication loss of trainer.
+        bn_list: The order list of nn.BatchNorm2d, which remembers statistics for recovering signal. 
+        sigma_list: The order list of positive float, which means the :math:`\sigma` of gaussian noise.
+        v_list: The order list of nn.Module, which transfroms the input signal. Corresponding to :math:`V^i` in the original paper.
+        lam_list: The order list of regularization coefficient, which describes how important to recovery signals.  Corresponding to :math:`\lambda^i` in the original paper.
+    '''
+
     def __init__(self,
                  model: nn.Module,
                  optimizer: Optimizer,
@@ -250,6 +265,9 @@ class Ladder(TrainerBase):
         self._report_topk = report_accuracy_topk
 
     def data_preprocess(self, data: Tuple[Tensor, ...]) -> (Tuple[Tensor, ...], int):
+        r'''
+        The labeled data and unlabeled data are combined if they were split previously.
+        '''
         if isinstance(data, tuple):
             data = (cat((data[0][0], data[1][0]), dim=0),
                     cat((data[0][1], data[1][1]), dim=0))

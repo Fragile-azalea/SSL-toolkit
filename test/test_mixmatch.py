@@ -7,14 +7,19 @@ from torchvision.datasets import MNIST
 from torchvision import transforms as tf
 import hydra
 from managpu import GpuManager
-from itertools import cycle
 GpuManager().set_by_memory(1)
+
+
+def cycle(iterable):
+    while True:
+        for x in iterable:
+            yield x
 
 
 @hydra.main(config_path="config", config_name='test_ladder.yml')
 def main(args):
     import sys
-    sys.path.append('/home/kp600168/semi')
+    sys.path.append('/home/kp600168/semi/SSL-toolkit')
     from allinone import SEMI_DATASET_REGISTRY, SEMI_TRAINER_REGISTRY, SCHEDULER_REGISTRY, TRANSFORM_REGISTRY
     print(args)
     unlabel_transform = TRANSFORM_REGISTRY('ManyTimes')(tf.Compose([tf.RandomResizedCrop(
@@ -23,13 +28,15 @@ def main(args):
         (32, 32)), tf.ToTensor(), tf.Normalize((0.1307,), (0.3081,))], semi_size=args.semi_size, unlabel_transform=unlabel_transform)
 
     train_loader, test_loader, unlabel_loader, num_classes = mnist(
-        args.batch_size, num_workers=0, return_num_classes=True)
+        args.batch_size, num_workers=4, return_num_classes=True)
+    unlabel_loader = cycle(unlabel_loader)
     kwargs = {
         'model': MODEL_REGISTRY(args.model)(num_classes=num_classes),
         'optimizer': SGD(lr=args.lr_256 * args.batch_size / 256, momentum=0.9),
         'loss_f': F.cross_entropy,
         'temperature': 0.5,
         'beta': 0.2,
+        'ema': SCHEDULER_REGISTRY('lambda')(lambda epoch: min(1 - 1 / (1 + epoch), 0.99)),
         'consistency_weight': SCHEDULER_REGISTRY('identity')(1.),
         'dataset_type': 'split',
     }

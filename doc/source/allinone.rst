@@ -9,8 +9,16 @@ Subpackages
 
    allinone.data
    allinone.model
-   allinone.scheduler
    allinone.trainer
+
+Submodules
+----------
+
+allinone.scheduler module
+-------------------------
+
+.. automodule:: allinone.scheduler
+   :members:
 
 Module contents
 ---------------

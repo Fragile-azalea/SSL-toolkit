@@ -1,9 +1,11 @@
-from . import SCHEDULER_REGISTRY
-from dataclasses import dataclass
-import math
 from typing import Callable
+import math
+from dataclasses import dataclass
+from homura import Registry
+SCHEDULER_REGISTRY = Registry('scheduler')
 
 __all__ = [
+    'SCHEDULER_REGISTRY',
     'SchedulerBase',
     'Linear',
     'Identity',
@@ -28,7 +30,7 @@ class SchedulerBase:
 @dataclass
 class Linear(SchedulerBase):
     '''
-    Linear Scheduler.
+    The Linear scheduler.
 
     Args:
         initital: The initial value.
@@ -50,7 +52,7 @@ class Linear(SchedulerBase):
 @dataclass
 class Identity(SchedulerBase):
     '''
-    Static identity Scheduler.
+    The static identity cheduler.
 
     Args:
         value: The initial value.
@@ -70,7 +72,7 @@ class Identity(SchedulerBase):
 @dataclass
 class GaussianKernel(SchedulerBase):
     r'''
-    The GaussianKernel Scheduler.
+    The gaussian kernel scheduler.
 
     Args:
         mu: The :math:`\mu` of gaussian kernel.
@@ -92,7 +94,7 @@ class GaussianKernel(SchedulerBase):
 @dataclass
 class Lambda(SchedulerBase):
     r'''
-    The Lambda Scheduler.
+    The Lambda scheduler.
 
     Args:
         Lamb: The Lambda function.

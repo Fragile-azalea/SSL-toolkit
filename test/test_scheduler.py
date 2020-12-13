@@ -16,7 +16,7 @@ GpuManager().set_by_memory(1)
 def main(args):
     import sys
     sys.path.append('/home/kp600168/semi/SSL-toolkit')
-    from allinone import SCHEDULER_REGISTRY, SEMI_DATASET_REGISTRY
+    from allinone import SCHEDULER_REGISTRY
     print(args)
     print(SCHEDULER_REGISTRY.catalogue())
     a = SCHEDULER_REGISTRY('linear')(5, 10)
@@ -26,6 +26,10 @@ def main(args):
     a.step()
     print(a())
     a = SCHEDULER_REGISTRY('lambda')(lambda x: x + 1)
+    a.step()
+    print(a())
+    from allinone.scheduler import Lambda
+    a = Lambda(lambda x: x + 1, 100)
     a.step()
     print(a())
 

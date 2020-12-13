@@ -1,4 +1,4 @@
-from .data import *
-from .model import *
+from .scheduler import SCHEDULER_REGISTRY
 from .trainer import *
-from .scheduler import *
+from .model import MODEL_REGISTRY
+from .data import *

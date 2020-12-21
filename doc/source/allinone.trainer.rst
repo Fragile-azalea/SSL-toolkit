@@ -28,6 +28,9 @@ allinone.trainer.Ladder module
    :undoc-members:
    :show-inheritance:
 
+.. figure:: static/Ladder-Mnist-100.png
+   The result of training LeNet-5 by the Ladder algorithm with 100 labeled images on MNIST Dataset.  
+
 allinone.trainer.MeanTeacher module
 -----------------------------------
 

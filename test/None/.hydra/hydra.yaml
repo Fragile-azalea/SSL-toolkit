@@ -107,7 +107,7 @@ hydra:
     hydra: []
     task: []
   job:
-    name: test_supervise
+    name: test_ladder_v3
     override_dirname: ''
     id: ???
     num: ???
@@ -121,5 +121,5 @@ hydra:
         exclude_keys: []
   runtime:
     version: 1.0.4
-    cwd: /home/kp600168/semi/SSL-toolkit/test
+    cwd: /userhome/SSL-toolkit/test
   verbose: false

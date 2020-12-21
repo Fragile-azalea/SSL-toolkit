@@ -1,11 +1,11 @@
 from typing import Callable, Optional, Iterable
 from torch.utils.data import Dataset, Subset, DataLoader
-from torchvision.datasets import CIFAR10, MNIST
+from torchvision.datasets import CIFAR10, MNIST, SVHN
 from functools import partial
 from torchvision import transforms as tf
 import numpy as np
 
-__all__ = ['SemiDataset', 'SemiDataLoader', 'semi_mnist']
+__all__ = ['SemiDataset', 'SemiDataLoader', 'semi_mnist', 'semi_svhn']
 
 
 def get_label_list(dataset: Dataset) -> (np.array):
@@ -47,13 +47,13 @@ class SemiDataLoader:
             count += 1
             try:
                 label = label_iter.next()
-            except:
+            except BaseException:
                 label_iter = iter(self.label)
                 label = label_iter.next()
 
             try:
                 unlabel = unlabel_iter.next()
-            except:
+            except BaseException:
                 unlabel_iter = iter(self.unlabel)
                 unlabel = unlabel_iter.next()
 
@@ -109,9 +109,15 @@ class SemiDataset:
         if test_batch_size is None:
             test_batch_size = label_batch_size + unlabel_batch_size
         label_loader = DataLoader(
-            self.label_dataset, label_batch_size, shuffle=shuffle, **shared_dict)
+            self.label_dataset,
+            label_batch_size,
+            shuffle=shuffle,
+            **shared_dict)
         unlabel_loader = DataLoader(
-            self.unlabel_dataset, unlabel_batch_size, shuffle=shuffle, **shared_dict)
+            self.unlabel_dataset,
+            unlabel_batch_size,
+            shuffle=shuffle,
+            **shared_dict)
         test_loader = DataLoader(self.test_dataset,
                                  test_batch_size, **shared_dict)
         if num_iteration is None:
@@ -138,3 +144,15 @@ semi_mnist = partial(SemiDataset,
                      test_transform=tf.Compose(
                          [tf.Resize((32, 32)), tf.ToTensor(), tf.Normalize((0.1307,), (0.3081,))]),
                      )
+
+
+semi_svhn = partial(SemiDataset,
+                    dataset=SVHN,
+                    num_classes=10,
+                    label_transform=tf.Compose(
+                        [tf.ToTensor(), tf.Normalize((0.4390, 0.4443, 0.4692), (0.1189, 0.1222, 0.1049))]),
+                    unlabel_transform=tf.Compose(
+                        [tf.ToTensor(), tf.Normalize((0.4390, 0.4443, 0.4692), (0.1189, 0.1222, 0.1049))]),
+                    test_transform=tf.Compose(
+                        [tf.ToTensor(), tf.Normalize((0.4390, 0.4443, 0.4692), (0.1189, 0.1222, 0.1049))]),
+                    )

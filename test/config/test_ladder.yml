@@ -1,4 +1,5 @@
-dataset: '/home/kp600168/.torch/data/'
+# dataset: '/home/kp600168/.torch/data/'
+dataset: '/gdata/MNIST/'
 batch_size: 256
 lr_256: 0.005
 epochs: 40

@@ -7,16 +7,17 @@ from torch.nn import ConvTranspose2d
 from torchvision.datasets import MNIST
 from torchvision import transforms as tf
 import hydra
+from allinone.data.data import semi_mnist
+from allinone import SEMI_DATASET_REGISTRY, SEMI_TRAINER_REGISTRY
 from managpu import GpuManager
 GpuManager().set_by_memory(1)
 
 
 @hydra.main(config_path="config", config_name='test_ladder.yml')
 def main(args):
-    import sys
-    sys.path.append('/home/kp600168/semi/SSL-toolkit')
-    from allinone.data.data import semi_mnist
-    from allinone import SEMI_DATASET_REGISTRY, SEMI_TRAINER_REGISTRY
+#     import sys
+#     sys.path.append('/home/kp600168/semi/SSL-toolkit')
+    
     print(args)
     mnist = semi_mnist(50, args.dataset)
     # mnist = SEMI_DATASET_REGISTRY('mix')(MNIST, args.dataset, 10, [tf.Resize(

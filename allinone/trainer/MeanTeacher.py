@@ -9,6 +9,8 @@ from homura.utils.containers import TensorTuple
 from homura.metrics import accuracy
 from . import SEMI_TRAINER_REGISTRY, unroll
 
+__all__ = ['MeanTeacher']
+
 
 def _update_teacher(student, teacher, alpha):
     for teacher_param, stduent_param in zip(teacher.parameters(), student.parameters()):
@@ -192,6 +194,18 @@ class MeanTeacherTrainerV2(TrainerBase):
 
 @SEMI_TRAINER_REGISTRY.register
 class MeanTeacher(TrainerBase):
+    r'''
+    Reproduced trainer based on `Mean teachers are better role models: Weight-averaged consistency targets improve semi-supervised deep learning results <https://arxiv.org/abs/1703.01780>`_.
+
+    Args:
+        model: The backbone model of trainer.
+        optimizer: The optimizer of trainer. 
+        loss_f: The classfication loss of trainer.
+        consistency_weight: The consistency schedule of trainer. Corresponding to ``consistency cost coefficient`` in the original paper.
+        alpha: The EMA schedule of trainer. Corresponding to :math:`\alpha` in the original paper.
+        dataset_type: The type of dataset. Choose ``mix`` or ``split`` corresponding to dataset type.
+    '''
+
     def __init__(self,
                  model: nn.Module,
                  optimizer: Optimizer,
@@ -221,6 +235,9 @@ class MeanTeacher(TrainerBase):
     def data_preprocess(self,
                         data: Tuple[Tensor, ...]
                         ) -> (Tuple[Tensor, ...], int):
+        r'''
+        The labeled data and unlabeled data are combined if they were split previously.
+        '''
         data = unroll(data)
         return TensorTuple(data).to(self.device, non_blocking=self._cuda_nonblocking), data[0].size(0)
 

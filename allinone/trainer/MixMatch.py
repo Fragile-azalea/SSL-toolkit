@@ -12,6 +12,8 @@ from torch.distributions.beta import Beta
 from torchvision import transforms as tf
 from . import SEMI_TRAINER_REGISTRY, unroll
 
+__all__ = ['MixMatch']
+
 
 class MixMatchTrainer(TrainerBase):
     def __init__(self,
@@ -124,6 +126,19 @@ class MixMatchTrainer(TrainerBase):
 
 @SEMI_TRAINER_REGISTRY.register
 class MixMatch(TrainerBase):
+    r'''
+    Reproduced trainer based on `MixMatch: A Holistic Approach to Semi-Supervised Learning <https://arxiv.org/abs/1905.02249>`_.
+
+    Args:
+        model: The backbone model of trainer.
+        optimizer: The optimizer of trainer. 
+        loss_f: The classfication loss of trainer.
+        temperature: The temperature of sharpen function. Corresponding to ``T`` in the original paper.
+        beta: The hyperparameter of beta function. Corresponding to :math:`\alpha` in the original paper.
+        consistency_weight: The consistency schedule of trainer. Corresponding to :math:`\lambda_\mathcal{u}` in the original paper.
+        dataset_type: The type of dataset. Choose ``mix`` or ``split`` corresponding to dataset type.
+    '''
+
     def __init__(self,
                  model: nn.Module,
                  optimizer: Optimizer,
@@ -152,6 +167,9 @@ class MixMatch(TrainerBase):
     def data_preprocess(self,
                         data: Tuple[Tensor, ...]
                         ) -> (Tuple[Tensor, ...], int):
+        r'''
+        The labeled data and unlabeled data are combined if they were split previously.
+        '''
         data = unroll(data)
         return TensorTuple(data).to(self.device, non_blocking=self._cuda_nonblocking), data[0].size(0)
 

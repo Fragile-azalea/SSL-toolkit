@@ -12,6 +12,8 @@ from torch.distributions.beta import Beta
 from homura.vision.transforms.mixup import mixup
 from . import SEMI_TRAINER_REGISTRY
 
+__all__ = ['AdversariallyLearnedInference']
+
 
 class AdversariallyLearnedInferenceTrainer(TrainerBase):
     def __init__(self,
@@ -279,6 +281,16 @@ class AdversariallyLearnedInferenceTrainerV2(TrainerBase):
 
 @SEMI_TRAINER_REGISTRY.register
 class AdversariallyLearnedInference(TrainerBase):
+    r'''
+    Reproduced trainer based on `Adversarially Learned Inference <https://arxiv.org/pdf/1606.00704>`_.
+
+    Args:
+        model_dict: The ``generator_x``, ``generator_z``, ``discriminator_x``, ``discriminator_z``, and ``discriminator_x_z`` model of trainer.
+        optimizer: The optimizer of trainer. 
+        loss_f: The classfication loss of trainer.
+        consistency_weight: The consistency schedule of trainer. 
+    '''
+
     def __init__(self,
                  model_dict: nn.ModuleDict,
                  optimizer: Optimizer,

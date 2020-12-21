@@ -12,6 +12,8 @@ from torch.distributions.beta import Beta
 from homura.vision.transforms.mixup import mixup
 from . import SEMI_TRAINER_REGISTRY
 
+__all__ = ['InterpolationConsistency']
+
 
 def _update_teacher(student, teacher, alpha):
     for teacher_param, stduent_param in zip(teacher.parameters(), student.parameters()):
@@ -179,6 +181,18 @@ class InterpolationConsistencyTrainerV2(TrainerBase):
 
 @SEMI_TRAINER_REGISTRY.register
 class InterpolationConsistency(TrainerBase):
+    r'''
+    Reproduced trainer based on `Interpolation Consistency Training for Semi-Supervised Learning <https://arxiv.org/abs/1903.03825>`_.
+
+    Args:
+        model: The backbone model of trainer.
+        optimizer: The optimizer of trainer. 
+        loss_f: The classfication loss of trainer.
+        consistency_weight: The consistency schedule of trainer. Corresponding to :math:`w(t)` in the original paper.
+        alpha: The EMA schedule of trainer. Corresponding to :math:`\alpha` in the original paper.
+        beta: The hyperparameter of beta function. Corresponding to :math:`\alpha` in the original paper.
+    '''
+
     def __init__(self,
                  model: nn.Module,
                  optimizer: Optimizer,

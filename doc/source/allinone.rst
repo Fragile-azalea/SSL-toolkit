@@ -19,9 +19,13 @@ allinone.scheduler module
 
 .. automodule:: allinone.scheduler
    :members:
+   :undoc-members:
+   :show-inheritance:
 
 Module contents
 ---------------
 
 .. automodule:: allinone
    :members:
+   :undoc-members:
+   :show-inheritance:

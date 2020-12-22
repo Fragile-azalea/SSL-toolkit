@@ -1,6 +1,7 @@
+from typing import Callable
 from torchvision import transforms as tf
 from . import TRANSFORM_REGISTRY
-from typing import Callable
+
 
 __all__ = ['ManyTimes', 'Twice']
 

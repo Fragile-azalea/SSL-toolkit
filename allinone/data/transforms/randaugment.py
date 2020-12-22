@@ -1,17 +1,18 @@
 # code in this file is adpated from rpmcruz/autoaugment
 # https://github.com/rpmcruz/autoaugment/blob/master/transformations.py
-from . import TRANSFORM_REGISTRY
-import random
-
-import PIL
-import PIL.ImageOps
-import PIL.ImageEnhance
-import PIL.ImageDraw
-import numpy as np
-import torch
 from PIL import Image
+import torch
+import numpy as np
+import PIL.ImageDraw
+import PIL.ImageEnhance
+import PIL.ImageOps
+import PIL
+import random
+from . import TRANSFORM_REGISTRY
+
 
 __all__ = ['RandAugment']
+
 
 def ShearX(img, v):  # [-0.3, 0.3]
     assert -0.3 <= v <= 0.3
@@ -259,13 +260,14 @@ class CutoutDefault(object):
 class RandAugment:
     '''
     The `RandAugment <https://arxiv.org/abs/1909.13719>`_ reproduced by pytorch.
-    This code is duplicated from `Github <https://github.com/ildoonet/pytorch-randaugment/blob/master/RandAugment/augmentations.py>`_. 
-    
+    This code is duplicated from `Github <https://github.com/ildoonet/pytorch-randaugment/blob/master/RandAugment/augmentations.py>`_.
+
     Args:
         n: Number of augmentation transformations to apply sequentially.
         m: Magnitude for all the transformaations.
     '''
-    def __init__(self, n:int, m:int):
+
+    def __init__(self, n: int, m: int):
         self.n = n
         self.m = m      # [0, 30]
         self.augment_list = augment_list()

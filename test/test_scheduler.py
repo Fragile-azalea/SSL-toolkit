@@ -1,38 +1,32 @@
-from homura.trainers import SupervisedTrainer
-from homura.optim import SGD
-from homura.reporters import TQDMReporter, TensorboardReporter
-from homura.vision import MODEL_REGISTRY
-from torch.nn import functional as F
-from torch.nn import ConvTranspose2d
-from torchvision.datasets import MNIST
-from torchvision import transforms as tf
-import hydra
-from managpu import GpuManager
-from itertools import cycle
-GpuManager().set_by_memory(1)
+from allinone import SCHEDULER_REGISTRY
+from pytest import raises
 
 
-@hydra.main(config_path="config", config_name='test_ladder.yml')
-def main(args):
-    import sys
-    sys.path.append('/home/kp600168/semi/SSL-toolkit')
-    from allinone import SCHEDULER_REGISTRY
-    print(args)
-    print(SCHEDULER_REGISTRY.catalogue())
-    a = SCHEDULER_REGISTRY('linear')(5, 10)
-    a.step()
-    print(a())
-    a = SCHEDULER_REGISTRY('identity')(5)
-    a.step()
-    print(a())
-    a = SCHEDULER_REGISTRY('lambda')(lambda x: x + 1)
-    a.step()
-    print(a())
+def test_linear_scheduler():
+    scheduler = SCHEDULER_REGISTRY('linear')(5, 10)
+    assert scheduler() == 5
+    scheduler.step()
+    assert scheduler() == 15
+
+
+def test_identity_scheduler():
+    scheduler = SCHEDULER_REGISTRY('linear')(5)
+    assert scheduler() == 5
+    scheduler.step()
+    assert scheduler() == 5
+
+
+def test_lambda_scheduler():
+    scheduler = SCHEDULER_REGISTRY('lambda')(lambda x: x + 1)
+    assert scheduler() == 1
+    scheduler.step()
+    assert scheduler() == 2
+
+
+def test_import_scheduler():
     from allinone.scheduler import Lambda
-    a = Lambda(lambda x: x + 1, 100)
-    a.step()
-    print(a())
-
-
-if __name__ == '__main__':
-    main()
+    scheduler = Lambda(lambda x: x + 1, 100)
+    scheduler.step()
+    assert scheduler() == 102
+    with raises(ImportError):
+        from allinone import Lambda

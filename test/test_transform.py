@@ -1,21 +1,35 @@
 from torchvision import transforms as tf
-if __name__ == "__main__":
-    import sys
-    sys.path.append('..')
-    from allinone import *
-    print(TRANSFORM_REGISTRY.catalogue())
-    print(tf.Compose(((tf.Resize((32, 32)), tf.ToTensor()))))
+from allinone import TRANSFORM_REGISTRY
+from PIL import Image
+import torch
 
-    transform = TRANSFORM_REGISTRY('IdentityAndManyTimes')
-    transform = transform([tf.ToTensor()], [tf.Resize((32, 32))], 2)
-    print(transform)
+def test_many_times_transfrom():
+    input = Image.new('RGB', (224, 224), color = 'white')
     transform = TRANSFORM_REGISTRY('ManyTimes')
     transform = transform(tf.Compose([tf.Resize((32, 32)), tf.ToTensor()]), 3)
-    print(transform)
+    output = transform(input)
+    assert isinstance(output, tuple) 
+    assert len(output) == 3
+    assert isinstance(output[0], torch.Tensor)
+    assert output[0].shape == torch.Size([3, 32, 32])
+    
+def test_twice_transfrom():
+    input = Image.new('RGB', (224, 224), color = 'white')
     transform = TRANSFORM_REGISTRY('Twice')
-    transform = transform(tf.Compose([tf.Resize((32, 32)), tf.ToTensor()]))
-    print(transform)
+    transform = transform(tf.Compose([tf.Resize((64, 64)), tf.ToTensor()]))
+    output = transform(input)
+    assert isinstance(output, tuple) 
+    assert len(output) == 2
+    assert isinstance(output[0], torch.Tensor)
+    assert output[0].shape == torch.Size([3, 64, 64])
 
+def test_random_augment_transfrom():
+    input = Image.new('RGB', (224, 224), color = 'white')
     transform = TRANSFORM_REGISTRY('RandAugment')
     transform = transform(5, 3)
-    print(transform)
+    intermediate = transform(input)
+    assert isinstance(intermediate, Image.Image)
+    norm = tf.Compose([tf.Resize((64, 64)), tf.ToTensor()])
+    output = norm(intermediate)
+    assert isinstance(output, torch.Tensor)
+    assert output.shape == torch.Size([3, 64, 64])

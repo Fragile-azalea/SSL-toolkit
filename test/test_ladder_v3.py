@@ -1,18 +1,18 @@
-from homura.trainers import SupervisedTrainer
-from homura.optim import SGD
-from homura.reporters import TQDMReporter, TensorboardReporter
-from homura.vision import MODEL_REGISTRY
-from torch.nn import functional as F
-from torch.nn import ConvTranspose2d
-from torchvision.datasets import MNIST
-from torch.utils.data import Dataset
-from torchvision import transforms as tf
-import hydra
-import os
-import gzip
-import numpy as np
-from allinone.data.data import semi_svhn, SemiDataset
 from allinone import SEMI_DATASET_REGISTRY, SEMI_TRAINER_REGISTRY
+from allinone.data.data import semi_svhn, SemiDataset
+import numpy as np
+import gzip
+import os
+import hydra
+from torchvision import transforms as tf
+from torch.utils.data import Dataset
+from torchvision.datasets import MNIST
+from torch.nn import ConvTranspose2d
+from torch.nn import functional as F
+from homura.vision import MODEL_REGISTRY
+from homura.reporters import TQDMReporter, TensorboardReporter
+from homura.optim import SGD
+from homura.trainers import SupervisedTrainer
 from managpu import GpuManager
 GpuManager().set_by_memory(1)
 

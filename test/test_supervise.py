@@ -9,19 +9,17 @@ from torchvision import transforms as tf
 import hydra
 from managpu import GpuManager
 from itertools import cycle
+from allinone import SEMI_DATASET_REGISTRY, SEMI_TRAINER_REGISTRY
 GpuManager().set_by_memory(1)
 
 
 @hydra.main(config_path="config", config_name='test_ladder.yml')
 def main(args):
-    import sys
-    sys.path.append('/home/kp600168/semi/SSL-toolkit')
-    from allinone import SEMI_DATASET_REGISTRY, SEMI_TRAINER_REGISTRY
     print(args)
     mnist = SEMI_DATASET_REGISTRY('split')(MNIST, args.dataset, 10, [tf.Resize(
         (32, 32)), tf.ToTensor(), tf.Normalize((0.1307,), (0.3081,))], semi_size=59900)
     train_loader, test_loader, _, num_classes = mnist(
-        args.batch_size, num_workers=0, return_num_classes=True)
+        args.batch_size, num_workers=4, return_num_classes=True)
     lenet = MODEL_REGISTRY(args.model)(num_classes=num_classes)
     kwargs = {
         'bn_list': [lenet.bn1, lenet.bn2, lenet.bn3],

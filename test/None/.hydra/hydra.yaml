@@ -107,7 +107,7 @@ hydra:
     hydra: []
     task: []
   job:
-    name: test_ladder_v3
+    name: test_supervise_v2
     override_dirname: ''
     id: ???
     num: ???

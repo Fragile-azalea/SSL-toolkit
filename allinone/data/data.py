@@ -1,11 +1,11 @@
 from typing import Callable, Optional, Iterable
 from torch.utils.data import Dataset, Subset, DataLoader
-from torchvision.datasets import CIFAR10, MNIST, SVHN
+from torchvision.datasets import CIFAR10, SVHN
 from functools import partial
 from torchvision import transforms as tf
 import numpy as np
 
-__all__ = ['SemiDataset', 'SemiDataLoader', 'semi_mnist', 'semi_svhn']
+__all__ = ['SemiDataset', 'SemiDataLoader', 'semi_svhn']
 
 
 def get_label_list(dataset: Dataset) -> (np.array):
@@ -65,8 +65,8 @@ class SemiDataLoader:
 
 class SemiDataset:
     def __init__(self,
-                 num_labels_per_class: int,
                  root: str,
+                 num_labels_per_class: int,
                  dataset: Dataset,
                  num_classes: int,
                  label_transform: Optional[Callable] = None,
@@ -132,18 +132,6 @@ class SemiDataset:
         return ret
 
     __call__ = get_dataloader
-
-
-semi_mnist = partial(SemiDataset,
-                     dataset=MNIST,
-                     num_classes=10,
-                     label_transform=tf.Compose(
-                         [tf.Resize((32, 32)), tf.ToTensor(), tf.Normalize((0.1307,), (0.3081,))]),
-                     unlabel_transform=tf.Compose(
-                         [tf.Resize((32, 32)), tf.ToTensor(), tf.Normalize((0.1307,), (0.3081,))]),
-                     test_transform=tf.Compose(
-                         [tf.Resize((32, 32)), tf.ToTensor(), tf.Normalize((0.1307,), (0.3081,))]),
-                     )
 
 
 semi_svhn = partial(SemiDataset,

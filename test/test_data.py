@@ -1,6 +1,17 @@
 from torchvision.datasets import CIFAR10, MNIST
 from torchvision import transforms as tf
-from tqdm import tqdm
+from pytest import raises
+
+
+def test_data():
+    from allinone.data import SemiDataset, semi_mnist
+
+
+def test_import_data():
+    with raises(ImportError):
+        from allinone import SemiDataset, semi_mnist
+
+
 if __name__ == "__main__":
     import sys
     sys.path.append('..')

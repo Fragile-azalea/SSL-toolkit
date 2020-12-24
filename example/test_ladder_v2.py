@@ -7,7 +7,7 @@ from torch.nn import ConvTranspose2d
 from torchvision.datasets import MNIST
 from torchvision import transforms as tf
 import hydra
-from allinone.data.data import semi_mnist
+from allinone.data import semi_mnist
 from allinone import SEMI_DATASET_REGISTRY, SEMI_TRAINER_REGISTRY
 from managpu import GpuManager
 GpuManager().set_by_memory(1)

@@ -1,9 +1,9 @@
-import hydra
 import os
 import gzip
 import numpy as np
-from torchvision.datasets import CIFAR10, MNIST, SVHN
+from torchvision.datasets import MNIST
 from functools import partial
+from torch.utils.data import Dataset
 from torchvision import transforms as tf
 from .data import SemiDataset
 
@@ -20,6 +20,7 @@ __all__ = [
     'semi_mnist_gz_32x32',
     'semi_10_mnist_gz_32x32',
     'semi_50_mnist_gz_32x32',
+    'SEMI_MNIST',
 ]
 
 
@@ -34,7 +35,7 @@ semi_mnist = partial(SemiDataset,
                          [tf.ToTensor(), tf.Normalize((0.1307,), (0.3081,))]),
                      )
 semi_10_mnist = partial(semi_mnist, num_labels_per_class=10)
-semi_50_mnist = partial(semi_mnistnum_labels_per_class=50)
+semi_50_mnist = partial(semi_mnist, num_labels_per_class=50)
 semi_mnist_32x32 = partial(SemiDataset,
                            dataset=MNIST,
                            num_classes=10,
@@ -98,17 +99,38 @@ semi_mnist_gz = partial(SemiDataset,
                         test_transform=tf.Compose(
                             [tf.Normalize((0.1307,), (0.3081,))]),
                         )
-semi_10_mnist_gz = partial(semi_mnist, num_labels_per_class=10)
-semi_50_mnist_gz = partial(semi_mnistnum_labels_per_class=50)
-semi_mnist_gz_32x32 = partial(SemiDataset,
-                           dataset=DealDataset,
-                           num_classes=10,
-                           label_transform=tf.Compose(
-                               [tf.ToPILImage(), tf.Resize((32, 32)), tf.ToTensor(), tf.Normalize((0.1307,), (0.3081,))]),
-                           unlabel_transform=tf.Compose(
-                               [tf.ToPILImage(), tf.Resize((32, 32)), tf.ToTensor(), tf.Normalize((0.1307,), (0.3081,))]),
-                           test_transform=tf.Compose(
-                               [tf.ToPILImage(), tf.Resize((32, 32)), tf.ToTensor(), tf.Normalize((0.1307,), (0.3081,))]),
-                           )
-semi_10_mnist_gz_32x32 = partial(semi_mnist_32x32, num_labels_per_class=10)
-semi_50_mnist_gz_32x32 = partial(semi_mnist_32x32, num_labels_per_class=50)
+semi_10_mnist_gz = partial(semi_mnist_gz, num_labels_per_class=10)
+semi_50_mnist_gz = partial(semi_mnist_gz, num_labels_per_class=50)
+semi_mnist_gz_32x32 = partial(
+    SemiDataset, dataset=DealDataset, num_classes=10, label_transform=tf.Compose(
+        [
+            tf.ToPILImage(), tf.Resize(
+                (32, 32)), tf.ToTensor(), tf.Normalize(
+                    (0.1307,), (0.3081,))]), unlabel_transform=tf.Compose(
+                        [
+                            tf.ToPILImage(), tf.Resize(
+                                (32, 32)), tf.ToTensor(), tf.Normalize(
+                                    (0.1307,), (0.3081,))]), test_transform=tf.Compose(
+                                        [
+                                            tf.ToPILImage(), tf.Resize(
+                                                (32, 32)), tf.ToTensor(), tf.Normalize(
+                                                    (0.1307,), (0.3081,))]), )
+semi_10_mnist_gz_32x32 = partial(semi_mnist_gz_32x32, num_labels_per_class=10)
+semi_50_mnist_gz_32x32 = partial(semi_mnist_gz_32x32, num_labels_per_class=50)
+
+
+SEMI_MNIST = {
+    'semi_mnist': semi_mnist,
+    'semi_10_mnist': semi_10_mnist,
+    'semi_50_mnist': semi_50_mnist,
+    'semi_mnist_32x32': semi_mnist_32x32,
+    'semi_10_mnist_32x32': semi_10_mnist_32x32,
+    'semi_50_mnist_32x32': semi_50_mnist_32x32,
+    'semi_mnist_gz': semi_mnist_gz,
+    'semi_10_mnist_gz': semi_10_mnist_gz,
+    'semi_50_mnist_gz': semi_50_mnist_gz,
+    'semi_mnist_gz_32x32': semi_mnist_gz_32x32,
+    'semi_10_mnist_gz_32x32': semi_10_mnist_gz_32x32,
+    'semi_50_mnist_gz_32x32': semi_50_mnist_gz_32x32,
+
+}

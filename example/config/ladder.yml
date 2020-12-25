@@ -1,0 +1,8 @@
+# dataset: '/home/kp600168/.torch/data/'
+root: '/gdata/MNIST/'
+batch_size: 256
+lr_256: 0.005
+epochs: 40
+dataset: 'semi_10_mnist_gz_32x32'
+num_workers: 4
+model: 'LeNet5'

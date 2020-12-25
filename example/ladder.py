@@ -1,22 +1,23 @@
 from allinone import SEMI_TRAINER_REGISTRY
 from allinone.data import SEMI_MNIST
 import hydra
+import logging
 from torchvision import transforms as tf
-from torch.utils.data import Dataset
-from torchvision.datasets import MNIST
 from torch.nn import ConvTranspose2d
 from torch.nn import functional as F
 from homura.vision import MODEL_REGISTRY
 from homura.reporters import TQDMReporter, TensorboardReporter
 from homura.optim import SGD
-from homura.trainers import SupervisedTrainer
 from managpu import GpuManager
 GpuManager().set_by_memory(1)
 
 
-@hydra.main(config_path="config", config_name='ladder.yml')
+logger = logging.getLogger(__name__)
+
+
+@hydra.main(config_path="config", config_name='base.yml')
 def main(args):
-    print(args)
+    logger.info(args)
     mnist = SEMI_MNIST[args.dataset](args.root)
     train_loader, test_loader, num_classes = mnist(
         args.batch_size, num_workers=args.num_workers, return_num_classes=True)
@@ -40,7 +41,7 @@ def main(args):
         trainer.train(train_loader)
         trainer.test(test_loader)
 
-    print(f"Max Accuracy={max(trainer.history['accuracy/test'])}")
+    logger.info(f"Max Accuracy={max(trainer.history['accuracy/test'])}")
 
 
 if __name__ == '__main__':

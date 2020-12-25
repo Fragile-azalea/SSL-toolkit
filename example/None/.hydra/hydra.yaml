@@ -107,11 +107,11 @@ hydra:
     hydra: []
     task: []
   job:
-    name: ladder
+    name: mean_teacher
     override_dirname: ''
     id: ???
     num: ???
-    config_name: ladder.yml
+    config_name: test_ladder.yml
     env_set: {}
     env_copy: []
     config:

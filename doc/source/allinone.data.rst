@@ -21,6 +21,14 @@ allinone.data.data module
    :undoc-members:
    :show-inheritance:
 
+allinone.data.mnist module
+--------------------------
+
+.. automodule:: allinone.data.mnist
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Module contents
 ---------------
 

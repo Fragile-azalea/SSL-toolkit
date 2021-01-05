@@ -1,5 +1,5 @@
 root: '/gdata/MNIST/'
-batch_size: 2048
+batch_size: 128
 lr_256: 0.005
 epochs: 40
 dataset: 'semi_10_mnist_gz_32x32'
@@ -8,4 +8,4 @@ model: 'LeNet5'
 
 hydra:
   run:
-    dir: outputs/${hydra.job.name}/${now:%Y-%m-%d_%H-%M-%S}
+    dir: /userhome/outputs/${hydra.job.name}/${now:%Y-%m-%d_%H-%M-%S}

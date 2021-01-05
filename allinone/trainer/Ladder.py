@@ -32,14 +32,15 @@ class _MemoryBatchNorm2d(nn.Module):
     def forward(self, input):
         if self.training:
             if self.is_noise:
-                output = self.bn(input) + torch.randn_like(input) * self.sigma
-
-                self.noise_z = output.detach()
+                self.batch_mean = torch.mean(input, dim=[0, 2, 3], keepdim=True)
+                self.batch_std = torch.std(input, dim=[0, 2, 3], keepdim=True)
+                input = input - self.batch_mean
+                input = input / (self.batch_std + 1e-7)
+                output = input + torch.randn_like(input) * self.sigma
+                self.noise_z = output
             else:
-                self.batch_mean = torch.mean(input, dim=[0, 2, 3])
-                self.batch_std = torch.std(input, dim=[0, 2, 3])
                 output = self.bn(input)
-                self.z = output.detach()
+                self.z = output
             if self.affine:
                 output = self.weight.view(
                     1, -1, 1, 1).expand_as(output) * output
@@ -73,16 +74,25 @@ class _Decoder(nn.Module):
 
     def forward(self, input):
         # print(input.shape, self.mbn.z.shape)
+        batch_mean = torch.mean(input, dim=[0, 2, 3], keepdim=True)
+        batch_std = torch.std(input, dim=[0, 2, 3], keepdim=True)
+        input = input - batch_mean
+        input = input / (batch_std + 1e-7)
         mu = self.a0(torch.sigmoid(self.a1(input))) + self.a2(input)
         sigma = self.a3(torch.sigmoid(self.a4(input))) + self.a5(input)
-        self.denoise_z = (input - mu) * sigma + mu
+        self.denoise_z = (self.mbn.noise_z - mu) * sigma + mu
         return self.denoise_z
 
     def get_loss_d(self, lam):
+#         tmp = self.mbn.bn(self.denoise_z)
+#         tmp = self.denoise_z - self.mbn.batch_mean.view(1, -1, 1, 1)
+#         tmp /= self.mbn.batch_std.view(1, -1, 1, 1) + 1e-7
+        denoise_z = self.denoise_z - self.mbn.bn.running_mean.view(1, -1, 1, 1)
+        denoise_z /= (self.mbn.bn.running_var.view(1, -1, 1, 1) + 1e-7) ** 0.5
+        denoise_z = denoise_z.flatten(start_dim=1)
+        clean_z = self.mbn.z.flatten(start_dim=1)
         lam /= self.denoise_z.shape[1]
-        tmp = self.denoise_z - self.mbn.batch_mean.view(1, -1, 1, 1)
-        tmp /= self.mbn.batch_std.view(1, -1, 1, 1) + 1e-7
-        return torch.mean(lam * torch.norm(tmp - self.mbn.z, p=2, dim=1))
+        return torch.mean(lam * torch.norm(denoise_z - clean_z, p=2, dim=1))
 
 
 def _convert_bn_to_memory_bn(module, bn_list, sigma_list):

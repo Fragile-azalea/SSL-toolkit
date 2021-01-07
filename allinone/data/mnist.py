@@ -93,11 +93,11 @@ semi_mnist_gz = partial(SemiDataset,
                         dataset=DealDataset,
                         num_classes=10,
                         label_transform=tf.Compose(
-                            [tf.Normalize((0.1307,), (0.3081,))]),
+                            [tf.ToPILImage(), tf.ToTensor(), tf.Normalize((0.1307,), (0.3081,))]),
                         unlabel_transform=tf.Compose(
-                            [tf.Normalize((0.1307,), (0.3081,))]),
+                            [tf.ToPILImage(), tf.ToTensor(), tf.Normalize((0.1307,), (0.3081,))]),
                         test_transform=tf.Compose(
-                            [tf.Normalize((0.1307,), (0.3081,))]),
+                            [tf.ToPILImage(), tf.ToTensor(), tf.Normalize((0.1307,), (0.3081,))]),
                         )
 semi_10_mnist_gz = partial(semi_mnist_gz, num_labels_per_class=10)
 semi_50_mnist_gz = partial(semi_mnist_gz, num_labels_per_class=50)

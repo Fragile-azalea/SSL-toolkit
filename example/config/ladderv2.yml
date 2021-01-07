@@ -1,0 +1,11 @@
+root: '/gdata/MNIST/'
+batch_size: 2048
+lr_256: 0.004
+epochs: 40
+dataset: 'semi_10_mnist_gz'
+num_workers: 4
+model: 'Ladder_MLP'
+
+hydra:
+  run:
+    dir: /userhome/outputs/${hydra.job.name}/${now:%Y-%m-%d_%H-%M-%S}

@@ -46,6 +46,7 @@ class Ladder_MLP(nn.Module):
         input_shape: The shape of inputs.
         num_neurons: The list of neurons.
         sigma_noise: The list of the :math:`\sigma` of gaussian noise.
+        input_sigma_noise: THe :math:`\sigma` of noise added to supervised learning path.
     '''
 
     def __init__(
@@ -53,10 +54,12 @@ class Ladder_MLP(nn.Module):
         input_shape: tuple,
         num_neurons: List[int],
         sigma_noise: List[float],
+        input_sigma_noise: float = 0.3,
     ):
         super(Ladder_MLP, self).__init__()
         input_dim = prod(input_shape)
         input_dim_list = [input_dim] + num_neurons[:-1]
+        self.input_sigma_noise = input_sigma_noise
         self.encoder = nn.ModuleList([nn.Linear(input_dim,
                                                 output_dim, False) for input_dim,
                                       output_dim in zip(input_dim_list, num_neurons)])
@@ -64,8 +67,6 @@ class Ladder_MLP(nn.Module):
                                                 input_dim, False) for input_dim,
                                       output_dim in zip(input_dim_list, num_neurons)])
         self.bn = nn.ModuleList(
-            [nn.BatchNorm1d(dim, affine=False) for dim in num_neurons])
-        self.inv_bn = nn.ModuleList(
             [nn.BatchNorm1d(dim, affine=False) for dim in num_neurons])
         self.factor = nn.ParameterList(
             [nn.Parameter(torch.ones(dim)) for dim in num_neurons])
@@ -95,10 +96,11 @@ class Ladder_MLP(nn.Module):
             [nn.Parameter(torch.ones(dim)) for dim in num_neurons])
 
     def clear_path(self, *input):
-        self.z = []
-        self.mean = []
-        self.std = []
         input = [*map(partial(torch.flatten, start_dim=1), input)]
+        if len(input) == 2:
+            self.z = [input[1]]
+            self.mean = [None]
+            self.std = [None]
         for net, bn, factor, bias in zip(
                 self.encoder, self.bn, self.factor, self.bias):
             input = [*map(net, input)]
@@ -121,6 +123,8 @@ class Ladder_MLP(nn.Module):
     def noise_path(self, *input):
         self.noise_z = []
         input = map(partial(torch.flatten, start_dim=1), input)
+        input = [*map(lambda x: x + torch.randn_like(x)
+                      * self.input_sigma_noise, input)]
         for net, bn, factor, bias, sigma in zip(
                 self.encoder, self.bn, self.factor, self.bias, self.sigma_noise):
             input = [*map(net, input)]
@@ -159,6 +163,7 @@ class Ladder_MLP(nn.Module):
             input = (noise_z - mu) * std + mu
             self.denoise_z.append(input)
             input = net(input)
+        self.denoise_z.append(input)
         self.denoise_z = self.denoise_z[::-1]
 
     def forward(self, path_name, *input):
@@ -173,7 +178,8 @@ class Ladder_MLP(nn.Module):
         loss = 0.
         for lam, denoise_z, z, mean, std in zip(
                 lam_list, self.denoise_z, self.z, self.mean, self.std):
-            denoise_z = (denoise_z - mean) / (std + 1e-7)
+            if mean is not None:
+                denoise_z = (denoise_z - mean) / (std + 1e-7)
             loss = loss + lam * \
                 torch.mean(torch.norm(denoise_z - z, dim=1) / z.shape[1])
         return loss

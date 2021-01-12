@@ -30,8 +30,8 @@ class ToyNet(nn.Module):
 
 
 def batch_normalization(batch, return_mean_and_std=False):
-    batch_mean = torch.mean(batch, dim=0, keepdim=True)
-    batch_std = torch.std(batch, dim=0, keepdim=True)
+    batch_mean = torch.mean(batch, 0, keepdim=True)
+    batch_std = torch.std(batch, 0, False, keepdim=True)
     batch = (batch - batch_mean) / (batch_std + 1e-7)
     if return_mean_and_std:
         return batch, batch_mean, batch_std
@@ -77,7 +77,7 @@ class Ladder_MLP(nn.Module):
         self.a0 = nn.ParameterList(
             [nn.Parameter(torch.zeros(dim)) for dim in num_neurons])
         self.a1 = nn.ParameterList(
-            [nn.Parameter(torch.zeros(dim)) for dim in num_neurons])
+            [nn.Parameter(torch.ones(dim)) for dim in num_neurons])
         self.a2 = nn.ParameterList(
             [nn.Parameter(torch.zeros(dim)) for dim in num_neurons])
         self.a3 = nn.ParameterList(
@@ -85,16 +85,20 @@ class Ladder_MLP(nn.Module):
         self.a4 = nn.ParameterList(
             [nn.Parameter(torch.zeros(dim)) for dim in num_neurons])
         self.a5 = nn.ParameterList(
-            [nn.Parameter(torch.ones(dim)) for dim in num_neurons])
+            [nn.Parameter(torch.zeros(dim)) for dim in num_neurons])
         self.a6 = nn.ParameterList(
             [nn.Parameter(torch.ones(dim)) for dim in num_neurons])
         self.a7 = nn.ParameterList(
-            [nn.Parameter(torch.ones(dim)) for dim in num_neurons])
+            [nn.Parameter(torch.zeros(dim)) for dim in num_neurons])
         self.a8 = nn.ParameterList(
-            [nn.Parameter(torch.ones(dim)) for dim in num_neurons])
+            [nn.Parameter(torch.zeros(dim)) for dim in num_neurons])
         self.a9 = nn.ParameterList(
-            [nn.Parameter(torch.ones(dim)) for dim in num_neurons])
-
+            [nn.Parameter(torch.zeros(dim)) for dim in num_neurons])
+        
+        for m in self.modules():
+            if isinstance(m, nn.Linear):
+                nn.init.normal_(m.weight, std = 1 / m.weight.shape[0])
+                
     def clear_path(self, *input):
         input = [*map(partial(torch.flatten, start_dim=1), input)]
         if len(input) == 2:
@@ -112,7 +116,7 @@ class Ladder_MLP(nn.Module):
                 self.std.append(batch_std)
                 self.z.append(input[1])
             if net == self.encoder[-1]:  # last layer
-                output = [*map(lambda x: x * factor, input)]
+                output = [*map(lambda x: (x + bias) * factor, input)]
                 output = [*map(partial(nn.functional.softmax, dim=1), output)]
             else:
                 output = [*map(lambda x: x + bias, input)]
@@ -132,7 +136,7 @@ class Ladder_MLP(nn.Module):
             input = [*map(lambda x: x + torch.randn_like(x) * sigma, input)]
             self.noise_z.append(input[1])
             if net == self.encoder[-1]:  # last layer
-                output = map(lambda x: x * factor, input)
+                output = map(lambda x: (x + bias) * factor, input)
                 output = [*map(partial(nn.functional.softmax, dim=1), output)]
                 self.noise_h = output[1]
             else:
@@ -180,8 +184,7 @@ class Ladder_MLP(nn.Module):
                 lam_list, self.denoise_z, self.z, self.mean, self.std):
             if mean is not None:
                 denoise_z = (denoise_z - mean) / (std + 1e-7)
-            loss = loss + lam * \
-                torch.mean(torch.norm(denoise_z - z, dim=1) / z.shape[1])
+            loss = loss + lam * nn.functional.mse_loss(denoise_z, z)
         return loss
 
 

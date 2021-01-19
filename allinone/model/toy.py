@@ -127,12 +127,11 @@ class Ladder_MLP(nn.Module):
     def noise_path(self, *input):
         self.noise_z = []
         input = map(partial(torch.flatten, start_dim=1), input)
-        input = [*map(lambda x: x + torch.randn_like(x)
-                      * self.input_sigma_noise, input)]
+        input = map(lambda x: x + torch.randn_like(x) * self.input_sigma_noise, input)
         for net, bn, factor, bias, sigma in zip(
                 self.encoder, self.bn, self.factor, self.bias, self.sigma_noise):
-            input = [*map(net, input)]
-            input = [*map(batch_normalization, input)]
+            input = map(net, input)
+            input = map(batch_normalization, input)
             input = [*map(lambda x: x + torch.randn_like(x) * sigma, input)]
             self.noise_z.append(input[1])
             if net == self.encoder[-1]:  # last layer
@@ -141,8 +140,7 @@ class Ladder_MLP(nn.Module):
                 self.noise_h = output[1]
             else:
                 output = map(lambda x: x + bias, input)
-                output = [
-                    *map(partial(nn.functional.relu, inplace=True), output)]
+                output = map(partial(nn.functional.relu, inplace=True), output)
         return output[0]
 
     def decoder_path(self):

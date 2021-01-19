@@ -84,7 +84,8 @@ class SemiDataset:
 
         unlabel_base_dataset = dataset(root, transform=unlabel_transform)
         unlabel_base_dataset.targets = [-100] * self.length
-        self.unlabel_dataset = Subset(unlabel_base_dataset, unlabel_indices)
+#         self.unlabel_dataset = Subset(unlabel_base_dataset, unlabel_indices)
+        self.unlabel_dataset = unlabel_base_dataset
 
         self.test_dataset = dataset(
             root, train=False, transform=test_transform, download=download)

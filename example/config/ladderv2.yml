@@ -1,5 +1,5 @@
 root: '/gdata/MNIST/'
-batch_size: 2000
+batch_size: 1000
 lr_256: 0.0512
 epochs: 150
 dataset: 'semi_10_mnist_gz'

@@ -1,6 +1,7 @@
 import os
 import gzip
 import numpy as np
+import torch
 from torchvision.datasets import MNIST
 from functools import partial
 from torch.utils.data import Dataset
@@ -24,16 +25,52 @@ __all__ = [
 ]
 
 
+device = torch.device('cuda')
+
+
+class FastMNIST(MNIST):
+    def __init__(self, *args, **kwargs):
+        print(args, kwargs)
+        super().__init__(*args, **kwargs)
+
+        # Scale data to [0,1]
+        self.data = self.data.unsqueeze(1).float().div(255)
+
+        # Normalize it with the usual MNIST mean and std
+        self.data = self.data.sub_(0.1307).div_(0.3081)
+
+        # Put both data and targets on GPU in advance
+        self.data, self.targets = self.data.to(device), self.targets.to(device)
+
+    def __getitem__(self, index):
+        """
+        Args:
+            index (int): Index
+
+        Returns:
+            tuple: (image, target) where target is index of the target class.
+        """
+        img, target = self.data[index], self.targets[index]
+
+        return img, target
+
+
 semi_mnist = partial(SemiDataset,
                      dataset=MNIST,
                      num_classes=10,
                      label_transform=tf.Compose(
-                         [tf.ToTensor(), tf.Normalize((0.1307,), (0.3081,))]),
+                         [tf.ToTensor(), ]),
                      unlabel_transform=tf.Compose(
-                         [tf.ToTensor(), tf.Normalize((0.1307,), (0.3081,))]),
+                         [tf.ToTensor(), ]),
                      test_transform=tf.Compose(
-                         [tf.ToTensor(), tf.Normalize((0.1307,), (0.3081,))]),
+                         [tf.ToTensor(), ]),
                      )
+
+# semi_mnist = partial(SemiDataset,
+#                      dataset=FastMNIST,
+#                      num_classes=10,
+#                      )
+
 semi_10_mnist = partial(semi_mnist, num_labels_per_class=10)
 semi_50_mnist = partial(semi_mnist, num_labels_per_class=50)
 semi_mnist_32x32 = partial(SemiDataset,

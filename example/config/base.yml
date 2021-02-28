@@ -1,11 +1,11 @@
-root: '/gdata/MNIST/'
+root: '/home/kp600168/.torch/data/'
 batch_size: 128
 lr_256: 0.005
 epochs: 40
-dataset: 'semi_10_mnist_gz_32x32'
+dataset: 'semi_10_mnist_32x32'
 num_workers: 4
 model: 'LeNet5'
 
 hydra:
   run:
-    dir: /userhome/outputs/${hydra.job.name}/${now:%Y-%m-%d_%H-%M-%S}
+    dir: ./outputs/${hydra.job.name}/${now:%Y-%m-%d_%H-%M-%S}

@@ -31,8 +31,11 @@ class ToyNet(nn.Module):
 
 def batch_normalization(batch, return_mean_and_std=False):
     batch_mean = torch.mean(batch, 0, keepdim=True)
-    batch_std = torch.std(batch, 0, False, keepdim=True)
-    batch = (batch - batch_mean) / (batch_std + 1e-7)
+    batch_var = (batch - batch_mean.detach()).pow(2).mean(dim=0, keepdim=True)
+    # batch_var = torch.var(batch, 0, False, keepdim=True)
+    batch_std = (batch_var + 1e-5).sqrt()
+    batch = (batch - batch_mean) / batch_std
+    # batch = nn.functional.batch_norm(batch, None, None, training=True)
     if return_mean_and_std:
         return batch, batch_mean, batch_std
     else:
@@ -63,16 +66,18 @@ class Ladder_MLP(nn.Module):
         self.encoder = nn.ModuleList([nn.Linear(input_dim,
                                                 output_dim, False) for input_dim,
                                       output_dim in zip(input_dim_list, num_neurons)])
-        self.decoder = nn.ModuleList([nn.Linear(output_dim,
-                                                input_dim, False) for input_dim,
-                                      output_dim in zip(input_dim_list, num_neurons)])
+        self.decoder = nn.ModuleList([nn.Linear(output_dim, input_dim, False)
+                                      for input_dim, output_dim in zip(input_dim_list, num_neurons)]+[nn.Identity()])
         self.bn = nn.ModuleList(
             [nn.BatchNorm1d(dim, affine=False) for dim in num_neurons])
+
         self.factor = nn.ParameterList(
             [nn.Parameter(torch.ones(dim)) for dim in num_neurons])
         self.bias = nn.ParameterList(
             [nn.Parameter(torch.zeros(dim)) for dim in num_neurons])
         self.sigma_noise = sigma_noise
+
+        num_neurons = [input_dim] + num_neurons
 
         self.a0 = nn.ParameterList(
             [nn.Parameter(torch.zeros(dim)) for dim in num_neurons])
@@ -94,11 +99,12 @@ class Ladder_MLP(nn.Module):
             [nn.Parameter(torch.zeros(dim)) for dim in num_neurons])
         self.a9 = nn.ParameterList(
             [nn.Parameter(torch.zeros(dim)) for dim in num_neurons])
-        
+
         for m in self.modules():
             if isinstance(m, nn.Linear):
-                nn.init.normal_(m.weight, std = 1 / m.weight.shape[0])
-                
+                # print(m.weight.shape, m)
+                nn.init.normal_(m.weight, std=m.weight.shape[1] ** -0.5)
+
     def clear_path(self, *input):
         input = [*map(partial(torch.flatten, start_dim=1), input)]
         if len(input) == 2:
@@ -107,7 +113,7 @@ class Ladder_MLP(nn.Module):
             self.std = [None]
         for net, bn, factor, bias in zip(
                 self.encoder, self.bn, self.factor, self.bias):
-            input = [*map(net, input)]
+            input = [*map(net, input), ]
             input[0] = bn(input[0])
             if len(input) == 2:
                 input[1], batch_mean, batch_std = batch_normalization(
@@ -116,30 +122,32 @@ class Ladder_MLP(nn.Module):
                 self.std.append(batch_std)
                 self.z.append(input[1])
             if net == self.encoder[-1]:  # last layer
-                output = [*map(lambda x: (x + bias) * factor, input)]
+                # output = [*map(lambda x: (x + bias) * factor, input)]
+                output = [(x + bias) * factor for x in input]
                 output = [*map(partial(nn.functional.softmax, dim=1), output)]
             else:
-                output = [*map(lambda x: x + bias, input)]
-                output = [
-                    *map(partial(nn.functional.relu, inplace=True), output)]
+                output = [x + bias for x in input]
+                output = map(partial(nn.functional.relu, inplace=True), output)
         return output[0]
 
     def noise_path(self, *input):
-        self.noise_z = []
         input = map(partial(torch.flatten, start_dim=1), input)
-        input = map(lambda x: x + torch.randn_like(x) * self.input_sigma_noise, input)
+        input = [x + torch.randn_like(x) *
+                 self.input_sigma_noise for x in input]
+        self.noise_z = [input[1]]
         for net, bn, factor, bias, sigma in zip(
                 self.encoder, self.bn, self.factor, self.bias, self.sigma_noise):
             input = map(net, input)
             input = map(batch_normalization, input)
-            input = [*map(lambda x: x + torch.randn_like(x) * sigma, input)]
+            input = [x + torch.randn_like(x) * sigma for x in input]
             self.noise_z.append(input[1])
             if net == self.encoder[-1]:  # last layer
-                output = map(lambda x: (x + bias) * factor, input)
+                # output = [*map(lambda x: (x + bias) * factor, input), ]
+                output = [(x + bias) * factor for x in input]
                 output = [*map(partial(nn.functional.softmax, dim=1), output)]
                 self.noise_h = output[1]
             else:
-                output = map(lambda x: x + bias, input)
+                output = [x + bias for x in input]
                 output = map(partial(nn.functional.relu, inplace=True), output)
         return output[0]
 
@@ -158,14 +166,13 @@ class Ladder_MLP(nn.Module):
                                                                         self.a7[::-1],
                                                                         self.a8[::-1],
                                                                         self.a9[::-1]):
+            input = net(input)
             '''Normalization'''
             input = batch_normalization(input)
             mu = a0 * torch.sigmoid(a1 * input + a2) + a3 * input + a4
             std = a5 * torch.sigmoid(a6 * input + a7) + a8 * input + a9
             input = (noise_z - mu) * std + mu
             self.denoise_z.append(input)
-            input = net(input)
-        self.denoise_z.append(input)
         self.denoise_z = self.denoise_z[::-1]
 
     def forward(self, path_name, *input):
@@ -181,7 +188,7 @@ class Ladder_MLP(nn.Module):
         for lam, denoise_z, z, mean, std in zip(
                 lam_list, self.denoise_z, self.z, self.mean, self.std):
             if mean is not None:
-                denoise_z = (denoise_z - mean) / (std + 1e-7)
+                denoise_z = (denoise_z - mean) / std
             loss = loss + lam * nn.functional.mse_loss(denoise_z, z)
         return loss
 

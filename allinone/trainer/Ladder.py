@@ -61,15 +61,18 @@ class Ladder(TrainerBase):
         if self.is_train:
             label_data, target, unlabel_data, _ = data
             # clean path
+            # with torch.autograd.set_detect_anomaly(True):
             self.model('clear', label_data, unlabel_data)
             # noise path
             output = self.model('noise', label_data, unlabel_data)
             # decoder path
             self.model('decoder')
             loss = self.model.get_loss_d(self.lam_list)
-            loss += self.loss_f(torch.log(output), target)
+            loss = loss + self.loss_f(torch.log(output), target)
+            # print(loss.detach())
             self.optimizer.zero_grad()
             loss.backward()
+            # print(self.model.encoder[0].weight.grad)
             self.optimizer.step()
         else:
             input, target = data

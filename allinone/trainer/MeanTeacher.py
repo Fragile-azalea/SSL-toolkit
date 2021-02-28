@@ -14,7 +14,8 @@ __all__ = ['MeanTeacher']
 
 def _update_teacher(student, teacher, alpha):
     for teacher_param, stduent_param in zip(teacher.parameters(), student.parameters()):
-        teacher_param.data.add_((1 - alpha) * stduent_param.data, alpha=alpha)
+        teacher_param.data.mul_(alpha).add_(
+            stduent_param.data, alpha=(1 - alpha))
 
 
 class MeanTeacherTrainer(TrainerBase):

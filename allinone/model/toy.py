@@ -66,8 +66,18 @@ class Ladder_MLP(nn.Module):
         self.encoder = nn.ModuleList([nn.Linear(input_dim,
                                                 output_dim, False) for input_dim,
                                       output_dim in zip(input_dim_list, num_neurons)])
+
+
+<< << << < HEAD
         self.decoder = nn.ModuleList([nn.Linear(output_dim, input_dim, False)
                                       for input_dim, output_dim in zip(input_dim_list, num_neurons)]+[nn.Identity()])
+== == == =
+        self.decoder = nn.ModuleList([nn.Linear(output_dim,
+                                                input_dim,
+                                                False) for input_dim,
+                                      output_dim in zip(input_dim_list,
+                                                        num_neurons)] + [nn.Identity()])
+>>>>>> > 33bc167bcbd59811d266ef4eee5bfaac82163e8d
         self.bn = nn.ModuleList(
             [nn.BatchNorm1d(dim, affine=False) for dim in num_neurons])
 
@@ -102,8 +112,7 @@ class Ladder_MLP(nn.Module):
 
         for m in self.modules():
             if isinstance(m, nn.Linear):
-                # print(m.weight.shape, m)
-                nn.init.normal_(m.weight, std=m.weight.shape[1] ** -0.5)
+                nn.init.normal_(m.weight, std=m.weight.shape[0] ** -0.5)
 
     def clear_path(self, *input):
         input = [*map(partial(torch.flatten, start_dim=1), input)]

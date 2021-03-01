@@ -41,7 +41,7 @@ allinone.trainer.MeanTeacher module
    :show-inheritance:
 
    +----------------------------+-----------------------------+---------------------------------------------------------+
-   | The result of training LeNet-5 by the Mean Teacher(cost coefficient) with 100/500 labeled images on MNIST Dataset. |
+   | The result of training LeNet-5 by Mean Teacher(consistency_weight) with 100/500 labeled images on MNIST Dataset.   |
    +============================+=============================+=========================================================+
    | Mean Accuracy(Three Trials)| 100                         | 500                                                     |
    +----------------------------+-----------------------------+---------------------------------------------------------+
@@ -57,6 +57,11 @@ allinone.trainer.MeanTeacher module
    +----------------------------+-----------------------------+---------------------------------------------------------+
    | LeNet-5(with BN)           | 80.87(78.07 81.45 83.08)    | 94.69(95.16 94.22 94.69)                                |
    +----------------------------+-----------------------------+---------------------------------------------------------+
+
+.. figure:: static/MeanTeacher-Mnist-100500.png
+
+   The result of training LeNet-5 by the Mean Teacher with 100/500 labeled images on MNIST Dataset.  
+
 
 allinone.trainer.MixMatch module
 --------------------------------

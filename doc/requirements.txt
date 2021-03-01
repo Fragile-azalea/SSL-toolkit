@@ -1,1 +1,1 @@
--e git+https://github.com/moskomule/@v2020.10#homura
+-e git+https://github.com/moskomule/@v2020.10#egg=homura

@@ -67,17 +67,11 @@ class Ladder_MLP(nn.Module):
                                                 output_dim, False) for input_dim,
                                       output_dim in zip(input_dim_list, num_neurons)])
 
-
-<< << << < HEAD
-        self.decoder = nn.ModuleList([nn.Linear(output_dim, input_dim, False)
-                                      for input_dim, output_dim in zip(input_dim_list, num_neurons)]+[nn.Identity()])
-== == == =
         self.decoder = nn.ModuleList([nn.Linear(output_dim,
                                                 input_dim,
                                                 False) for input_dim,
                                       output_dim in zip(input_dim_list,
                                                         num_neurons)] + [nn.Identity()])
->>>>>> > 33bc167bcbd59811d266ef4eee5bfaac82163e8d
         self.bn = nn.ModuleList(
             [nn.BatchNorm1d(dim, affine=False) for dim in num_neurons])
 

@@ -73,7 +73,7 @@ class SemiDataset:
         dataset: An instance class representing a `Dataset <https://pytorch.org/docs/stable/data.html#torch.utils.data.Dataset>`_.
 
     Returns:
-        initial + speed * epoch
+        A semi-supervised dataset.
     '''
     def __init__(self,
                  root: str,

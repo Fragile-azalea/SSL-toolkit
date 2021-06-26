@@ -5,6 +5,7 @@ Subpackages
 -----------
 
 .. toctree::
+   :titlesonly:
    :maxdepth: 4
 
    allinone.data

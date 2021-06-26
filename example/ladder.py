@@ -29,8 +29,8 @@ def main(args):
     train_loader, test_loader, num_classes = mnist(
         args.batch_size, num_workers=args.num_workers, return_num_classes=True, pin_memory=False)
     lenet = MODEL_REGISTRY(args.model)((28, 28), **kwargs)
-    # lam_list = [1000., 10., 0.1, 0.1, 0.1, 0.1, 0.1]
-    lam_list = [0.] * 7
+    lam_list = [1000., 10., 0.1, 0.1, 0.1, 0.1, 0.1]
+    # lam_list = [0.] * 7
     lr_scheduler = LambdaLR(lambda epoch: epoch * 0.18 + 0.1 if epoch < 5 else (1. if epoch <
                                                                                 50 else 1.5 - epoch / 100))
     kwargs = {'lam_list': lam_list, 'scheduler': lr_scheduler}

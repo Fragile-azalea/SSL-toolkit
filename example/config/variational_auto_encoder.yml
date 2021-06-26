@@ -1,10 +1,11 @@
 root: '/home/kp600168/.torch/data/'
-batch_size: 100
-lr_256: 0.0512
+batch_size: 128
+lr_256: 0.002
 epochs: 150
 dataset: 'semi_10_mnist'
 num_workers: 0
-model: 'Ladder_MLP'
+model: 'toynet'
+vae: 'VAE'
 
 hydra:
   run:

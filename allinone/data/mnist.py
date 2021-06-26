@@ -37,8 +37,8 @@ class FastMNIST(MNIST):
         self.data = self.data.unsqueeze(1).float().div(255)
 
         # Normalize it with the usual MNIST mean and std
-        self.data = self.data.sub_(0.1307).div_(0.3081)
-
+        # self.data = self.data.sub_(0.1307).div_(0.3081)
+        print('mnist line 40 is delete!')
         # Put both data and targets on GPU in advance
         self.data, self.targets = self.data.to(device), self.targets.to(device)
 
@@ -55,21 +55,21 @@ class FastMNIST(MNIST):
         return img, target
 
 
-semi_mnist = partial(SemiDataset,
-                     dataset=MNIST,
-                     num_classes=10,
-                     label_transform=tf.Compose(
-                         [tf.ToTensor(), ]),
-                     unlabel_transform=tf.Compose(
-                         [tf.ToTensor(), ]),
-                     test_transform=tf.Compose(
-                         [tf.ToTensor(), ]),
-                     )
-
 # semi_mnist = partial(SemiDataset,
-#                      dataset=FastMNIST,
+#                      dataset=MNIST,
 #                      num_classes=10,
+#                      label_transform=tf.Compose(
+#                          [tf.ToTensor(), ]),
+#                      unlabel_transform=tf.Compose(
+#                          [tf.ToTensor(), ]),
+#                      test_transform=tf.Compose(
+#                          [tf.ToTensor(), ]),
 #                      )
+
+semi_mnist = partial(SemiDataset,
+                     dataset=FastMNIST,
+                     num_classes=10,
+                     )
 
 semi_10_mnist = partial(semi_mnist, num_labels_per_class=10)
 semi_50_mnist = partial(semi_mnist, num_labels_per_class=50)

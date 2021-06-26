@@ -3,7 +3,7 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to SSL-toolkit's documentation!
+Welcome to DeSSL's documentation!
 =======================================
 
 DeSSL is a library for fast prototyping of Deep Semi-Supervised Learning research.
@@ -11,6 +11,7 @@ DeSSL is a library for fast prototyping of Deep Semi-Supervised Learning researc
 
 .. toctree::
    :maxdepth: 2
+   :titlesonly:
    :caption: Package Reference:
    
    allinone

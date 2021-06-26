@@ -8,9 +8,10 @@ Welcome to SSL-toolkit's documentation!
 
 DeSSL is a library for fast prototyping of Deep Semi-Supervised Learning research.
 
+
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :caption: Package Reference:
    
    allinone
 

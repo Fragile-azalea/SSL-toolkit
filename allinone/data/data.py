@@ -1,4 +1,4 @@
-from typing import Callable, Optional, Iterable
+from typing import Callable, Optional, Iterable, Tuple
 from torch.utils.data import Dataset, Subset, DataLoader
 from torchvision.datasets import CIFAR10, SVHN
 from functools import partial
@@ -19,7 +19,7 @@ def get_label_list(dataset: Dataset) -> (np.array):
 def get_label_and_unlabel_indices(
         label_list: np.array,
         num_labels_per_class: int,
-        num_classes: int) -> (list, list):
+        num_classes: int) -> Tuple[list, list]:
     label_indices = []
     unlabel_indices = []
     for i in range(num_classes):
@@ -64,6 +64,17 @@ class SemiDataLoader:
 
 
 class SemiDataset:
+    r'''
+    A class representing a semi-supervised dataset.
+
+    Args:
+        root: The root directory where the dataset exists or will be saved.
+        num_labels_per_class: The number of each class.
+        dataset: An instance class representing a `Dataset <https://pytorch.org/docs/stable/data.html#torch.utils.data.Dataset>`_.
+
+    Returns:
+        initial + speed * epoch
+    '''
     def __init__(self,
                  root: str,
                  num_labels_per_class: int,

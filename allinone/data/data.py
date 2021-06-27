@@ -118,6 +118,14 @@ class SemiDataset:
                        pin_memory: bool = True,
                        drop_last: bool = False,
                        return_num_classes: bool = True):
+        r'''
+        Get Dataloader.
+
+        Args:
+            label_batch_size: The batch size of labeled data. 
+            unlabel_batch_size: The batch size of unlabeled data. If None, use label_batch_size instead.
+            test_batch_size: The batch size of testing data. If None, use label_batch_size + unlabel_batch_size instead.
+        '''
         shared_dict = {'num_workers': num_workers,
                        'pin_memory': pin_memory,
                        'drop_last': drop_last

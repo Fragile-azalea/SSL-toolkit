@@ -1,4 +1,4 @@
-from typing import Callable, Optional, Iterable, Tuple
+from typing import Callable, Optional, Iterable
 from torch.utils.data import Dataset, Subset, DataLoader
 from torchvision.datasets import CIFAR10, SVHN
 from functools import partial
@@ -19,7 +19,7 @@ def get_label_list(dataset: Dataset) -> (np.array):
 def get_label_and_unlabel_indices(
         label_list: np.array,
         num_labels_per_class: int,
-        num_classes: int) -> Tuple[list, list]:
+        num_classes: int) -> (list[int], list[int]):
     label_indices = []
     unlabel_indices = []
     for i in range(num_classes):
@@ -76,6 +76,7 @@ class SemiDataset:
         unlabel_transform: A function/transform that takes in a unlabeled image and returns a transformed version. E.g, `transforms.RandomCrop <https://pytorch.org/vision/stable/transforms.html#torchvision.transforms.RandomCrop>`_.
         test_transform: A function/transform that takes in a test image and returns a transformed version. E.g, `transforms.RandomCrop <https://pytorch.org/vision/stable/transforms.html#torchvision.transforms.RandomCrop>`_.
         download:  If true, downloads the dataset from the internet and puts it in root directory. If dataset is already downloaded, it is not downloaded again.
+        include_labeled_data: If true, unlabeled data will include labeled data.
 
     Returns:
         A semi-supervised dataset.
@@ -89,21 +90,26 @@ class SemiDataset:
                  label_transform: Optional[Callable] = None,
                  unlabel_transform: Optional[Callable] = None,
                  test_transform: Optional[Callable] = None,
-                 download: bool = False):
+                 download: bool = False,
+                 include_labeled_data: bool = True):
         super(SemiDataset, self).__init__()
         base_dataset = dataset(
-            root, transform=label_transform, download=download)
-        label_list = get_label_list(base_dataset)
+            root, transform=label_transform, download=download)  # instantiate train dataset
+        label_list = get_label_list(base_dataset)  # get indices list
         label_indices, unlabel_indices = get_label_and_unlabel_indices(
-            label_list, num_labels_per_class, num_classes)
-        self.length = len(label_indices) + len(unlabel_indices)
+            label_list, num_labels_per_class, num_classes)  # sample labeled data from train data
+        # instantiate labeled dataset
         self.label_dataset = Subset(base_dataset, label_indices)
-
+        self.length = len(label_indices) + len(unlabel_indices)
         unlabel_base_dataset = dataset(root, transform=unlabel_transform)
         unlabel_base_dataset.targets = [-100] * self.length
-#         self.unlabel_dataset = Subset(unlabel_base_dataset, unlabel_indices)
-        self.unlabel_dataset = unlabel_base_dataset
-
+        # instantiate unlabeled dataset
+        if include_labeled_data:
+            self.unlabel_dataset = unlabel_base_dataset
+        else:
+            self.unlabel_dataset = Subset(
+                unlabel_base_dataset, unlabel_indices)
+        # instantiate test dataset
         self.test_dataset = dataset(
             root, train=False, transform=test_transform, download=download)
         self.num_classes = num_classes
@@ -124,7 +130,11 @@ class SemiDataset:
         Args:
             label_batch_size: The batch size of labeled data. 
             unlabel_batch_size: The batch size of unlabeled data. If None, use label_batch_size instead.
-            test_batch_size: The batch size of testing data. If None, use label_batch_size + unlabel_batch_size instead.
+            test_batch_size: The batch size of testing data. If ``None``, use label_batch_size + unlabel_batch_size instead.
+            num_iteration The number of iteration for each epoch. If None, use the number of iteration of supervised dataset instead.
+            shuffle: set to True to have the training data reshuffled at every epoch.
+            num_workers: how many subprocesses to use for data loading. 0 means that the data will be loaded in the main process.
+            pin_memory: If ``True``, the data loader will copy Tensors into CUDA pinned memory before returning them.
         '''
         shared_dict = {'num_workers': num_workers,
                        'pin_memory': pin_memory,

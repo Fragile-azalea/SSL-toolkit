@@ -1,4 +1,4 @@
-from typing import Callable, Optional, Iterable, Tuple, List
+from typing import Callable, Optional, Iterable, Tuple, List, Union
 from torch.utils.data import Dataset, Subset, DataLoader
 from torchvision.datasets import CIFAR10, SVHN
 from functools import partial
@@ -124,7 +124,7 @@ class SemiDataset:
                        num_workers: int = 0,
                        pin_memory: bool = True,
                        drop_last: bool = False,
-                       return_num_classes: bool = True):
+                       return_num_classes: bool = True) -> Union[Tuple[SemiDataLoader, DataLoader], Tuple[SemiDataLoader, DataLoader, int]]:
         r'''
         Get Dataloader.
 
@@ -133,13 +133,14 @@ class SemiDataset:
             unlabel_batch_size: The batch size of unlabeled data. If ``None``, use label_batch_size instead.
             test_batch_size: The batch size of testing data. If ``None``, use label_batch_size + unlabel_batch_size instead.
             num_iteration: The number of iteration for each epoch. If ``None``, use the number of iteration of supervised dataset instead.
-            shuffle: set to ``True`` to have the training data reshuffled at every epoch.
-            num_workers: how many subprocesses to use for data loading. 0 means that the data will be loaded in the main process.
+            shuffle: Set to ``True`` to have the training data reshuffled at every epoch.
+            num_workers: How many subprocesses to use for data loading. 0 means that the data will be loaded in the main process.
             pin_memory: If ``True``, the data loader will copy Tensors into CUDA pinned memory before returning them.
-            drop_last: set to ``True`` to drop the last incomplete batch, if the dataset size is not divisible by the batch size. If ``False`` and the size of dataset is not divisible by the batch size, then the last batch will be smaller.
+            drop_last: Set to ``True`` to drop the last incomplete batch, if the dataset size is not divisible by the batch size. If ``False`` and the size of dataset is not divisible by the batch size, then the last batch will be smaller.
+            return_num_classes: If return number of classes as the last return value. 
 
         Returns:
-            A semi-supervised dataset.
+            A semi-supervised training dataloader and a testing dataloader.
         '''
         shared_dict = {'num_workers': num_workers,
                        'pin_memory': pin_memory,

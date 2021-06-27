@@ -1,0 +1,383 @@
+
+
+<!doctype html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>allinone.model package &#8212; SSL-toolkit 1.0.0 documentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bizstyle.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script src="_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="allinone.trainer package" href="allinone.trainer.html" />
+    <link rel="prev" title="allinone.data.transforms package" href="allinone.data.transforms.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <!--[if lt IE 9]>
+    <script src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="allinone.trainer.html" title="allinone.trainer package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="allinone.data.transforms.html" title="allinone.data.transforms package"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">SSL-toolkit 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="allinone.html" accesskey="U">allinone package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">allinone.model package</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="allinone-model-package">
+<h1>allinone.model package<a class="headerlink" href="#allinone-model-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-allinone.model.ALImodel">
+<span id="allinone-model-alimodel-module"></span><h2>allinone.model.ALImodel module<a class="headerlink" href="#module-allinone.model.ALImodel" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="allinone.model.ALImodel.Discriminator_x">
+<em class="property">class </em><code class="sig-name descname">Discriminator_x</code><a class="headerlink" href="#allinone.model.ALImodel.Discriminator_x" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>The Discriminator of x for CIFAR10 reported by <a class="reference external" href="https://arxiv.org/pdf/1606.00704">Adversarially Learned Inference</a>.</p>
+<dl class="py method">
+<dt id="allinone.model.ALImodel.Discriminator_x.forward">
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">input</span></em><span class="sig-paren">)</span><a class="headerlink" href="#allinone.model.ALImodel.Discriminator_x.forward" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="allinone.model.ALImodel.Discriminator_x.training">
+<code class="sig-name descname">training</code><em class="property">: bool</em><a class="headerlink" href="#allinone.model.ALImodel.Discriminator_x.training" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="allinone.model.ALImodel.Discriminator_x_z">
+<em class="property">class </em><code class="sig-name descname">Discriminator_x_z</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">num_classes</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">10</span></em><span class="sig-paren">)</span><a class="headerlink" href="#allinone.model.ALImodel.Discriminator_x_z" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>The Discriminator of x and z for CIFAR10 reported by <a class="reference external" href="https://arxiv.org/pdf/1606.00704">Adversarially Learned Inference</a>.</p>
+<dl class="py method">
+<dt id="allinone.model.ALImodel.Discriminator_x_z.forward">
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">z</span></em><span class="sig-paren">)</span><a class="headerlink" href="#allinone.model.ALImodel.Discriminator_x_z.forward" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="allinone.model.ALImodel.Discriminator_x_z.training">
+<code class="sig-name descname">training</code><em class="property">: bool</em><a class="headerlink" href="#allinone.model.ALImodel.Discriminator_x_z.training" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="allinone.model.ALImodel.Discriminator_z">
+<em class="property">class </em><code class="sig-name descname">Discriminator_z</code><a class="headerlink" href="#allinone.model.ALImodel.Discriminator_z" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>The Discriminator of z for CIFAR10 reported by <a class="reference external" href="https://arxiv.org/pdf/1606.00704">Adversarially Learned Inference</a>.</p>
+<dl class="py method">
+<dt id="allinone.model.ALImodel.Discriminator_z.forward">
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">input</span></em><span class="sig-paren">)</span><a class="headerlink" href="#allinone.model.ALImodel.Discriminator_z.forward" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="allinone.model.ALImodel.Discriminator_z.training">
+<code class="sig-name descname">training</code><em class="property">: bool</em><a class="headerlink" href="#allinone.model.ALImodel.Discriminator_z.training" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="allinone.model.ALImodel.Generator_x">
+<em class="property">class </em><code class="sig-name descname">Generator_x</code><a class="headerlink" href="#allinone.model.ALImodel.Generator_x" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>The Generator of x for CIFAR10 reported by <a class="reference external" href="https://arxiv.org/pdf/1606.00704">Adversarially Learned Inference</a>.</p>
+<dl class="py method">
+<dt id="allinone.model.ALImodel.Generator_x.forward">
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">input</span></em><span class="sig-paren">)</span><a class="headerlink" href="#allinone.model.ALImodel.Generator_x.forward" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="allinone.model.ALImodel.Generator_x.training">
+<code class="sig-name descname">training</code><em class="property">: bool</em><a class="headerlink" href="#allinone.model.ALImodel.Generator_x.training" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="allinone.model.ALImodel.Generator_z">
+<em class="property">class </em><code class="sig-name descname">Generator_z</code><a class="headerlink" href="#allinone.model.ALImodel.Generator_z" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>The Generator of z for CIFAR10 reported by <a class="reference external" href="https://arxiv.org/pdf/1606.00704">Adversarially Learned Inference</a>.</p>
+<dl class="py method">
+<dt id="allinone.model.ALImodel.Generator_z.forward">
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">input</span></em><span class="sig-paren">)</span><a class="headerlink" href="#allinone.model.ALImodel.Generator_z.forward" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="allinone.model.ALImodel.Generator_z.training">
+<code class="sig-name descname">training</code><em class="property">: bool</em><a class="headerlink" href="#allinone.model.ALImodel.Generator_z.training" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-allinone.model.VAE">
+<span id="allinone-model-vae-module"></span><h2>allinone.model.VAE module<a class="headerlink" href="#module-allinone.model.VAE" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="allinone.model.VAE.VAE">
+<em class="property">class </em><code class="sig-name descname">VAE</code><a class="headerlink" href="#allinone.model.VAE.VAE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>Based on <a class="reference external" href="https://github.com/pytorch/examples/blob/master/vae/main.py">VAE</a>.</p>
+<dl class="py method">
+<dt id="allinone.model.VAE.VAE.decode">
+<code class="sig-name descname">decode</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">z</span></em><span class="sig-paren">)</span><a class="headerlink" href="#allinone.model.VAE.VAE.decode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="allinone.model.VAE.VAE.encode">
+<code class="sig-name descname">encode</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em><span class="sig-paren">)</span><a class="headerlink" href="#allinone.model.VAE.VAE.encode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="allinone.model.VAE.VAE.forward">
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em><span class="sig-paren">)</span><a class="headerlink" href="#allinone.model.VAE.VAE.forward" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="allinone.model.VAE.VAE.reparameterize">
+<code class="sig-name descname">reparameterize</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mu</span></em>, <em class="sig-param"><span class="n">logvar</span></em><span class="sig-paren">)</span><a class="headerlink" href="#allinone.model.VAE.VAE.reparameterize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="allinone.model.VAE.VAE.training">
+<code class="sig-name descname">training</code><em class="property">: bool</em><a class="headerlink" href="#allinone.model.VAE.VAE.training" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-allinone.model.lenet">
+<span id="allinone-model-lenet-module"></span><h2>allinone.model.lenet module<a class="headerlink" href="#module-allinone.model.lenet" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="allinone.model.lenet.LeNet5">
+<em class="property">class </em><code class="sig-name descname">LeNet5</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">num_classes</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">10</span></em><span class="sig-paren">)</span><a class="headerlink" href="#allinone.model.lenet.LeNet5" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>The <a class="reference external" href="https://ieeexplore.ieee.org/document/726791">LeNet-5</a> for measuring the performance of the algorithms on MNIST.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>num_classes</strong> – The number of categories.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="allinone.model.lenet.LeNet5.forward">
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">img</span></em><span class="sig-paren">)</span><a class="headerlink" href="#allinone.model.lenet.LeNet5.forward" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="allinone.model.lenet.LeNet5.training">
+<code class="sig-name descname">training</code><em class="property">: bool</em><a class="headerlink" href="#allinone.model.lenet.LeNet5.training" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="allinone.model.lenet.LeNet5_SVHN">
+<em class="property">class </em><code class="sig-name descname">LeNet5_SVHN</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">num_classes</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">10</span></em><span class="sig-paren">)</span><a class="headerlink" href="#allinone.model.lenet.LeNet5_SVHN" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>The <a class="reference external" href="https://ieeexplore.ieee.org/document/726791">LeNet-5</a> for measuring the performance of the algorithms on SVHN.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>num_classes</strong> – The number of categories.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="allinone.model.lenet.LeNet5_SVHN.forward">
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">img</span></em><span class="sig-paren">)</span><a class="headerlink" href="#allinone.model.lenet.LeNet5_SVHN.forward" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="allinone.model.lenet.LeNet5_SVHN.training">
+<code class="sig-name descname">training</code><em class="property">: bool</em><a class="headerlink" href="#allinone.model.lenet.LeNet5_SVHN.training" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-allinone.model.toy">
+<span id="allinone-model-toy-module"></span><h2>allinone.model.toy module<a class="headerlink" href="#module-allinone.model.toy" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="allinone.model.toy.Ladder_MLP">
+<em class="property">class </em><code class="sig-name descname">Ladder_MLP</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">input_shape</span><span class="p">:</span> <span class="n">tuple</span></em>, <em class="sig-param"><span class="n">num_neurons</span><span class="p">:</span> <span class="n">List<span class="p">[</span>int<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">sigma_noise</span><span class="p">:</span> <span class="n">List<span class="p">[</span>float<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">input_sigma_noise</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">0.3</span></em><span class="sig-paren">)</span><a class="headerlink" href="#allinone.model.toy.Ladder_MLP" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_shape</strong> – The shape of inputs.</p></li>
+<li><p><strong>num_neurons</strong> – The list of neurons.</p></li>
+<li><p><strong>sigma_noise</strong> – The list of the <span class="math notranslate nohighlight">\(\sigma\)</span> of gaussian noise.</p></li>
+<li><p><strong>input_sigma_noise</strong> – THe <span class="math notranslate nohighlight">\(\sigma\)</span> of noise added to supervised learning path.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="allinone.model.toy.Ladder_MLP.clear_path">
+<code class="sig-name descname">clear_path</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">input</span></em><span class="sig-paren">)</span><a class="headerlink" href="#allinone.model.toy.Ladder_MLP.clear_path" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="allinone.model.toy.Ladder_MLP.decoder_path">
+<code class="sig-name descname">decoder_path</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#allinone.model.toy.Ladder_MLP.decoder_path" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="allinone.model.toy.Ladder_MLP.forward">
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path_name</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">input</span></em><span class="sig-paren">)</span><a class="headerlink" href="#allinone.model.toy.Ladder_MLP.forward" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="allinone.model.toy.Ladder_MLP.get_loss_d">
+<code class="sig-name descname">get_loss_d</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lam_list</span></em><span class="sig-paren">)</span><a class="headerlink" href="#allinone.model.toy.Ladder_MLP.get_loss_d" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="allinone.model.toy.Ladder_MLP.noise_path">
+<code class="sig-name descname">noise_path</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">input</span></em><span class="sig-paren">)</span><a class="headerlink" href="#allinone.model.toy.Ladder_MLP.noise_path" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="allinone.model.toy.Ladder_MLP.training">
+<code class="sig-name descname">training</code><em class="property">: bool</em><a class="headerlink" href="#allinone.model.toy.Ladder_MLP.training" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="allinone.model.toy.ToyNet">
+<em class="property">class </em><code class="sig-name descname">ToyNet</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">num_classes</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span><a class="headerlink" href="#allinone.model.toy.ToyNet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>The toy NN for measuring the performance of the algorithms on MNIST.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>num_classes</strong> – The number of categories.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="allinone.model.toy.ToyNet.forward">
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">input</span></em><span class="sig-paren">)</span><a class="headerlink" href="#allinone.model.toy.ToyNet.forward" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="allinone.model.toy.ToyNet.training">
+<code class="sig-name descname">training</code><em class="property">: bool</em><a class="headerlink" href="#allinone.model.toy.ToyNet.training" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="allinone.model.toy.batch_normalization">
+<code class="sig-name descname">batch_normalization</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">batch</span></em>, <em class="sig-param"><span class="n">return_mean_and_std</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#allinone.model.toy.batch_normalization" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-allinone.model">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-allinone.model" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">allinone.model package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-allinone.model.ALImodel">allinone.model.ALImodel module</a></li>
+<li><a class="reference internal" href="#module-allinone.model.VAE">allinone.model.VAE module</a></li>
+<li><a class="reference internal" href="#module-allinone.model.lenet">allinone.model.lenet module</a></li>
+<li><a class="reference internal" href="#module-allinone.model.toy">allinone.model.toy module</a></li>
+<li><a class="reference internal" href="#module-allinone.model">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="allinone.data.transforms.html"
+                        title="previous chapter">allinone.data.transforms package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="allinone.trainer.html"
+                        title="next chapter">allinone.trainer package</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/allinone.model.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="allinone.trainer.html" title="allinone.trainer package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="allinone.data.transforms.html" title="allinone.data.transforms package"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">SSL-toolkit 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="allinone.html" >allinone package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">allinone.model package</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, SMILElab.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.3.1.
+    </div>
+  </body>
+</html>

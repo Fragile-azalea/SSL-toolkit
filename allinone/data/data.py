@@ -1,9 +1,10 @@
-from typing import Callable, Optional, Iterable
+from typing import Callable, Optional, Iterable, Tuple, List
 from torch.utils.data import Dataset, Subset, DataLoader
 from torchvision.datasets import CIFAR10, SVHN
 from functools import partial
 from torchvision import transforms as tf
 import numpy as np
+from torchvision.transforms.transforms import LinearTransformation
 
 __all__ = ['SemiDataset', 'SemiDataLoader', 'semi_svhn']
 
@@ -19,7 +20,7 @@ def get_label_list(dataset: Dataset) -> (np.array):
 def get_label_and_unlabel_indices(
         label_list: np.array,
         num_labels_per_class: int,
-        num_classes: int) -> (list[int], list[int]):
+        num_classes: int) -> Tuple[List[int], List[int]]:
     label_indices = []
     unlabel_indices = []
     for i in range(num_classes):
@@ -135,6 +136,9 @@ class SemiDataset:
             shuffle: set to True to have the training data reshuffled at every epoch.
             num_workers: how many subprocesses to use for data loading. 0 means that the data will be loaded in the main process.
             pin_memory: If ``True``, the data loader will copy Tensors into CUDA pinned memory before returning them.
+
+        Returns:
+            A semi-supervised dataset.
         '''
         shared_dict = {'num_workers': num_workers,
                        'pin_memory': pin_memory,

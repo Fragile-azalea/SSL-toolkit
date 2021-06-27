@@ -132,7 +132,7 @@ class SemiDataset:
             label_batch_size: The batch size of labeled data. 
             unlabel_batch_size: The batch size of unlabeled data. If ``None``, use label_batch_size instead.
             test_batch_size: The batch size of testing data. If ``None``, use label_batch_size + unlabel_batch_size instead.
-            num_iteration The number of iteration for each epoch. If ``None``, use the number of iteration of supervised dataset instead.
+            num_iteration: The number of iteration for each epoch. If ``None``, use the number of iteration of supervised dataset instead.
             shuffle: set to ``True`` to have the training data reshuffled at every epoch.
             num_workers: how many subprocesses to use for data loading. 0 means that the data will be loaded in the main process.
             pin_memory: If ``True``, the data loader will copy Tensors into CUDA pinned memory before returning them.

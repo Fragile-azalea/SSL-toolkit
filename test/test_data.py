@@ -3,6 +3,24 @@ import pytest
 
 
 @pytest.mark.parametrize('root, num_labels_per_class, num_classes, batch_size, num_workers', [('/home/kp600168/.torch/data/', 50, 10, 256, 4), ])
+def test_register(root, num_labels_per_class, num_classes, batch_size, num_workers):
+    from allinone.data import SEMI_DATASET_REGISTRY
+    semi_cifar = SEMI_DATASET_REGISTRY(
+        'semi_cifar10')(root, num_labels_per_class)
+    train_loader, test_loader, classes = semi_cifar(
+        batch_size, num_workers=num_workers)
+    for label, unlabel in train_loader:
+        label_data, label_target = label
+        unlabel_data, unlabel_target = unlabel
+        assert list(label_data.shape) == [batch_size, 3, 32, 32]
+        break
+    for data, target in test_loader:
+        assert list(data.shape) == [batch_size * 2, 3, 32, 32]
+        break
+    assert classes == num_classes
+
+
+@pytest.mark.parametrize('root, num_labels_per_class, num_classes, batch_size, num_workers', [('/home/kp600168/.torch/data/', 50, 10, 256, 4), ])
 def test_data(root, num_labels_per_class, num_classes, batch_size, num_workers):
     from allinone.data import SemiDataset, semi_cifar10
     from torchvision.datasets import CIFAR10

@@ -78,7 +78,7 @@ class SemiDataset:
     Args:
         root: The root directory where the dataset exists or will be saved.
         num_labels_per_class: The number of each class.
-        dataset: An instance class representing a `Dataset <https://pytorch.org/docs/stable/data.html#torch.utils.data.Dataset>`_.
+        dataset: An instantiable class representing a `Dataset <https://pytorch.org/docs/stable/data.html#torch.utils.data.Dataset>`_.
         num_classes: The number of class.
         label_transform: A function/transform that takes in a labeled image and returns a transformed version. E.g, `transforms.RandomCrop <https://pytorch.org/vision/stable/transforms.html#torchvision.transforms.RandomCrop>`_.
         unlabel_transform: A function/transform that takes in a unlabeled image and returns a transformed version. E.g, `transforms.RandomCrop <https://pytorch.org/vision/stable/transforms.html#torchvision.transforms.RandomCrop>`_.

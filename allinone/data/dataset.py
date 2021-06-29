@@ -65,7 +65,15 @@ class SemiDataLoader:
 
 class SemiDataset:
     r'''
-    A class representing a semi-supervised dataset.
+    A class representing a semi-supervised dataset.::
+
+        from torchvision.datasets import CIFAR10
+        from torchvision import transforms as tf
+        root = '...'
+        # initialize a semi CIFAR10 with 1000 labeled images for each class.
+        semi_dataset = SemiDataset(root, 1000, CIFAR10, 10, norm=tf.Compose([tf.ToTensor(), 
+                                                                             tf.Normalize((0.4914, 0.4822, 0.4465), 
+                                                                                          (0.2023, 0.1994, 0.2010))]))
 
     Args:
         root: The root directory where the dataset exists or will be saved.

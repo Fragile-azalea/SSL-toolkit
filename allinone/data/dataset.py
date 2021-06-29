@@ -78,15 +78,11 @@ class SemiDataset:
     Args:
         root: The root directory where the dataset exists or will be saved.
         num_labels_per_class: The number of each class.
-        # torch.utils.data.Dataset>`_.
-        dataset: An instance class representing a `Dataset <https://pytorch.org/docs/stable/data.html
+        dataset: An instance class representing a `Dataset <https://pytorch.org/docs/stable/data.html#torch.utils.data.Dataset>`_.
         num_classes: The number of class.
-        # torchvision.transforms.RandomCrop>`_.
-        label_transform: A function/transform that takes in a labeled image and returns a transformed version. E.g, `transforms.RandomCrop <https://pytorch.org/vision/stable/transforms.html
-        # torchvision.transforms.RandomCrop>`_.
-        unlabel_transform: A function/transform that takes in a unlabeled image and returns a transformed version. E.g, `transforms.RandomCrop <https://pytorch.org/vision/stable/transforms.html
-        # torchvision.transforms.RandomCrop>`_.
-        test_transform: A function/transform that takes in a test image and returns a transformed version. E.g, `transforms.RandomCrop <https://pytorch.org/vision/stable/transforms.html
+        label_transform: A function/transform that takes in a labeled image and returns a transformed version. E.g, `transforms.RandomCrop <https://pytorch.org/vision/stable/transforms.html#torchvision.transforms.RandomCrop>`_.
+        unlabel_transform: A function/transform that takes in a unlabeled image and returns a transformed version. E.g, `transforms.RandomCrop <https://pytorch.org/vision/stable/transforms.html#torchvision.transforms.RandomCrop>`_.
+        test_transform: A function/transform that takes in a test image and returns a transformed version. E.g, `transforms.RandomCrop <https://pytorch.org/vision/stable/transforms.html#torchvision.transforms.RandomCrop>`_.
         norm: Normalization after all transform.
         download:  If true, downloads the dataset from the internet and puts it in root directory. If dataset is already downloaded, it is not downloaded again.
         include_labeled_data: If true, unlabeled data will include labeled data.

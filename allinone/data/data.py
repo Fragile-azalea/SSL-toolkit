@@ -1,12 +1,12 @@
 from typing import Callable, Optional, Iterable, Tuple, List, Union
-from torch.utils.data import Dataset, Subset, DataLoader
+from torch.utils.data import Dataset, Subset, DataLoader, dataset
 from torchvision.datasets import CIFAR10, SVHN
 from functools import partial
 from torchvision import transforms as tf
 import numpy as np
 from torchvision.transforms.transforms import LinearTransformation
 
-__all__ = ['SemiDataset', 'SemiDataLoader', 'semi_cifar10']
+__all__ = ['SemiDataset', 'SemiDataLoader', 'semi_cifar10', 'semi_svhn']
 
 
 def get_label_list(dataset: Dataset) -> (np.array):
@@ -71,11 +71,15 @@ class SemiDataset:
     Args:
         root: The root directory where the dataset exists or will be saved.
         num_labels_per_class: The number of each class.
-        dataset: An instance class representing a `Dataset <https://pytorch.org/docs/stable/data.html#torch.utils.data.Dataset>`_.
+        # torch.utils.data.Dataset>`_.
+        dataset: An instance class representing a `Dataset <https://pytorch.org/docs/stable/data.html
         num_classes: The number of class.
-        label_transform: A function/transform that takes in a labeled image and returns a transformed version. E.g, `transforms.RandomCrop <https://pytorch.org/vision/stable/transforms.html#torchvision.transforms.RandomCrop>`_.
-        unlabel_transform: A function/transform that takes in a unlabeled image and returns a transformed version. E.g, `transforms.RandomCrop <https://pytorch.org/vision/stable/transforms.html#torchvision.transforms.RandomCrop>`_.
-        test_transform: A function/transform that takes in a test image and returns a transformed version. E.g, `transforms.RandomCrop <https://pytorch.org/vision/stable/transforms.html#torchvision.transforms.RandomCrop>`_.
+        # torchvision.transforms.RandomCrop>`_.
+        label_transform: A function/transform that takes in a labeled image and returns a transformed version. E.g, `transforms.RandomCrop <https://pytorch.org/vision/stable/transforms.html
+        # torchvision.transforms.RandomCrop>`_.
+        unlabel_transform: A function/transform that takes in a unlabeled image and returns a transformed version. E.g, `transforms.RandomCrop <https://pytorch.org/vision/stable/transforms.html
+        # torchvision.transforms.RandomCrop>`_.
+        test_transform: A function/transform that takes in a test image and returns a transformed version. E.g, `transforms.RandomCrop <https://pytorch.org/vision/stable/transforms.html
         norm: Normalization after all transform.
         download:  If true, downloads the dataset from the internet and puts it in root directory. If dataset is already downloaded, it is not downloaded again.
         include_labeled_data: If true, unlabeled data will include labeled data.
@@ -138,7 +142,7 @@ class SemiDataset:
         Get Dataloader.
 
         Args:
-            label_batch_size: The batch size of labeled data. 
+            label_batch_size: The batch size of labeled data.
             unlabel_batch_size: The batch size of unlabeled data. If ``None``, use label_batch_size instead.
             test_batch_size: The batch size of testing data. If ``None``, use label_batch_size + unlabel_batch_size instead.
             num_iteration: The number of iteration for each epoch. If ``None``, use the number of iteration of supervised dataset instead.
@@ -146,7 +150,7 @@ class SemiDataset:
             num_workers: How many subprocesses to use for data loading. 0 means that the data will be loaded in the main process.
             pin_memory: If ``True``, the data loader will copy Tensors into CUDA pinned memory before returning them.
             drop_last: Set to ``True`` to drop the last incomplete batch, if the dataset size is not divisible by the batch size. If ``False`` and the size of dataset is not divisible by the batch size, then the last batch will be smaller.
-            return_num_classes: If return number of classes as the last return value. 
+            return_num_classes: If return number of classes as the last return value.
 
         Returns:
             A semi-supervised training dataloader and a testing dataloader.
@@ -185,16 +189,25 @@ class SemiDataset:
     __call__ = get_dataloader
 
 
-semi_svhn = partial(SemiDataset,
-                    dataset=SVHN,
-                    num_classes=10,
-                    norm=tf.Compose([tf.ToTensor(), tf.Normalize(
-                        (0.4390, 0.4443, 0.4692), (0.1189, 0.1222, 0.1049))]),
-                    )
+def semi_svhn(*args, **kwargs) -> SemiDataset:
+    r'''
+    The partical function is an initialization of SemiDataset which has ``dataset=SVHN``, ``num_classes=10``, ``norm=tf.Compose([tf.ToTensor(), tf.Normalize((0.4390, 0.4443, 0.4692), (0.1189, 0.1222, 0.1049))])`` supplied.
+    '''
+    kwargs = {**kwargs,
+              'dataset': SVHN,
+              'num_classes': 10,
+              'norm': tf.Compose([tf.ToTensor(), tf.Normalize((0.4390, 0.4443, 0.4692), (0.1189, 0.1222, 0.1049))]),
+              }
+    return SemiDataset(*args, **kwargs)
 
-semi_cifar10 = partial(SemiDataset,
-                       dataset=CIFAR10,
-                       num_classes=10,
-                       norm=tf.Compose([tf.ToTensor(), tf.Normalize(
-                           (0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))]),
-                       )
+
+def semi_cifar10(*args, **kwargs) -> SemiDataset:
+    r'''
+    The partical function is an initialization of SemiDataset which has ``dataset=CIFAR10``, ``num_classes=10``, ``norm=tf.Compose([tf.ToTensor(), tf.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))])`` supplied.
+    '''
+    kwargs = {**kwargs,
+              'dataset': CIFAR10,
+              'num_classes': 10,
+              'norm': tf.Compose([tf.ToTensor(), tf.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))]),
+              }
+    return SemiDataset(*args, **kwargs)

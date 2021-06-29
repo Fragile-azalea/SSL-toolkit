@@ -6,7 +6,7 @@ from torchvision import transforms as tf
 import numpy as np
 from torchvision.transforms.transforms import LinearTransformation
 
-__all__ = ['SemiDataset', 'SemiDataLoader', 'semi_svhn']
+__all__ = ['SemiDataset', 'SemiDataLoader', 'semi_cifar10']
 
 
 def get_label_list(dataset: Dataset) -> (np.array):
@@ -76,6 +76,7 @@ class SemiDataset:
         label_transform: A function/transform that takes in a labeled image and returns a transformed version. E.g, `transforms.RandomCrop <https://pytorch.org/vision/stable/transforms.html#torchvision.transforms.RandomCrop>`_.
         unlabel_transform: A function/transform that takes in a unlabeled image and returns a transformed version. E.g, `transforms.RandomCrop <https://pytorch.org/vision/stable/transforms.html#torchvision.transforms.RandomCrop>`_.
         test_transform: A function/transform that takes in a test image and returns a transformed version. E.g, `transforms.RandomCrop <https://pytorch.org/vision/stable/transforms.html#torchvision.transforms.RandomCrop>`_.
+        norm: Normalization after all transform.
         download:  If true, downloads the dataset from the internet and puts it in root directory. If dataset is already downloaded, it is not downloaded again.
         include_labeled_data: If true, unlabeled data will include labeled data.
 
@@ -91,9 +92,17 @@ class SemiDataset:
                  label_transform: Optional[Callable] = None,
                  unlabel_transform: Optional[Callable] = None,
                  test_transform: Optional[Callable] = None,
+                 norm: Optional[Callable] = None,
                  download: bool = False,
                  include_labeled_data: bool = True):
         super(SemiDataset, self).__init__()
+
+        def compose_transform_and_norm(transfrom, norm):
+            return tf.Compose(list(filter(lambda iter: iter is not None, [transfrom, norm])))
+        label_transform = compose_transform_and_norm(label_transform, norm)
+        unlabel_transform = compose_transform_and_norm(unlabel_transform, norm)
+        test_transform = compose_transform_and_norm(test_transform, norm)
+
         base_dataset = dataset(
             root, transform=label_transform, download=download)  # instantiate train dataset
         label_list = get_label_list(base_dataset)  # get indices list
@@ -179,10 +188,13 @@ class SemiDataset:
 semi_svhn = partial(SemiDataset,
                     dataset=SVHN,
                     num_classes=10,
-                    label_transform=tf.Compose(
-                        [tf.ToTensor(), tf.Normalize((0.4390, 0.4443, 0.4692), (0.1189, 0.1222, 0.1049))]),
-                    unlabel_transform=tf.Compose(
-                        [tf.ToTensor(), tf.Normalize((0.4390, 0.4443, 0.4692), (0.1189, 0.1222, 0.1049))]),
-                    test_transform=tf.Compose(
-                        [tf.ToTensor(), tf.Normalize((0.4390, 0.4443, 0.4692), (0.1189, 0.1222, 0.1049))]),
+                    norm=tf.Compose([tf.ToTensor(), tf.Normalize(
+                        (0.4390, 0.4443, 0.4692), (0.1189, 0.1222, 0.1049))]),
                     )
+
+semi_cifar10 = partial(SemiDataset,
+                       dataset=CIFAR10,
+                       num_classes=10,
+                       norm=tf.Compose([tf.ToTensor(), tf.Normalize(
+                           (0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))]),
+                       )

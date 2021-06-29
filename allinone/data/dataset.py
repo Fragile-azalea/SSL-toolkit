@@ -1,10 +1,9 @@
-from typing import Callable, Optional, Iterable, Tuple, List, Union
-from torch.utils.data import Dataset, Subset, DataLoader, dataset
+from . import SEMI_DATASET_REGISTRY
+from typing import Callable, Optional, Tuple, List, Union
+from torch.utils.data import Dataset, Subset, DataLoader
 from torchvision.datasets import CIFAR10, SVHN
-from functools import partial
 from torchvision import transforms as tf
 import numpy as np
-from torchvision.transforms.transforms import LinearTransformation
 
 __all__ = ['SemiDataset', 'SemiDataLoader', 'semi_cifar10', 'semi_svhn']
 
@@ -189,6 +188,7 @@ class SemiDataset:
     __call__ = get_dataloader
 
 
+@SEMI_DATASET_REGISTRY.register
 def semi_svhn(*args, **kwargs) -> SemiDataset:
     r'''
     The partical function is an initialization of SemiDataset which has ``dataset=SVHN``, ``num_classes=10``, ``norm=tf.Compose([tf.ToTensor(), tf.Normalize((0.4390, 0.4443, 0.4692), (0.1189, 0.1222, 0.1049))])`` supplied.
@@ -201,6 +201,7 @@ def semi_svhn(*args, **kwargs) -> SemiDataset:
     return SemiDataset(*args, **kwargs)
 
 
+@SEMI_DATASET_REGISTRY.register
 def semi_cifar10(*args, **kwargs) -> SemiDataset:
     r'''
     The partical function is an initialization of SemiDataset which has ``dataset=CIFAR10``, ``num_classes=10``, ``norm=tf.Compose([tf.ToTensor(), tf.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))])`` supplied.

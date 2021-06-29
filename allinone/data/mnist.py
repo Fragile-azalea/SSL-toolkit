@@ -6,7 +6,7 @@ from torchvision.datasets import MNIST
 from functools import partial
 from torch.utils.data import Dataset
 from torchvision import transforms as tf
-from .data import SemiDataset
+from .dataset import SemiDataset
 
 __all__ = [
     'semi_mnist',

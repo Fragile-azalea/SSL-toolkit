@@ -15,9 +15,9 @@ GpuManager().set_by_memory(1)
 
 @hydra.main(config_path="config", config_name='test_ladder.yml')
 def main(args):
-#     import sys
-#     sys.path.append('/home/kp600168/semi/SSL-toolkit')
-    
+    #     import sys
+    #     sys.path.append('/home/kp600168/semi/SSL-toolkit')
+
     print(args)
     mnist = semi_mnist(50, args.dataset)
     # mnist = SEMI_DATASET_REGISTRY('mix')(MNIST, args.dataset, 10, [tf.Resize(

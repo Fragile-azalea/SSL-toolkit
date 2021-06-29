@@ -7,24 +7,23 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
-   allinone.data.datasets
    allinone.data.transforms
 
 Submodules
 ----------
 
-allinone.data.data module
+allinone.data.dataset module
 -------------------------
 
-.. automodule:: allinone.data.data
+.. automodule:: allinone.data.dataset
    :members:
    :undoc-members:
    :show-inheritance:
 
-allinone.data.mnist module
+allinone.dataset.mnist module
 --------------------------
 
-.. automodule:: allinone.data.mnist
+.. automodule:: allinone.dataset.mnist
    :members:
    :undoc-members:
    :show-inheritance:
@@ -32,7 +31,7 @@ allinone.data.mnist module
 Module contents
 ---------------
 
-.. automodule:: allinone.data
+.. automodule:: allinone.dataset
    :members:
    :undoc-members:
    :show-inheritance:

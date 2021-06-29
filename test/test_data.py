@@ -14,8 +14,10 @@ def test_data(root, num_labels_per_class, num_classes, batch_size, num_workers):
     for label, unlabel in train_loader:
         label_data, label_target = label
         unlabel_data, unlabel_target = unlabel
+        assert list(label_data.shape) == [batch_size, 3, 32, 32]
         break
     for data, target in test_loader:
+        assert list(data.shape) == [batch_size * 2, 3, 32, 32]
         break
     assert classes == num_classes
 
@@ -25,8 +27,10 @@ def test_data(root, num_labels_per_class, num_classes, batch_size, num_workers):
     for label, unlabel in train_loader:
         label_data, label_target = label
         unlabel_data, unlabel_target = unlabel
+        assert list(label_data.shape) == [batch_size, 3, 32, 32]
         break
     for data, target in test_loader:
+        assert list(data.shape) == [batch_size * 2, 3, 32, 32]
         break
     assert classes == num_classes
 

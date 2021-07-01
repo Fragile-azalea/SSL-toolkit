@@ -22,10 +22,51 @@ __all__ = [
     'semi_10_mnist_gz_32x32',
     'semi_50_mnist_gz_32x32',
     'SEMI_MNIST',
+    'accelerator',
 ]
 
 
 device = torch.device('cuda')
+
+
+def accelerator(device: torch.device,
+                mnist: MNIST,
+                mean: float = 0.5,
+                std: float = 1.) -> MNIST:
+    accelerated_mnist = type('Accelerated' + mnist.__name__, (mnist,), {})
+
+    def __init__(self, *args, **kwargs):
+        super(accelerated_mnist, self).__init__(*args, **kwargs)
+        self.data = self.data.unsqueeze(1).float().div(255)
+        self.data = self.data.sub_(mean).div_(std)
+        self.data, self.targets = self.data.to(device), self.targets.to(device)
+
+    def __getitem__(self, index):
+        """
+        Args:
+            index (int): Index
+
+        Returns:
+            tuple: (image, target) where target is index of the target class.
+        """
+        img, target = self.data[index], self.targets[index]
+
+        return img, target
+
+    @property
+    def raw_folder(self) -> str:
+        return os.path.join(self.root, mnist.__name__, 'raw')
+
+    @property
+    def processed_folder(self) -> str:
+        return os.path.join(self.root, mnist.__name__, 'processed')
+
+    accelerated_mnist.__init__ = __init__
+    accelerated_mnist.__getitem__ = __getitem__
+    accelerated_mnist.raw_folder = raw_folder
+    accelerated_mnist.processed_folder = processed_folder
+
+    return accelerated_mnist
 
 
 class FastMNIST(MNIST):

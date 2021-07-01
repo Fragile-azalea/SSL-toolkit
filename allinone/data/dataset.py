@@ -3,6 +3,7 @@ from typing import Callable, Optional, Tuple, List, Union
 from torch.utils.data import Dataset, Subset, DataLoader
 from torchvision.datasets import CIFAR10, SVHN
 from torchvision import transforms as tf
+from torch import Tensor
 import numpy as np
 
 __all__ = ['SemiDataset', 'SemiDataLoader', 'semi_cifar10', 'semi_svhn']
@@ -11,6 +12,8 @@ __all__ = ['SemiDataset', 'SemiDataLoader', 'semi_cifar10', 'semi_svhn']
 def get_label_list(dataset: Dataset) -> (np.array):
     label_list = []
     for _, label in dataset:
+        if isinstance(label, Tensor):
+            label = label.item()
         label_list.append(label)
     label_list = np.array(label_list)
     return label_list
@@ -212,12 +215,18 @@ def semi_svhn(*args, **kwargs) -> SemiDataset:
         semi_cifar = SEMI_DATASET_REGISTRY('semi_cifar10')(root, 1000)
 
     '''
-    kwargs = {**kwargs,
+    name = ['root',
+            'num_labels_per_class',
+            'dataset',
+            'num_classes']
+
+    kwargs = {**dict(zip(name, args)),
+              **kwargs,
               'dataset': SVHN,
               'num_classes': 10,
               'norm': tf.Compose([tf.ToTensor(), tf.Normalize((0.4390, 0.4443, 0.4692), (0.1189, 0.1222, 0.1049))]),
               }
-    return SemiDataset(*args, **kwargs)
+    return SemiDataset(**kwargs)
 
 
 @SEMI_DATASET_REGISTRY.register
@@ -225,9 +234,15 @@ def semi_cifar10(*args, **kwargs) -> SemiDataset:
     r'''
     The partical function is an initialization of SemiDataset which has ``dataset=CIFAR10``, ``num_classes=10``, ``norm=tf.Compose([tf.ToTensor(), tf.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))])`` supplied.
     '''
-    kwargs = {**kwargs,
+    name = ['root',
+            'num_labels_per_class',
+            'dataset',
+            'num_classes']
+
+    kwargs = {**dict(zip(name, args)),
+              **kwargs,
               'dataset': CIFAR10,
               'num_classes': 10,
               'norm': tf.Compose([tf.ToTensor(), tf.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))]),
               }
-    return SemiDataset(*args, **kwargs)
+    return SemiDataset(**kwargs)

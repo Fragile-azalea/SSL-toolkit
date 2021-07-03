@@ -1,12 +1,14 @@
 from . import SEMI_DATASET_REGISTRY
 from typing import Callable, Optional, Tuple, List, Union
 from torch.utils.data import Dataset, Subset, DataLoader
-from torchvision.datasets import CIFAR10, SVHN
+from torchvision.datasets import CIFAR10, SVHN, MNIST
 from torchvision import transforms as tf
 from torch import Tensor
 import numpy as np
+from inspect import signature
 
-__all__ = ['SemiDataset', 'SemiDataLoader', 'semi_cifar10', 'semi_svhn']
+__all__ = ['SemiDataset', 'SemiDataLoader',
+           'semi_cifar10', 'semi_svhn', 'semi_mnist']
 
 
 def get_label_list(dataset: Dataset) -> (np.array):
@@ -215,10 +217,7 @@ def semi_svhn(*args, **kwargs) -> SemiDataset:
         semi_cifar = SEMI_DATASET_REGISTRY('semi_cifar10')(root, 1000)
 
     '''
-    name = ['root',
-            'num_labels_per_class',
-            'dataset',
-            'num_classes']
+    name = list(signature(SemiDataset.__init__).parameters.keys())[1:]
 
     kwargs = {**dict(zip(name, args)),
               **kwargs,
@@ -234,15 +233,28 @@ def semi_cifar10(*args, **kwargs) -> SemiDataset:
     r'''
     The partical function is an initialization of SemiDataset which has ``dataset=CIFAR10``, ``num_classes=10``, ``norm=tf.Compose([tf.ToTensor(), tf.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))])`` supplied.
     '''
-    name = ['root',
-            'num_labels_per_class',
-            'dataset',
-            'num_classes']
+    name = list(signature(SemiDataset.__init__).parameters.keys())[1:]
 
     kwargs = {**dict(zip(name, args)),
               **kwargs,
               'dataset': CIFAR10,
               'num_classes': 10,
               'norm': tf.Compose([tf.ToTensor(), tf.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))]),
+              }
+    return SemiDataset(**kwargs)
+
+
+@SEMI_DATASET_REGISTRY.register
+def semi_mnist(*args, **kwargs) -> SemiDataset:
+    r'''
+    The partical function is an initialization of SemiDataset which has ``dataset=MNIST``, ``num_classes=10``, ``norm=tf.Compose([tf.ToTensor(), tf.Normalize((0.1307), (0.3081))])`` supplied.
+    '''
+    name = list(signature(SemiDataset.__init__).parameters.keys())[1:]
+
+    kwargs = {**dict(zip(name, args)),
+              **kwargs,
+              'dataset': MNIST,
+              'num_classes': 10,
+              'norm': tf.Compose([tf.ToTensor(), tf.Normalize((0.1307), (0.3081))]),
               }
     return SemiDataset(**kwargs)

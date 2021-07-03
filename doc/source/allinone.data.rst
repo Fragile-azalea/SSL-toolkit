@@ -20,10 +20,10 @@ allinone.data.dataset module
    :undoc-members:
    :show-inheritance:
 
-allinone.dataset.mnist module
+allinone.data.mnist module
 --------------------------
 
-.. automodule:: allinone.dataset.mnist
+.. automodule:: allinone.data.mnist
    :members:
    :undoc-members:
    :show-inheritance:
@@ -31,7 +31,7 @@ allinone.dataset.mnist module
 Module contents
 ---------------
 
-.. automodule:: allinone.dataset
+.. automodule:: allinone.data
    :members:
    :undoc-members:
    :show-inheritance:

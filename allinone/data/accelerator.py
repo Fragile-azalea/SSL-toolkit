@@ -1,10 +1,13 @@
+from . import ACCELERATOR_REGISTRY
 import os
 import torch
-from torchvision.datasets import MNIST
+from torchvision.datasets import MNIST, FashionMNIST
+from inspect import signature
 
 __all__ = [
     'accelerator',
     'accelerated_mnist',
+    'accelerated_fashionmnist',
 ]
 
 
@@ -61,10 +64,10 @@ def accelerator(device: torch.device,
 
 
 def accelerated_mnist(*args, **kwargs) -> MNIST:
-    name = ['device',
-            'mnist',
-            'mean',
-            'std']
+    r'''
+    The partical function is an initialization of AcceleratedMNIST which has ``mnist=MNIST``, ``mean=0.1307``, ``std=0.3081`` supplied.
+    '''
+    name = list(signature(accelerator).parameters.keys())
 
     kwargs = {**dict(zip(name, args)),
               **kwargs,
@@ -73,3 +76,24 @@ def accelerated_mnist(*args, **kwargs) -> MNIST:
               'std': 0.3081,
               }
     return accelerator(**kwargs)
+
+
+def accelerated_fashionmnist(*args, **kwargs) -> MNIST:
+    r'''
+    The partical function is an initialization of AcceleratedMNIST which has ``mnist=FashionMNIST``, ``mean=0.286``, ``std=0.352`` supplied.
+    '''
+    name = list(signature(accelerator).parameters.keys())
+
+    kwargs = {**dict(zip(name, args)),
+              **kwargs,
+              'mnist': FashionMNIST,
+              'mean': 0.286,
+              'std': 0.352,
+              }
+    return accelerator(**kwargs)
+
+
+ACCELERATOR_REGISTRY.register_from_dict({
+    'mnist': accelerated_mnist,
+    'fashionmnist': accelerated_fashionmnist,
+})

@@ -20,6 +20,15 @@ allinone.transforms.transform\_many\_times module
    :undoc-members:
    :show-inheritance:
 
+allinone.transforms.mixup module
+------------------------------------------------------
+   
+.. automodule:: allinone.transforms.mixup
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
 Module contents
 ---------------
 

@@ -1,14 +1,6 @@
 allinone.data package
 =====================
 
-Subpackages
------------
-
-.. toctree::
-   :maxdepth: 4
-
-   allinone.data.transforms
-
 Submodules
 ----------
 

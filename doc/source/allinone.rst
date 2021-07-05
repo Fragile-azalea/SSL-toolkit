@@ -11,6 +11,7 @@ Subpackages
    allinone.data
    allinone.model
    allinone.trainer
+   allinone.transforms
 
 Submodules
 ----------

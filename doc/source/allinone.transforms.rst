@@ -1,21 +1,21 @@
-allinone.data.transforms package
+allinone.transforms package
 ================================
 
 Submodules
 ----------
 
-allinone.data.transforms.randaugment module
+allinone.transforms.randaugment module
 -------------------------------------------
 
-.. automodule:: allinone.data.transforms.randaugment
+.. automodule:: allinone.transforms.randaugment
    :members:
    :undoc-members:
    :show-inheritance:
 
-allinone.data.transforms.transform\_many\_times module
+allinone.transforms.transform\_many\_times module
 ------------------------------------------------------
 
-.. automodule:: allinone.data.transforms.transform_many_times
+.. automodule:: allinone.transforms.transform_many_times
    :members:
    :undoc-members:
    :show-inheritance:
@@ -23,7 +23,7 @@ allinone.data.transforms.transform\_many\_times module
 Module contents
 ---------------
 
-.. automodule:: allinone.data.transforms
+.. automodule:: allinone.transforms
    :members:
    :undoc-members:
    :show-inheritance:

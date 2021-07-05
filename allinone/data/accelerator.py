@@ -18,6 +18,15 @@ def accelerator(device: torch.device,
     r'''
     An accelerator for MNIST-like dataset.
 
+    Note:
+        The accelerator will transmit all data to a device(e.g. GPU) in initialization. As a result, no subprocess use for data loading. 
+        ``num_workers=0`` is necessary to dataloader.
+
+    Example:
+        >>> from allinone.data import accelerator
+        >>> from torchvision.datasets import MNIST
+        >>> FastMNIST = accelerator(torch.device('cuda:0'), MNIST, 0.1307, 0.3081)
+
     Args:
         device: the device on which a dataset will be allocated.
         mnist: a MNIST-like dataset.
@@ -66,6 +75,15 @@ def accelerator(device: torch.device,
 def accelerated_mnist(*args, **kwargs) -> MNIST:
     r'''
     The partical function is an initialization of AcceleratedMNIST which has ``mnist=MNIST``, ``mean=0.1307``, ``std=0.3081`` supplied.
+
+    Example:
+        >>> from allinone.data import accelerated_mnist
+        >>> from torchvision.datasets import MNIST
+        >>> FastMNIST = accelerated_mnist(torch.device('cuda:0'))
+    or:
+
+        >>> from allinone.data import ACCELERATOR_REGISTRY
+        >>> FastMNIST = ACCELERATOR_REGISTRY('mnist')(torch.device('cuda:0'))
     '''
     name = list(signature(accelerator).parameters.keys())
 

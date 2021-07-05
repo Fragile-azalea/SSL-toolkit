@@ -260,7 +260,7 @@ class CutoutDefault(object):
 class RandAugment:
     '''
     The `RandAugment <https://arxiv.org/abs/1909.13719>`_ reproduced by pytorch.
-    This code is duplicated from `Github <https://github.com/ildoonet/pytorch-randaugment/blob/master/RandAugment/augmentations.py>`_.
+    This code is completely duplicated from `Github <https://github.com/ildoonet/pytorch-randaugment/blob/master/RandAugment/augmentations.py>`_.
 
     Args:
         n: Number of augmentation transformations to apply sequentially.

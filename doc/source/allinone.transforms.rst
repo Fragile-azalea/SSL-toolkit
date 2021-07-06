@@ -4,6 +4,13 @@ allinone.transforms package
 Submodules
 ----------
 
+cutmix module
+------------------------------------------------------
+   
+.. automodule:: allinone.transforms.cutmix
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 cutout module
 ------------------------------------------------------

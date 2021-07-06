@@ -3,6 +3,8 @@ import torch
 from typing import Optional, Tuple
 from . import TRANSFORM_REGISTRY, mixup
 
+__all__ = ['cutmix_for_one_hot', 'cutmix_for_integer']
+
 
 def rand_bbox(size, lam):
     W = size[2]
@@ -55,7 +57,7 @@ def cutmix_for_integer(input: torch.Tensor,
                        target: torch.Tensor,
                        gamma: float,
                        indices: Optional[torch.Tensor] = None
-                       ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+                       ) -> Tuple[torch.Tensor, float, torch.Tensor, torch.Tensor]:
     r"""
     mixup_for_integer: Beyond Empirical Risk Minimization
     """

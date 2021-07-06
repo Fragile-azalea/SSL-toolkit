@@ -4,7 +4,24 @@ allinone.transforms package
 Submodules
 ----------
 
-allinone.transforms.randaugment module
+
+cutout module
+------------------------------------------------------
+   
+.. automodule:: allinone.transforms.cutout
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+mixup module
+------------------------------------------------------
+   
+.. automodule:: allinone.transforms.mixup
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+randaugment module
 -------------------------------------------
 
 .. automodule:: allinone.transforms.randaugment
@@ -16,14 +33,6 @@ allinone.transforms.transform\_many\_times module
 ------------------------------------------------------
 
 .. automodule:: allinone.transforms.transform_many_times
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-allinone.transforms.mixup module
-------------------------------------------------------
-   
-.. automodule:: allinone.transforms.mixup
    :members:
    :undoc-members:
    :show-inheritance:

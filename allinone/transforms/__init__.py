@@ -4,4 +4,6 @@ while True:
     from .randaugment import *
     from .transform_many_times import *
     from .mixup import *
+    from .cutout import *
+    from .cutmix import *
     break

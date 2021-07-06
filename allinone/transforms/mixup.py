@@ -1,8 +1,9 @@
 import torch
+from torch import nn
 from typing import Optional, Tuple
 from . import TRANSFORM_REGISTRY
 
-__all__ = ['mixup_for_one_hot', 'mixup_for_integer']
+__all__ = ['mixup_for_one_hot', 'mixup_for_integer', 'MixLoss']
 
 
 def mixup(input: torch.Tensor,
@@ -51,3 +52,16 @@ def mixup_for_integer(input: torch.Tensor,
         indices = torch.randperm(input.size(
             0), device=input.device, dtype=torch.long)
     return mixup(input, gamma, indices), target, target[indices]
+
+
+class MixLoss(nn.Module):
+    def __init__(self):
+        super(MixLoss, self).__init__()
+        self.criterion = nn.functional.cross_entropy
+
+    def forward(self, mix_input, mix_target):
+        log_prob = nn.functional.log_softmax(mix_input)
+        return (log_prob * mix_target).sum(dim=1).mean().neg()
+
+    def forward(self, mix_input, gamma, target, perm_target):
+        return gamma * self.criterion(mix_input, target) + (1. - gamma) * self.critertion(mix_input, perm_target)

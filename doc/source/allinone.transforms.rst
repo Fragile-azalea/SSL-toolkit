@@ -14,6 +14,11 @@ cutmix module
 
 cutout module
 ------------------------------------------------------
+
+.. figure:: static/cutout.png
+   :width: 100
+
+   The example of CutOut Augmentation. 
    
 .. automodule:: allinone.transforms.cutout
    :members:

@@ -5,19 +5,29 @@ from PIL.Image import Image
 from PIL.ImageDraw import Draw
 from . import TRANSFORM_REGISTRY
 
-__all__ = ['TensorCutOut', 'ImageCutOut']
+__all__ = ['TensorCutout', 'ImageCutout']
 
 
 @TRANSFORM_REGISTRY.register
-class TensorCutOut():
-    """
-    Reference : https://github.com/quark0/darts/blob/master/cnn/utils.py
-    """
+class TensorCutout():
+    r'''
+    `Cutout <https://arxiv.org/abs/1708.04552>`_ Augmentation for Tensor.
 
-    def __init__(self, length):
+    Args:
+        length: side length of cutout part. 
+
+    Example:
+        >>> from torchvision import transforms as tf
+        >>> transforms = tf.Compose([tf.ToTensor(), TensorCutout(10)])
+
+    Returns:
+        An augmented tensor.
+    '''
+
+    def __init__(self, length: int):
         self.length = length
 
-    def __call__(self, img: torch.Tensor):
+    def __call__(self, img: torch.Tensor) -> torch.Tensor:
         h, w = img.size(1), img.size(2)
         mask = np.ones((h, w), np.float32)
         y = np.random.randint(h)
@@ -36,16 +46,26 @@ class TensorCutOut():
 
 
 @TRANSFORM_REGISTRY.register
-class ImageCutOut():
-    """
-    Reference : https://github.com/quark0/darts/blob/master/cnn/utils.py
-    """
+class ImageCutout():
+    r'''
+    `Cutout <https://arxiv.org/abs/1708.04552>`_ Augmentation for Image.
+
+    Args:
+        length: side length of cutout part. 
+
+    Example:
+        >>> from torchvision import transforms as tf
+        >>> transforms = tf.Compose([ImageCutout(10), tf.ToTensor()])
+
+    Returns:
+        An augmented image.
+    '''
 
     def __init__(self, length: int, color: Tuple[int, int, int] = (127, 127, 127)):
         self.length = length
         self.color = color
 
-    def __call__(self, img: Image):
+    def __call__(self, img: Image) -> Image:
         h, w = img.size
         y = np.random.randint(h)
         x = np.random.randint(w)

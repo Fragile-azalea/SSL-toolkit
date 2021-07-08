@@ -52,6 +52,7 @@ class ImageCutout():
 
     Args:
         length: side length of cutout part. 
+        color: color of cutout part.
 
     Example:
         >>> from torchvision import transforms as tf

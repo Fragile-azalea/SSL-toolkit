@@ -3,6 +3,7 @@ from torch import nn
 from typing import Optional, Tuple
 from . import TRANSFORM_REGISTRY
 
+
 __all__ = ['mixup_for_one_hot', 'mixup_for_integer', 'MixLoss']
 
 
@@ -10,9 +11,6 @@ def mixup(input: torch.Tensor,
           gamma: float,
           indices: torch.Tensor
           ) -> torch.Tensor:
-    """ mixup: Beyond Empirical Risk Minimization
-
-    """
 
     if input.size(0) != indices.size(0):
         raise RuntimeError("Size mismatch!")
@@ -26,9 +24,26 @@ def mixup_for_one_hot(input: torch.Tensor,
                       gamma: float,
                       indices: Optional[torch.Tensor] = None
                       ) -> Tuple[torch.Tensor, torch.Tensor]:
-    r"""
-    mixup: Beyond Empirical Risk Minimization
-    """
+    r'''
+    `Mixup <https://arxiv.org/abs/1710.09412>`_ Augmentation for Tensor.
+
+    Args:
+        input: input tensor of data. 
+        target: one-hot label of data.
+        gamma: The interpolation coefficient.
+        indices: indices[i] denotes the mixup target of data i. If ``indices=None``, then mixup generates indices by torch.perm. 
+
+    Example:
+        >>> from allinone.transforms import mixup_for_one_hot
+        >>> input = torch.randn([256, 3, 64, 64])
+        >>> target = torch.randn([256, 10])
+        >>> gamma = 0.995
+        >>> mix_input, mix_target = mixup_for_one_hot(input, target, gamma)
+
+    Returns:
+        Mixed tensor and mixed targets.
+    '''
+
     if input.device != target.device:
         raise RuntimeError("Device mismatch!")
     if indices is None:
@@ -43,9 +58,25 @@ def mixup_for_integer(input: torch.Tensor,
                       gamma: float,
                       indices: Optional[torch.Tensor] = None
                       ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
-    r"""
-    mixup_for_integer: Beyond Empirical Risk Minimization
-    """
+    r'''
+    `Mixup <https://arxiv.org/abs/1710.09412>`_ Augmentation for Tensor.
+
+    Args:
+        input: input tensor of data. 
+        target: integer label of data.
+        gamma: The interpolation coefficient.
+        indices: indices[i] denotes the mixup target of data i. If ``indices=None``, then mixup generates indices by torch.perm. 
+
+    Example:
+        >>> from allinone.transforms import mixup_for_integer
+        >>> input = torch.randn([256, 3, 64, 64])
+        >>> target = torch.randn([256, 10]).argmax(dim=-1)
+        >>> gamma = 0.995
+        >>> mix_input, target, perm_target = mixup_for_integer(input, target, gamma)
+
+    Returns:
+        Mixed tensor, targets and perm_targets.
+    '''
     if input.device != target.device:
         raise RuntimeError("Device mismatch!")
     if indices is None:
@@ -55,13 +86,45 @@ def mixup_for_integer(input: torch.Tensor,
 
 
 class MixLoss(nn.Module):
+    r'''
+    Creates a criterion that measures the cross entropy loss between each element in
+    the input and target.
+    '''
+
     def __init__(self):
         super(MixLoss, self).__init__()
         self.criterion = nn.functional.cross_entropy
 
-    def forward(self, mix_input, mix_target):
+    def one_hot_forward(self, mix_input: torch.Tensor, mix_target: torch.Tensor) -> torch.Tensor:
+        r'''
+            Args:
+                mix_input: The input tensor.
+                mix_target: The target tensor.
+
+            Returns:
+                The cross entropy loss.
+        '''
         log_prob = nn.functional.log_softmax(mix_input)
         return (log_prob * mix_target).sum(dim=1).mean().neg()
 
-    def forward(self, mix_input, gamma, target, perm_target):
+    def integer_forward(self, mix_input: torch.Tensor, gamma: float, target: torch.LongTensor, perm_target: torch.LongTensor):
+        r'''
+            Args:
+                mix_input: The input tensor.
+                gamma: The interpolation coefficient.
+                target: The target tensor.
+                perm_target: The perm_target tensor.
+
+            Returns:
+                The cross entropy loss.
+        '''
         return gamma * self.criterion(mix_input, target) + (1. - gamma) * self.critertion(mix_input, perm_target)
+
+    def forward(self, *args):
+        r'''
+            Choose ``integer_forward`` or ``one_hot_forward`` by parameter list.
+        '''
+        if list(args) == 2:
+            return self.one_hot_forward(*args)
+        else:
+            return self.integer_forward(*args)

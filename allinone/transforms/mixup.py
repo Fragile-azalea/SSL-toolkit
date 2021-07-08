@@ -91,7 +91,7 @@ def mixup_for_integer(input: torch.Tensor,
 class OneHotMixLoss(nn.Module):
     r'''
     Creates a criterion that measures the cross entropy loss between each element in
-    the input and target.
+    the input and one-hot target.
     '''
 
     def __init__(self):
@@ -111,6 +111,11 @@ class OneHotMixLoss(nn.Module):
 
 
 class IntegerMixLoss(nn.Module):
+    r'''
+    Creates a criterion that measures the cross entropy loss between each element in
+    the input and integer target.
+    '''
+
     def __init__(self):
         super(IntegerMixLoss, self).__init__()
         self.crl = nn.CrossEntropyLoss()

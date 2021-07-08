@@ -1,4 +1,4 @@
-from allinone.transforms import mixup
+from allinone.transforms import mixup, IntegerMixLoss, OneHotMixLoss
 from torchvision import transforms as tf
 from allinone import TRANSFORM_REGISTRY
 from PIL import Image
@@ -63,3 +63,18 @@ def test_mixup():
     assert (input * 0.1 + input[indices] * 0.9 - mix_input).abs().max() < 1e-5
     assert (target * 0.1 + target[indices] *
             0.9 - mix_target).abs().max() < 1e-5
+
+
+def test_mixloss():
+    input = torch.randn([256, 10])
+    label = torch.randint(0, 10, (256, ))
+    gamma = 0.9
+    mix_input, label, perm_label = mixup.mixup_for_integer(input, label, gamma)
+    criterion = IntegerMixLoss()
+    loss = criterion(mix_input, gamma, label, perm_label)
+    assert isinstance(loss, torch.Tensor)
+    label = torch.rand([256, 10])
+    mix_input, mix_label = mixup.mixup_for_one_hot(input, label, gamma)
+    one_hot = OneHotMixLoss()
+    loss = one_hot(mix_input, mix_label)
+    assert isinstance(loss, torch.Tensor)

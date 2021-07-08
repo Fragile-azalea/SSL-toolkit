@@ -1,10 +1,13 @@
 import torch
 from torch import nn
 from typing import Optional, Tuple
+
+from torch.nn.functional import cross_entropy
 from . import TRANSFORM_REGISTRY
 
 
-__all__ = ['mixup_for_one_hot', 'mixup_for_integer', 'MixLoss']
+__all__ = ['mixup_for_one_hot', 'mixup_for_integer',
+           'OneHotMixLoss', 'IntegerMixLoss']
 
 
 def mixup(input: torch.Tensor,
@@ -85,17 +88,16 @@ def mixup_for_integer(input: torch.Tensor,
     return mixup(input, gamma, indices), target, target[indices]
 
 
-class MixLoss(nn.Module):
+class OneHotMixLoss(nn.Module):
     r'''
     Creates a criterion that measures the cross entropy loss between each element in
     the input and target.
     '''
 
     def __init__(self):
-        super(MixLoss, self).__init__()
-        self.criterion = nn.functional.cross_entropy
+        super(OneHotMixLoss, self).__init__()
 
-    def one_hot_forward(self, mix_input: torch.Tensor, mix_target: torch.Tensor) -> torch.Tensor:
+    def forward(self, mix_input: torch.Tensor, mix_target: torch.Tensor) -> torch.Tensor:
         r'''
             Args:
                 mix_input: The input tensor.
@@ -104,10 +106,16 @@ class MixLoss(nn.Module):
             Returns:
                 The cross entropy loss.
         '''
-        log_prob = nn.functional.log_softmax(mix_input)
+        log_prob = nn.functional.log_softmax(mix_input, dim=-1)
         return (log_prob * mix_target).sum(dim=1).mean().neg()
 
-    def integer_forward(self, mix_input: torch.Tensor, gamma: float, target: torch.LongTensor, perm_target: torch.LongTensor):
+
+class IntegerMixLoss(nn.Module):
+    def __init__(self):
+        super(IntegerMixLoss, self).__init__()
+        self.crl = nn.CrossEntropyLoss()
+
+    def forward(self, mix_input: torch.Tensor, gamma: float, target: torch.LongTensor, perm_target: torch.LongTensor):
         r'''
             Args:
                 mix_input: The input tensor.
@@ -118,13 +126,4 @@ class MixLoss(nn.Module):
             Returns:
                 The cross entropy loss.
         '''
-        return gamma * self.criterion(mix_input, target) + (1. - gamma) * self.critertion(mix_input, perm_target)
-
-    def forward(self, *args):
-        r'''
-            Choose ``integer_forward`` or ``one_hot_forward`` by parameter list.
-        '''
-        if list(args) == 2:
-            return self.one_hot_forward(*args)
-        else:
-            return self.integer_forward(*args)
+        return gamma * self.crl(mix_input, target) + (1. - gamma) * self.crl(mix_input, perm_target)

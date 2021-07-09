@@ -1,8 +1,6 @@
 import torch
 from torch import nn
 from typing import Optional, Tuple
-
-from torch.nn.functional import cross_entropy
 from . import TRANSFORM_REGISTRY
 
 
@@ -39,7 +37,7 @@ def mixup_for_one_hot(input: torch.Tensor,
     Example:
         >>> from allinone.transforms import mixup_for_one_hot
         >>> input = torch.randn([256, 3, 64, 64])
-        >>> target = torch.randn([256, 10])
+        >>> target = torch.rand([256, 10])
         >>> gamma = 0.995
         >>> mix_input, mix_target = mixup_for_one_hot(input, target, gamma)
 
@@ -73,7 +71,7 @@ def mixup_for_integer(input: torch.Tensor,
     Example:
         >>> from allinone.transforms import mixup_for_integer
         >>> input = torch.randn([256, 3, 64, 64])
-        >>> target = torch.randn([256, 10]).argmax(dim=-1)
+        >>> target = torch.rand([256, 10]).argmax(dim=-1)
         >>> gamma = 0.995
         >>> mix_input, target, perm_target = mixup_for_integer(input, target, gamma)
 
@@ -91,7 +89,7 @@ def mixup_for_integer(input: torch.Tensor,
 class OneHotMixLoss(nn.Module):
     r'''
     Creates a criterion that measures the cross entropy loss between each element in
-    the input and one-hot target.
+    the input and **one-hot** target.
     '''
 
     def __init__(self):
@@ -113,7 +111,7 @@ class OneHotMixLoss(nn.Module):
 class IntegerMixLoss(nn.Module):
     r'''
     Creates a criterion that measures the cross entropy loss between each element in
-    the input and integer target.
+    the input and **integer** target.
     '''
 
     def __init__(self):

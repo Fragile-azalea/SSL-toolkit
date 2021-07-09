@@ -41,7 +41,23 @@ def cutmix_for_one_hot(input: torch.Tensor,
                        indices: Optional[torch.Tensor] = None
                        ) -> Tuple[torch.Tensor, torch.Tensor]:
     r"""
-    mixup: Beyond Empirical Risk Minimization
+    `CutMix <https://arxiv.org/abs/1905.04899>`_ Augmentation for Tensor.
+
+    Args:
+        input: input tensor of data. 
+        target: one-hot label of data.
+        gamma: The expected interpolation coefficient.
+        indices: indices[i] denotes the cutmix target of data i. If ``indices=None``, then cutmix generates indices by torch.perm. 
+
+    Example:
+        >>> from allinone.transforms import cutmix_for_one_hot
+        >>> input = torch.randn([256, 3, 64, 64])
+        >>> target = torch.rand([256, 10])
+        >>> gamma = 0.995
+        >>> mix_input, mix_target = cutmix_for_one_hot(input, target, gamma)
+
+    Returns:
+        Mixed tensor and mixed targets.
     """
     if input.device != target.device:
         raise RuntimeError("Device mismatch!")
@@ -59,7 +75,23 @@ def cutmix_for_integer(input: torch.Tensor,
                        indices: Optional[torch.Tensor] = None
                        ) -> Tuple[torch.Tensor, float, torch.Tensor, torch.Tensor]:
     r"""
-    mixup_for_integer: Beyond Empirical Risk Minimization
+    `CutMix <https://arxiv.org/abs/1905.04899>`_ Augmentation for Tensor.
+
+    Args:
+        input: input tensor of data. 
+        target: integer label of data.
+        gamma: The expected interpolation coefficient.
+        indices: indices[i] denotes the cutmix target of data i. If ``indices=None``, then cutmix generates indices by torch.perm. 
+
+    Example:
+        >>> from allinone.transforms import cutmix_for_integer
+        >>> input = torch.randn([256, 3, 64, 64])
+        >>> target = torch.rand([256, 10]).argmax(dim=-1)
+        >>> gamma = 0.995
+        >>> mix_input, real_gamma, target, perm_target = cutmix_for_integer(input, target, gamma)
+
+    Returns:
+        Mixed tensor, real gamma, targets and perm_targets.
     """
     if input.device != target.device:
         raise RuntimeError("Device mismatch!")

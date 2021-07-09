@@ -4,6 +4,24 @@ allinone.transforms package
 Submodules
 ----------
 
+autoaugment module
+------------------------------------------------------
+
+.. figure:: static/original.png
+   :width: 100
+
+   The example of original data.
+
+.. figure:: static/autoaugment.png
+   :width: 100
+
+   The example of AutoAugment Augmentation. 
+   
+.. automodule:: allinone.transforms.autoaugment
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 cutmix module
 ------------------------------------------------------
    

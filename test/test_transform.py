@@ -1,8 +1,11 @@
-from allinone.transforms import mixup, IntegerMixLoss, OneHotMixLoss
+from allinone import transforms
+from allinone.data.dataset import semi_cifar10
+from allinone.transforms import mixup, IntegerMixLoss, OneHotMixLoss, CIFAR10Policy
 from torchvision import transforms as tf
 from allinone import TRANSFORM_REGISTRY
 from PIL import Image
 import torch
+import pytest
 
 
 def test_many_times_transfrom():
@@ -37,6 +40,16 @@ def test_random_augment_transfrom():
     output = norm(intermediate)
     assert isinstance(output, torch.Tensor)
     assert output.shape == torch.Size([3, 64, 64])
+
+
+@pytest.mark.parametrize('root, num_labels_per_class, num_classes', [('/home/kp600168/.torch/data/', 50, 10), ])
+def test_autoaugment_transfrom(root, num_labels_per_class, num_classes):
+    from torchvision.datasets import CIFAR10
+    cifar = CIFAR10(root, transform=tf.Compose(
+        [tf.RandomCrop(32, 4, fill=128), CIFAR10Policy()]))
+    for data, target in cifar:
+        assert isinstance(data, Image.Image) == True
+        break
 
 
 def test_mixup():

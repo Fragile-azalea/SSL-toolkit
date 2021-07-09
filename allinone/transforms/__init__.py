@@ -6,4 +6,5 @@ while True:
     from .mixup import *
     from .cutout import *
     from .cutmix import *
+    from .autoaugment import *
     break

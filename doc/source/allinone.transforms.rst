@@ -7,15 +7,17 @@ Submodules
 autoaugment module
 ------------------------------------------------------
 
-.. figure:: static/original.png
-   :width: 100
+.. list-table::
 
-   The example of original data.
+      * - .. figure:: static/original.png
+             :width: 100
 
-.. figure:: static/autoaugment.png
-   :width: 100
+             The example of original data.
 
-   The example of AutoAugment Augmentation. 
+        - .. figure:: static/autoaugment.png
+             :width: 100
+
+             The example of AutoAugment Augmentation. 
    
 .. automodule:: allinone.transforms.autoaugment
    :members:

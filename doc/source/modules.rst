@@ -1,7 +1,7 @@
-allinone
+DeSSL
 ========
 
 .. toctree::
    :maxdepth: 4
 
-   allinone
+   DeSSL

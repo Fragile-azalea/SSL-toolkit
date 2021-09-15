@@ -14,7 +14,7 @@ DeSSL is a library for fast prototyping of Deep Semi-Supervised Learning researc
    :titlesonly:
    :caption: Package Reference:
    
-   allinone
+   DeSSL
 
 
 Indices and tables

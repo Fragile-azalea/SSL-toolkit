@@ -1,29 +1,29 @@
-allinone.trainer package
+DeSSL.trainer package
 ========================
 
 Submodules
 ----------
 
-allinone.trainer.AdversariallyLearnedInference module
+DeSSL.trainer.AdversariallyLearnedInference module
 -----------------------------------------------------
 
-.. automodule:: allinone.trainer.AdversariallyLearnedInference
+.. automodule:: DeSSL.trainer.AdversariallyLearnedInference
    :members:
    :undoc-members:
    :show-inheritance:
 
-allinone.trainer.InterpolationConsistency module
+DeSSL.trainer.InterpolationConsistency module
 ------------------------------------------------
 
-.. automodule:: allinone.trainer.InterpolationConsistency
+.. automodule:: DeSSL.trainer.InterpolationConsistency
    :members:
    :undoc-members:
    :show-inheritance:
 
-allinone.trainer.Ladder module
+DeSSL.trainer.Ladder module
 ------------------------------
 
-.. automodule:: allinone.trainer.Ladder
+.. automodule:: DeSSL.trainer.Ladder
    :members:
    :undoc-members:
    :show-inheritance:
@@ -32,10 +32,10 @@ allinone.trainer.Ladder module
 
    The result of training LeNet-5 by the Ladder algorithm with 100 labeled images on MNIST Dataset.  
 
-allinone.trainer.MeanTeacher module
+DeSSL.trainer.MeanTeacher module
 -----------------------------------
 
-.. automodule:: allinone.trainer.MeanTeacher
+.. automodule:: DeSSL.trainer.MeanTeacher
    :members:
    :undoc-members:
    :show-inheritance:
@@ -63,26 +63,26 @@ allinone.trainer.MeanTeacher module
    The result of training LeNet-5 by the Mean Teacher with 100/500 labeled images on MNIST Dataset.  
 
 
-allinone.trainer.MixMatch module
+DeSSL.trainer.MixMatch module
 --------------------------------
 
-.. automodule:: allinone.trainer.MixMatch
+.. automodule:: DeSSL.trainer.MixMatch
    :members:
    :undoc-members:
    :show-inheritance:
 
-allinone.trainer.VariationalAutoEncoder module
+DeSSL.trainer.VariationalAutoEncoder module
 ----------------------------------------------
 
-.. automodule:: allinone.trainer.VariationalAutoEncoder
+.. automodule:: DeSSL.trainer.VariationalAutoEncoder
    :members:
    :undoc-members:
    :show-inheritance:
 
-allinone.trainer.utils module
+DeSSL.trainer.utils module
 -----------------------------
 
-.. automodule:: allinone.trainer.utils
+.. automodule:: DeSSL.trainer.utils
    :members:
    :undoc-members:
    :show-inheritance:
@@ -90,7 +90,7 @@ allinone.trainer.utils module
 Module contents
 ---------------
 
-.. automodule:: allinone.trainer
+.. automodule:: DeSSL.trainer
    :members:
    :undoc-members:
    :show-inheritance:

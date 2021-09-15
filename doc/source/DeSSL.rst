@@ -1,4 +1,4 @@
-allinone package
+DeSSL package
 ================
 
 Subpackages
@@ -8,18 +8,18 @@ Subpackages
    :titlesonly:
    :maxdepth: 4
 
-   allinone.data
-   allinone.model
-   allinone.trainer
-   allinone.transforms
+   DeSSL.data
+   DeSSL.model
+   DeSSL.trainer
+   DeSSL.transforms
 
 Submodules
 ----------
 
-allinone.scheduler module
+DeSSL.scheduler module
 -------------------------
 
-.. automodule:: allinone.scheduler
+.. automodule:: DeSSL.scheduler
    :members:
    :undoc-members:
    :show-inheritance:
@@ -27,7 +27,7 @@ allinone.scheduler module
 Module contents
 ---------------
 
-.. automodule:: allinone
+.. automodule:: DeSSL
    :members:
    :undoc-members:
    :show-inheritance:

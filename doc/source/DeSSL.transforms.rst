@@ -1,4 +1,4 @@
-allinone.transforms package
+DeSSL.transforms package
 ================================
 
 Submodules
@@ -19,7 +19,7 @@ autoaugment module
 
              The example of AutoAugment Augmentation. 
    
-.. automodule:: allinone.transforms.autoaugment
+.. automodule:: DeSSL.transforms.autoaugment
    :members:
    :undoc-members:
    :show-inheritance:
@@ -27,7 +27,7 @@ autoaugment module
 cutmix module
 ------------------------------------------------------
    
-.. automodule:: allinone.transforms.cutmix
+.. automodule:: DeSSL.transforms.cutmix
    :members:
    :undoc-members:
    :show-inheritance:
@@ -40,7 +40,7 @@ cutout module
 
    The example of CutOut Augmentation. 
    
-.. automodule:: allinone.transforms.cutout
+.. automodule:: DeSSL.transforms.cutout
    :members:
    :undoc-members:
    :show-inheritance:
@@ -48,7 +48,7 @@ cutout module
 mixup module
 ------------------------------------------------------
    
-.. automodule:: allinone.transforms.mixup
+.. automodule:: DeSSL.transforms.mixup
    :members:
    :undoc-members:
    :show-inheritance:
@@ -56,15 +56,15 @@ mixup module
 randaugment module
 -------------------------------------------
 
-.. automodule:: allinone.transforms.randaugment
+.. automodule:: DeSSL.transforms.randaugment
    :members:
    :undoc-members:
    :show-inheritance:
 
-allinone.transforms.transform\_many\_times module
+DeSSL.transforms.transform\_many\_times module
 ------------------------------------------------------
 
-.. automodule:: allinone.transforms.transform_many_times
+.. automodule:: DeSSL.transforms.transform_many_times
    :members:
    :undoc-members:
    :show-inheritance:
@@ -73,7 +73,7 @@ allinone.transforms.transform\_many\_times module
 Module contents
 ---------------
 
-.. automodule:: allinone.transforms
+.. automodule:: DeSSL.transforms
    :members:
    :undoc-members:
    :show-inheritance:

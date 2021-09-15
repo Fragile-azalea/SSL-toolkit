@@ -1,21 +1,21 @@
-allinone.data package
+DeSSL.data package
 =====================
 
 Submodules
 ----------
 
-allinone.data.dataset module
+DeSSL.data.dataset module
 -------------------------
 
-.. automodule:: allinone.data.dataset
+.. automodule:: DeSSL.data.dataset
    :members:
    :undoc-members:
    :show-inheritance:
 
-allinone.data.accelerator module
+DeSSL.data.accelerator module
 --------------------------
 
-.. automodule:: allinone.data.accelerator
+.. automodule:: DeSSL.data.accelerator
    :members:
    :undoc-members:
    :show-inheritance:
@@ -23,7 +23,7 @@ allinone.data.accelerator module
 Module contents
 ---------------
 
-.. automodule:: allinone.data
+.. automodule:: DeSSL.data
    :members:
    :undoc-members:
    :show-inheritance:

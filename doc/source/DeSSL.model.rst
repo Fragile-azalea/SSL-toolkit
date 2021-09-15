@@ -1,37 +1,37 @@
-allinone.model package
+DeSSL.model package
 ======================
 
 Submodules
 ----------
 
-allinone.model.ALImodel module
+DeSSL.model.ALImodel module
 ------------------------------
 
-.. automodule:: allinone.model.ALImodel
+.. automodule:: DeSSL.model.ALImodel
    :members:
    :undoc-members:
    :show-inheritance:
 
-allinone.model.VAE module
+DeSSL.model.VAE module
 -------------------------
 
-.. automodule:: allinone.model.VAE
+.. automodule:: DeSSL.model.VAE
    :members:
    :undoc-members:
    :show-inheritance:
 
-allinone.model.lenet module
+DeSSL.model.lenet module
 ---------------------------
 
-.. automodule:: allinone.model.lenet
+.. automodule:: DeSSL.model.lenet
    :members:
    :undoc-members:
    :show-inheritance:
 
-allinone.model.toy module
+DeSSL.model.toy module
 -------------------------
 
-.. automodule:: allinone.model.toy
+.. automodule:: DeSSL.model.toy
    :members:
    :undoc-members:
    :show-inheritance:
@@ -39,7 +39,7 @@ allinone.model.toy module
 Module contents
 ---------------
 
-.. automodule:: allinone.model
+.. automodule:: DeSSL.model
    :members:
    :undoc-members:
    :show-inheritance:

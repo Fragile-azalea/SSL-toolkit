@@ -1,4 +1,4 @@
-[![Documentation Status](https://readthedocs.org/projects/ssl-toolkit/badge/?version=latest)](https://ssl-toolkit.readthedocs.io/en/latest/?badge=latest)
+[![Documentation Status](https://readthedocs.org/projects/ssl-toolkit/badge/?version=latest)](https://ssl-toolkit.readthedocs.io/en/latest/?badge=latest) ![](https://img.shields.io/badge/license-MIT-blue)
 
 # DeSSl: A Pytorch toolkit for Deep Semi-supervised learning
 

@@ -1,6 +1,6 @@
-from allinone import MODEL_REGISTRY
+from DeSSL import MODEL_REGISTRY
 from torch.nn import Module
-from allinone.model import LeNet5
+from DeSSL.model import LeNet5
 import torch
 from pytest import raises
 
@@ -21,4 +21,4 @@ def test_lenet5():
 
 def test_import_model():
     with raises(ImportError):
-        from allinone import LeNet5
+        from DeSSL import LeNet5

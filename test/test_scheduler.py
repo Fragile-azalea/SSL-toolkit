@@ -1,4 +1,4 @@
-from allinone import SCHEDULER_REGISTRY
+from DeSSL import SCHEDULER_REGISTRY
 from pytest import raises
 
 
@@ -24,9 +24,9 @@ def test_lambda_scheduler():
 
 
 def test_import_scheduler():
-    from allinone.scheduler import Lambda
+    from DeSSL.scheduler import Lambda
     scheduler = Lambda(lambda x: x + 1, 100)
     scheduler.step()
     assert scheduler() == 102
     with raises(ImportError):
-        from allinone import Lambda
+        from DeSSL import Lambda

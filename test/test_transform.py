@@ -1,8 +1,8 @@
-from allinone import transforms
-from allinone.data.dataset import semi_cifar10
-from allinone.transforms import mixup, IntegerMixLoss, OneHotMixLoss, CIFAR10Policy
+from DeSSL import transforms
+from DeSSL.data.dataset import semi_cifar10
+from DeSSL.transforms import mixup, IntegerMixLoss, OneHotMixLoss, CIFAR10Policy
 from torchvision import transforms as tf
-from allinone import TRANSFORM_REGISTRY
+from DeSSL import TRANSFORM_REGISTRY
 from PIL import Image
 import torch
 import pytest

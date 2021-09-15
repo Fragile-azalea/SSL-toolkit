@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(
-    name='allinone',
+    name='DeSSL',
     version='1.0',
-    packages=['allinone'],
+    packages=['DeSSL'],
 )

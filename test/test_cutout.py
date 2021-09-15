@@ -1,7 +1,7 @@
 from numpy.core.numeric import tensordot
 import pytest
-from allinone.data import SemiDataset
-from allinone.transforms import ImageCutout, TensorCutout
+from DeSSL.data import SemiDataset
+from DeSSL.transforms import ImageCutout, TensorCutout
 from torchvision.datasets import MNIST
 from PIL.Image import Image
 from torchvision import transforms as tf

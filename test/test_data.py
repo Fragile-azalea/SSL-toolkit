@@ -4,7 +4,7 @@ import pytest
 
 @pytest.mark.parametrize('root, num_labels_per_class, num_classes, batch_size, num_workers', [('/home/kp600168/.torch/data/', 50, 10, 256, 4), ])
 def test_register(root, num_labels_per_class, num_classes, batch_size, num_workers):
-    from allinone.data import SEMI_DATASET_REGISTRY
+    from DeSSL.data import SEMI_DATASET_REGISTRY
     semi_cifar = SEMI_DATASET_REGISTRY(
         'semi_cifar10')(root, num_labels_per_class)
     train_loader, test_loader, classes = semi_cifar(
@@ -22,7 +22,7 @@ def test_register(root, num_labels_per_class, num_classes, batch_size, num_worke
 
 @pytest.mark.parametrize('root, num_labels_per_class, num_classes, batch_size, num_workers', [('/home/kp600168/.torch/data/', 50, 10, 256, 4), ])
 def test_data(root, num_labels_per_class, num_classes, batch_size, num_workers):
-    from allinone.data import SemiDataset, semi_cifar10
+    from DeSSL.data import SemiDataset, semi_cifar10
     from torchvision.datasets import CIFAR10
     from torchvision import transforms as tf
     semi_cifar = SemiDataset(root, num_labels_per_class, CIFAR10,
@@ -55,7 +55,7 @@ def test_data(root, num_labels_per_class, num_classes, batch_size, num_workers):
 
 @pytest.mark.parametrize('root, num_labels_per_class, num_classes, batch_size, num_workers', [('/home/kp600168/.torch/data/', 50, 10, 256, 4), ])
 def test_include_labeled_data(root, num_labels_per_class, num_classes, batch_size, num_workers):
-    from allinone.data import SemiDataset
+    from DeSSL.data import SemiDataset
     from torchvision.datasets import MNIST
     from torchvision import transforms as tf
     mnist = MNIST(root)
@@ -70,4 +70,4 @@ def test_include_labeled_data(root, num_labels_per_class, num_classes, batch_siz
 
 def test_import_data():
     with raises(ImportError):
-        from allinone import SemiDataset, semi_mnist
+        from DeSSL import SemiDataset, semi_mnist

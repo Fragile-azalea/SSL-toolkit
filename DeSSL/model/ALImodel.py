@@ -1,5 +1,5 @@
 from torch import nn, cat
-from homura.vision import MODEL_REGISTRY
+from . import MODEL_REGISTRY
 
 __all__ = ['Generator_z',
            'Generator_x',

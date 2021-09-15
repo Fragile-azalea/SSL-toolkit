@@ -204,13 +204,13 @@ def semi_svhn(*args, **kwargs) -> SemiDataset:
     The partical function is an initialization of SemiDataset which has ``dataset=SVHN``, ``num_classes=10``, ``norm=tf.Compose([tf.ToTensor(), tf.Normalize((0.4390, 0.4443, 0.4692), (0.1189, 0.1222, 0.1049))])`` supplied.
 
     Example:
-        >>> from allinone.data import semi_cifar10
+        >>> from DeSSL.data import semi_cifar10
         >>> root = '...'
         >>> # initialize a semi CIFAR10 with 1000 labeled images for each class.
         >>> semi_cifar = semi_cifar10(root, 1000)
     or:
 
-        >>> from allinone.data import SEMI_DATASET_REGISTRY
+        >>> from DeSSL.data import SEMI_DATASET_REGISTRY
         >>> root = '...'
         >>> # initialize a semi CIFAR10 with 1000 labeled images for each class.
         >>> semi_cifar = SEMI_DATASET_REGISTRY('semi_cifar10')(root, 1000)

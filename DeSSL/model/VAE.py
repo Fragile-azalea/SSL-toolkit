@@ -1,7 +1,7 @@
 import torch
 from torch import nn
 from torch.nn import functional as F
-from homura.vision import MODEL_REGISTRY
+from . import MODEL_REGISTRY
 
 
 @MODEL_REGISTRY.register

@@ -1,18 +1,18 @@
 import torch
 import torch.nn as nn
-from homura.vision import MODEL_REGISTRY
+from . import MODEL_REGISTRY
 
 
 @MODEL_REGISTRY.register
 class LeNet5(nn.Module):
     '''
     The `LeNet-5 <https://ieeexplore.ieee.org/document/726791>`_ for measuring the performance of the algorithms on MNIST.
-    
+
     Args:
         num_classes: The number of categories. 
     '''
 
-    def __init__(self, num_classes:int=10): 
+    def __init__(self, num_classes: int = 10):
         super(LeNet5, self).__init__()
         # 32 * 32 -> 28 * 28
         self.c1 = nn.Conv2d(1, 6, 5)
@@ -49,17 +49,17 @@ class LeNet5(nn.Module):
         output = self.fc7(output)
         return output
 
-    
+
 @MODEL_REGISTRY.register
 class LeNet5_SVHN(nn.Module):
     '''
     The `LeNet-5 <https://ieeexplore.ieee.org/document/726791>`_ for measuring the performance of the algorithms on SVHN.
-    
+
     Args:
         num_classes: The number of categories. 
     '''
 
-    def __init__(self, num_classes:int=10): 
+    def __init__(self, num_classes: int = 10):
         super(LeNet5_SVHN, self).__init__()
         # 32 * 32 -> 28 * 28
         self.c1 = nn.Conv2d(1, 6, 5)

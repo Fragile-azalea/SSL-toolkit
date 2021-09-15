@@ -1,4 +1,4 @@
-from homura import Registry
+from DeSSL import Registry
 
 SEMI_TRAINER_REGISTRY = Registry('semi_trainer')
 

@@ -1,7 +1,7 @@
 from typing import Callable
 import math
 from dataclasses import dataclass
-from homura import Registry
+from . import Registry
 SCHEDULER_REGISTRY = Registry('scheduler')
 
 __all__ = [

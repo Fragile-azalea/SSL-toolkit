@@ -1,4 +1,4 @@
-from homura import Registry
+from DeSSL import Registry
 TRANSFORM_REGISTRY = Registry('transform')
 while True:
     from .randaugment import *

@@ -1,6 +1,6 @@
 from torch import nn
 import torch
-from homura.vision import MODEL_REGISTRY
+from . import MODEL_REGISTRY
 from math import prod
 from typing import List
 from functools import partial

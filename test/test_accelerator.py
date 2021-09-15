@@ -4,7 +4,7 @@ import torch
 
 @pytest.mark.parametrize('root, num_labels_per_class, num_classes, batch_size', [('/home/kp600168/.torch/data/', 50, 10, 256), ])
 def test_accelerator(root, num_labels_per_class, num_classes, batch_size):
-    from allinone.data import accelerator, SemiDataset
+    from DeSSL.data import accelerator, SemiDataset
     from torchvision.datasets import MNIST, FashionMNIST
 
     FastMNIST = accelerator(torch.device('cuda:0'), MNIST, 0.1307, 0.3081)
@@ -38,7 +38,7 @@ def test_accelerator(root, num_labels_per_class, num_classes, batch_size):
 
 @pytest.mark.parametrize('root, num_labels_per_class, num_classes, batch_size', [('/home/kp600168/.torch/data/', 50, 10, 256), ])
 def test_register(root, num_labels_per_class, num_classes, batch_size):
-    from allinone.data import ACCELERATOR_REGISTRY, SemiDataset
+    from DeSSL.data import ACCELERATOR_REGISTRY, SemiDataset
 
     FastMNIST = ACCELERATOR_REGISTRY('mnist')(torch.device('cuda:0'))
     semi_mnist = SemiDataset(root, num_labels_per_class, FastMNIST, 10)

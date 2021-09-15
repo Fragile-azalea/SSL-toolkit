@@ -14,6 +14,12 @@ Our code is pythonic, and the design is consistent with torchvision. You can eas
 
 For flexible use and modification, please git clone the library.
 
+```console
+git clone https://github.com/Fragile-azalea/SSL-toolkit.git
+cd SSL-toolkit
+pip install -e .
+```
+
 ## Documentation
 
 You can find the tutorial and API documentation on the website: [DeSSL Documentation](https://ssl-toolkit.readthedocs.io/en/latest/) .

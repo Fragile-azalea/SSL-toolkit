@@ -176,6 +176,8 @@ class Ladder_MLP(nn.Module):
             std = a5 * torch.sigmoid(a6 * input + a7) + a8 * input + a9
             input = (noise_z - mu) * std + mu
             self.denoise_z.append(input)
+            input = nn.functional.relu(input)
+
         self.denoise_z = self.denoise_z[::-1]
 
     def forward(self, path_name, *input):

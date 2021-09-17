@@ -63,29 +63,6 @@ DeSSL.trainer.MeanTeacher module
    The result of training LeNet-5 by the Mean Teacher with 100/500 labeled images on MNIST Dataset.  
 
 
-DeSSL.trainer.MixMatch module
---------------------------------
-
-.. automodule:: DeSSL.trainer.MixMatch
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-DeSSL.trainer.VariationalAutoEncoder module
-----------------------------------------------
-
-.. automodule:: DeSSL.trainer.VariationalAutoEncoder
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-DeSSL.trainer.utils module
------------------------------
-
-.. automodule:: DeSSL.trainer.utils
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
 Module contents
 ---------------

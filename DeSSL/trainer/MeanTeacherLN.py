@@ -1,46 +1,63 @@
-from typing import Tuple, List
-import torch
-import torch.nn as nn
-import torch.nn.functional as F
-from torch.utils.data import DataLoader
-from pytorch_lightning.core import LightningModule
+from pytorch_lightning.utilities.types import STEP_OUTPUT
 from . import SEMI_TRAINER_REGISTRY
+from pytorch_lightning.core import LightningModule
+from torch.utils.data import DataLoader
+import torch.nn.functional as F
+import torch
+from typing import Tuple, Callable, Any
+from torch import nn
+from copy import deepcopy
+from . import SEMI_TRAINER_REGISTRY
+
+__all__ = ['MeanTeacher']
+
+
+def _update_teacher(student, teacher, alpha):
+    for teacher_param, stduent_param in zip(teacher.parameters(), student.parameters()):
+        teacher_param.data.mul_(alpha).add_(
+            stduent_param.data, alpha=(1 - alpha))
 
 
 @SEMI_TRAINER_REGISTRY.register
-class Ladder(LightningModule):
+class MeanTeacher(LightningModule):
     def __init__(self,
                  train_and_val_loader: Tuple[DataLoader, DataLoader],
                  optimizer: dict,
                  lr_schedular: dict,
                  model: nn.Module,
-                 lam_list: List[float]):
+                 consistency_weight: Callable,
+                 alpha: Callable):
         super().__init__()
         self._loader = train_and_val_loader
         self._optimizer = optimizer
         self._lr_schedular = lr_schedular
-        self.model = model
-        self.lam_list = lam_list
+        teacher = deepcopy(model)
+        self.model = nn.ModuleDict({'teacher': teacher, 'student': model})
+        self.consistency_weight = consistency_weight
+        self.alpha = alpha
         # self.save_hyperparameters()
 
-    def forward(self, path_name, *input):
-        return self.model(path_name, *input)
+    def forward(self, path_name, input):
+        return self.model[path_name](input)
 
     def training_step(self, batch, batch_idx):
-        (label_data, target), (unlabel_data, _) = batch
-        self('clear', label_data, unlabel_data)
-        output = self('noise', label_data, unlabel_data)
-        self('decoder')
-        loss = self.model.get_loss_d(self.lam_list)
-        loss_train = loss + F.nll_loss(torch.log(output), target)
+        (label_input, label_target), ((stduent_input, teacher_input), _) = batch
+        stduent_output = nn.LogSoftmax(dim=1)(
+            self.model['student'](stduent_input))
+        teacher_output = nn.Softmax(dim=1)(
+            self.model['teacher'](teacher_input)).detach()
+        label_output = self.model['student'](label_input)
+        loss_train = self.consistency_weight(
+        ) * nn.KLDivLoss(reduction='batchmean')(stduent_output, teacher_output)
+        loss_train += F.cross_entropy(label_output, label_target)
         self.log('train/loss', loss_train, on_step=True,
                  on_epoch=True, logger=True)
         return loss_train
 
     def validation_step(self, batch, batch_idx):
         input, target = batch
-        output = self('clear', input)
-        loss_val = F.nll_loss(torch.log(output), target)
+        output = self.model['teacher'](input)
+        loss_val = F.cross_entropy(output, target)
         acc1, acc5 = self.__accuracy(output, target, topk=(1, 5))
         self.log('val_loss', loss_val, on_epoch=True)
         self.log('val_acc1', acc1, prog_bar=True, on_epoch=True)
@@ -84,3 +101,13 @@ class Ladder(LightningModule):
 
     def val_dataloader(self):
         return self._loader[1]
+
+    def on_train_batch_end(self,
+                           outputs: STEP_OUTPUT,
+                           batch: Any,
+                           batch_idx: int,
+                           dataloader_idx: int) -> None:
+        _update_teacher(self.model['student'],
+                        self.model['teacher'], self.alpha())
+        self.consistency_weight.step()
+        self.alpha.step()

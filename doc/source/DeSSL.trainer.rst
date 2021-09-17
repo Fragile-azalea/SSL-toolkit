@@ -9,7 +9,6 @@ DeSSL.trainer.Ladder module
 
 .. automodule:: DeSSL.trainer.Ladder
    :members:
-   :no-show-inheritance:
 
 .. figure:: static/Ladder-Mnist-100.png
 
@@ -20,7 +19,6 @@ DeSSL.trainer.MeanTeacher module
 
 .. automodule:: DeSSL.trainer.MeanTeacher
    :members:
-   :no-show-inheritance:
 
    +----------------------------+-----------------------------+---------------------------------------------------------+
    | The result of training LeNet-5 by Mean Teacher(consistency_weight) with 100/500 labeled images on MNIST Dataset.   |

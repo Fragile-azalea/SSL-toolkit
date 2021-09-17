@@ -4,22 +4,6 @@ DeSSL.trainer package
 Submodules
 ----------
 
-DeSSL.trainer.AdversariallyLearnedInference module
------------------------------------------------------
-
-.. automodule:: DeSSL.trainer.AdversariallyLearnedInference
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-DeSSL.trainer.InterpolationConsistency module
-------------------------------------------------
-
-.. automodule:: DeSSL.trainer.InterpolationConsistency
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 DeSSL.trainer.Ladder module
 ------------------------------
 

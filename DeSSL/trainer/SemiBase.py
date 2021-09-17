@@ -8,39 +8,22 @@ from . import SEMI_TRAINER_REGISTRY
 
 
 @SEMI_TRAINER_REGISTRY.register
-class Ladder(LightningModule):
+class SemiBase(LightningModule):
     def __init__(self,
                  train_and_val_loader: Tuple[DataLoader, DataLoader],
                  optimizer: dict,
-                 lr_schedular: dict,
-                 model: nn.Module,
-                 lam_list: List[float]):
+                 lr_schedular: dict):
         super().__init__()
         self._loader = train_and_val_loader
         self._optimizer = optimizer
         self._lr_schedular = lr_schedular
-        self.model = model
-        self.lam_list = lam_list
-        # self.save_hyperparameters()
 
-    def forward(self, path_name, *input):
-        return self.model(path_name, *input)
-
-    def training_step(self, batch, batch_idx):
-        (label_data, target), (unlabel_data, _) = batch
-        self('clear', label_data, unlabel_data)
-        output = self('noise', label_data, unlabel_data)
-        self('decoder')
-        loss = self.model.get_loss_d(self.lam_list)
-        loss_train = loss + F.nll_loss(torch.log(output), target)
+    def training_step(self, loss_train):
         self.log('train/loss', loss_train, on_step=True,
                  on_epoch=True, logger=True)
         return loss_train
 
-    def validation_step(self, batch, batch_idx):
-        input, target = batch
-        output = self('clear', input)
-        loss_val = F.nll_loss(torch.log(output), target)
+    def validation_step(self, loss_val, output, target):
         acc1, acc5 = self.__accuracy(output, target, topk=(1, 5))
         self.log('val_loss', loss_val, on_epoch=True)
         self.log('val_acc1', acc1, prog_bar=True, on_epoch=True)

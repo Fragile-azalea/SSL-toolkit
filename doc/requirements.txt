@@ -1,3 +1,4 @@
--e git+https://github.com/moskomule/homura@v2020.12#egg=homura-core
-torch==1.7.1
+-e .
+pytorch-lightning
+torch
 torchvision

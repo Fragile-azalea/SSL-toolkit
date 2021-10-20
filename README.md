@@ -2,6 +2,13 @@
 
 # DeSSL: A Pytorch toolkit for Deep Semi-Supervised Learning
 
+
+## Requirements
+
+```consule
+python=3.8
+```
+
 ## Description
 
 DeSSL is an open source Python toolkit for deep semi-supervised learning.
@@ -17,7 +24,7 @@ For flexible use and modification, please git clone the library.
 ```console
 git clone https://github.com/Fragile-azalea/SSL-toolkit.git
 cd SSL-toolkit
-pip install -e .
+pip install -r doc/requirements.txt
 ```
 
 ## Documentation

@@ -57,7 +57,8 @@ class Ladder_MLP(nn.Module):
         input_shape: tuple,
         num_neurons: List[int],
         sigma_noise: List[float],
-        input_sigma_noise: float = 0.3,
+        input_sigma_noise: float,
+        **kwargs
     ):
         super(Ladder_MLP, self).__init__()
         input_dim = prod(input_shape)

@@ -1,0 +1,13 @@
+root: "/hdd1/public_data/"
+batch_size: 100
+model: "Ladder_MLP"
+dataset: "semi_mnist"
+num_workers: 0
+lr_256: 0.0512
+
+num_neurons: [1000, 500, 250, 250, 250, 10, ]
+sigma_noise: [0.3, 0.3, 0.3, 0.3, 0.3, 0.3, ]
+input_sigma_noise: 0.3
+input_shape: !!python/tuple [28, 28]
+
+lam_list: [1000., 10., 0.1, 0.1, 0.1, 0.1, 0.1]

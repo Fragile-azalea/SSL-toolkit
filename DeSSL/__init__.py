@@ -1,4 +1,5 @@
 from .register import Registry
+from .utils import loadding_config
 
 while True:
     from .scheduler import SCHEDULER_REGISTRY

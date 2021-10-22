@@ -5,7 +5,8 @@ import ast
 
 __all__ = ['loadding_config']
 
-def loadding_config(cfg_path : str) -> args.ArgumentParser:
+
+def loadding_config(cfg_path: str) -> argparse.ArgumentParser:
     '''
     load a config from Yaml file.
 
@@ -21,7 +22,9 @@ def loadding_config(cfg_path : str) -> args.ArgumentParser:
     parser = argparse.ArgumentParser()
     for item in cfg:
         if isinstance(cfg[item], bool):
-            parser.add_argument("--" + item, type=ast.literal_eval, default=cfg[item])
+            parser.add_argument(
+                "--" + item, type=ast.literal_eval, default=cfg[item])
         else:
-            parser.add_argument("--" + item, type=type(cfg[item]), default=cfg[item])
+            parser.add_argument(
+                "--" + item, type=type(cfg[item]), default=cfg[item])
     return parser

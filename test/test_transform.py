@@ -42,10 +42,14 @@ def test_random_augment_transfrom():
     assert output.shape == torch.Size([3, 64, 64])
 
 
-@pytest.mark.parametrize('root, num_labels_per_class, num_classes', [('/home/kp600168/.torch/data/', 50, 10), ])
-def test_autoaugment_transfrom(root, num_labels_per_class, num_classes):
+def test_autoaugment_transfrom():
+    from DeSSL import loadding_config
+
+    parser = loadding_config('config/base.yml')
+    args = parser.parse_args([])
+
     from torchvision.datasets import CIFAR10
-    cifar = CIFAR10(root, transform=tf.Compose(
+    cifar = CIFAR10(args.root, transform=tf.Compose(
         [tf.RandomCrop(32, 4, fill=128), CIFAR10Policy()]))
     for data, target in cifar:
         assert isinstance(data, Image.Image) == True

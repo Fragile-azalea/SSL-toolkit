@@ -1,5 +1,5 @@
-root: '/hdd1/panxinglin/.torch/data/'
-num_labels_per_class: 50
-num_classes: 10
 batch_size: 256
+num_classes: 10
+num_labels_per_class: 50
 num_workers: 4
+root: /hdd1/panxinglin/.torch/data/

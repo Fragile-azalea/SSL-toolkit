@@ -27,6 +27,15 @@ cd SSL-toolkit
 pip install -r doc/requirements.txt
 ```
 
+### test
+
+To check the integrity of the DeSSL installation
+```console
+cd test
+python dataset_download.py --DATASET_PATH
+pytest .
+```
+
 ## Documentation
 
 You can find the tutorial and API documentation on the website: [DeSSL Documentation](https://ssl-toolkit.readthedocs.io/en/latest/) .

@@ -2,8 +2,6 @@
 from torch.optim import Adam
 from torch.optim.lr_scheduler import LambdaLR
 import pytorch_lightning as pl
-from pytorch_lightning.callbacks import ModelCheckpoint
-from pytorch_lightning.plugins import DDPPlugin
 from DeSSL import MODEL_REGISTRY, SEMI_DATASET_REGISTRY, loadding_config
 from DeSSL.trainer import Ladder
 

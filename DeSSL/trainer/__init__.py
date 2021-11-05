@@ -6,8 +6,7 @@ while True:
     from .SemiBase import SemiBase
     from .Ladder import Ladder
     from .MeanTeacher import MeanTeacher
-    # from .utils import unroll
-    # from .InterpolationConsistency import InterpolationConsistency
+    from .InterpolationConsistency import InterpolationConsistency
     # from .AdversariallyLearnedInference import AdversariallyLearnedInference
     # from .MixMatch import MixMatch
     # from .VariationalAutoEncoder import VariationalAutoEncoder

@@ -28,6 +28,14 @@ DeSSL.model.lenet module
    :undoc-members:
    :show-inheritance:
 
+DeSSL.model.resnet module
+---------------------------
+
+.. automodule:: DeSSL.model.resnet
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 DeSSL.model.toy module
 -------------------------
 

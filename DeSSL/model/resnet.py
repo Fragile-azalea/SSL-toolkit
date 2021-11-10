@@ -7,6 +7,7 @@ __all__ = ['resnet18', 'resnet34', 'resnet50', 'resnet101', 'resnet152',
 
 @MODEL_REGISTRY.register
 def resnet18(*args, **kwargs):
+    __doc__ = models.resnet18.__doc__
     return models.resnet18(*args, **kwargs)
 
 

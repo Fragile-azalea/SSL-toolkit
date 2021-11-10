@@ -1,14 +1,22 @@
 from torchvision import models
+from torchvision.models.resnet import ResNet
 from . import MODEL_REGISTRY
+from typing import Any
 
 __all__ = ['resnet18', 'resnet34', 'resnet50', 'resnet101', 'resnet152',
            'resnext50_32x4d', 'resnext101_32x8d', 'wide_resnet50_2', 'wide_resnet101_2']
 
 
 @MODEL_REGISTRY.register
-def resnet18(*args, **kwargs):
-    __doc__ = models.resnet18.__doc__
-    return models.resnet18(*args, **kwargs)
+def resnet18(pretrained: bool = False, progress: bool = True, **kwargs: Any) -> ResNet:
+    '''
+    ResNet-18 model from "Deep Residual Learning for Image Recognition" <https://arxiv.org/pdf/1512.03385.pdf>_.
+
+    Args:
+        pretrained: If True, returns a model pre-trained on ImageNet
+        progress: If True, displays a progress bar of the download to stderr
+    '''
+    return models.resnet18(pretrained, progress, **kwargs)
 
 
 @MODEL_REGISTRY.register

@@ -1,8 +1,9 @@
 from pytorch_lightning.utilities.types import STEP_OUTPUT
+from torch.functional import Tensor
 from . import SEMI_TRAINER_REGISTRY
 from torch.utils.data import DataLoader
 import torch.nn.functional as F
-from typing import Tuple, Callable, Any
+from typing import Optional, Tuple, Callable, Any
 from DeSSL.scheduler import SchedulerBase
 from torch import nn, cat, randn_like, ones_like, zeros_like
 from torch import float as float_tensor
@@ -32,100 +33,48 @@ class AdversariallyLearnedInference(SemiBase):
         self.model = model_dict
         self.consistency_weight = consistency_weight
 
+    def discriminator_update(self, input: Tensor, z: Tensor, d_target: ones_like | zeros_like, class_target: Optional[Tensor] = None):
+        input = input.detach()
+        z = z.detach()
+        class_output, d_output = self.model['discriminator_x_z'](
+            self.model['discriminator_x'](input), self.model['discriminator_z'](z))
+        d_target = d_target(d_output)
+        lossD = self.consistency_weight() * nn.BCEWithLogitsLoss()(d_output, d_target)
+        if d_target:
+            lossD += F.cross_entropy(class_output, class_target)
+        return lossD
+
+    def generator_update(self, input: Tensor, z: Tensor, d_target: ones_like | zeros_like, class_target: Optional[Tensor] = None):
+        _, d_output = self.model['discriminator_x_z'](
+            self.model['discriminator_x'](input), self.model['discriminator_z'](z))
+        d_target = d_target(d_output)
+        lossG = self.consistency_weight() * nn.BCEWithLogitsLoss()(d_output, d_target)
+        return lossG
+
     def training_step(self, batch, batch_idx, optimizer_idx):
         (label_input, label_target), (unlabel_input, _) = batch
+        label_z = self.model['generator_z'](label_input)
+        fake_label_z = randn_like(label_z)
+        fake_label_x = self.model['generator_x'](fake_label_z)
+        unlabel_z = self.model['generator_z'](unlabel_input)
+        fake_unlabel_z = randn_like(unlabel_z)
+        fake_unlabel_x = self.model['generator_x'](fake_unlabel_z)
+        if optimizer_idx == 0:
+            lossD = (self.discriminator_update(label_input, label_z, ones_like, label_target) +
+                     self.discriminator_update(fake_label_x, fake_label_z, zeros_like)) / 2.
+            lossD += (self.discriminator_update(unlabel_input, unlabel_z, ones_like) +
+                      self.discriminator_update(fake_unlabel_x, fake_unlabel_z, zeros_like)) / 2.
+            self.log('train/lossD', lossD, on_step=True,
+                     on_epoch=True, logger=True)
+            return lossD
         if optimizer_idx == 1:
-            z = self.model['generator_z'](label_input).detach()
-            classification_output, real_output = self.model['discriminator_x_z'](
-                self.model['discriminator_x'](input), self.model['discriminator_z'](z))
-            lossD = F.cross_entropy(classification_output, label_target)
-            fake_z = randn_like(z)
-            fake_x = self.model['generator_x'](fake_z)
-            _, fake_output = self.model['discriminator_x_z'](self.model['discriminator_x'](
-                fake_x.detach()), self.model['discriminator_z'](fake_z))
-            output = cat((real_output, fake_output), dim=0)
-            label = cat((ones_like(label_target, dtype=float_tensor), zeros_like(
-                label_target, dtype=float_tensor)), dim=0).unsqueeze(1)
-            lossD += self.consistency_weight() * nn.BCEWithLogitsLoss()(output, label)
-            return {'lossD': lossD}
-
-    def train_iteration(self, data: Tuple[Tensor, Tensor]) -> None:
-        input, target = data
-        z = self.model['generator_z'](input).detach()
-        classification_output, real_output = self.model['discriminator_x_z'](
-            self.model['discriminator_x'](input), self.model['discriminator_z'](z))
-        lossD = self.loss_f(classification_output, target)
-
-        fake_z = randn_like(z)
-        fake_x = self.model['generator_x'](fake_z)
-        _, fake_output = self.model['discriminator_x_z'](self.model['discriminator_x'](
-            fake_x.detach()), self.model['discriminator_z'](fake_z))
-
-        output = cat((real_output, fake_output), dim=0)
-        label = cat((ones_like(target, dtype=float_tensor), zeros_like(
-            target, dtype=float_tensor)), dim=0).unsqueeze(1)
-        lossD += self.consistency_weight() * nn.BCEWithLogitsLoss()(output, label)
-        self.optimizerD.zero_grad()
-        lossD.backward()
-        self.optimizerD.step()
-        self.reporter.add('lossD', lossD.detach_())
-
-        _, real_output = self.model['discriminator_x_z'](
-            self.model['discriminator_x'](input), self.model['discriminator_z'](z))
-        _, fake_output = self.model['discriminator_x_z'](
-            self.model['discriminator_x'](fake_x), self.model['discriminator_z'](fake_z))
-        output = cat((real_output, fake_output), dim=0)
-        label = cat((zeros_like(target, dtype=float_tensor), ones_like(
-            target, dtype=float_tensor)), dim=0).unsqueeze(1)
-        lossG = self.consistency_weight() * nn.BCEWithLogitsLoss()(output, label)
-        self.optimizerG.zero_grad()
-        lossG.backward()
-        self.optimizerG.step()
-        self.reporter.add('lossG', lossG.detach_())
-
-    def supervised_iteration(self, data: Tuple[Tensor, Tensor]):
-        input, target = data
-        # According to paper, only discriminator is helpful to supervise task
-        z = self.model['generator_z'](input).detach()
-        output, _ = self.model['discriminator_x_z'](
-            self.model['discriminator_x'](input), self.model['discriminator_z'](z))
-        loss = self.loss_f(output, target)
-        self.optimizerD.zero_grad()
-        loss.backward()
-        self.optimizerD.step()
-        self.reporter.add('supervised_loss', loss.detach_())
-
-    def unsupervised_iteration(self, data: Tuple[Tensor, Tensor]):
-        input, target = data
-        z = self.model['generator_z'](input)
-        _, real_output = self.model['discriminator_x_z'](
-            self.model['discriminator_x'](input), self.model['discriminator_z'](z.detach()))
-        fake_z = randn_like(z)
-        fake_x = self.model['generator_x'](fake_z)
-        _, fake_output = self.model['discriminator_x_z'](self.model['discriminator_x'](
-            fake_x.detach()), self.model['discriminator_z'](fake_z))
-        output = cat((real_output, fake_output), dim=0)
-        label = cat((ones_like(target, dtype=float_tensor), zeros_like(
-            target, dtype=float_tensor)), dim=0).unsqueeze(1)
-        lossD = self.consistency_weight * nn.BCEWithLogitsLoss()(output, label)
-        self.optimizerD.zero_grad()
-        lossD.backward()
-        self.optimizerD.step()
-        # print(lossD.detach())
-        self.reporter.add('lossD', lossD.detach_())
-
-        _, real_output = self.model['discriminator_x_z'](
-            self.model['discriminator_x'](input), self.model['discriminator_z'](z))
-        _, fake_output = self.model['discriminator_x_z'](
-            self.model['discriminator_x'](fake_x), self.model['discriminator_z'](fake_z))
-        output = cat((real_output, fake_output), dim=0)
-        label = cat((zeros_like(target, dtype=float_tensor), ones_like(
-            target, dtype=float_tensor)), dim=0).unsqueeze(1)
-        lossG = self.consistency_weight * nn.BCEWithLogitsLoss()(output, label)
-        self.optimizerG.zero_grad()
-        lossG.backward()
-        self.optimizerG.step()
-        self.reporter.add('lossG', lossG.detach_())
+            lossG = (self.generator_update(label_input, label_z, zeros_like) +
+                     self.generator_update(fake_label_x, fake_label_z, ones_like)) / 2.
+            lossG += (self.generator_update(unlabel_input, unlabel_z, zeros_like) +
+                      self.generator_update(fake_unlabel_x, fake_unlabel_z, ones_like)) / 2.
+            self.log('train/lossG', lossG, on_step=True,
+                     on_epoch=True, logger=True)
+            return lossG
 
     def test_iteration(self, data: Tuple[Tensor, Tensor]):
         input, target = data
@@ -160,20 +109,3 @@ class AdversariallyLearnedInference(SemiBase):
                 'epoch': self.epoch,
                 'use_sync_bn': self._use_sync_bn
                 }
-
-    def load_state_dict(self,
-                        state_dict: Mapping[str, Any]
-                        ) -> None:
-        self.accessible_model.load_state_dict(state_dict['model'])
-        self.optimizer.load_state_dict(state_dict['optim'])
-        self.scheduler.load_state_dict(state_dict['scheduler'])
-        self.scheduler.last_epoch = state_dict['epoch']
-        self._epoch = state_dict['epoch']
-        self._use_sync_bn = state_dict['use_sync_bn']
-
-    def data_preprocess(self,
-                        data: Tuple[Tensor, ...]
-                        ) -> (Tuple[Tensor, ...], int):
-        if isinstance(data[0], list):
-            data = (data[0][0], data[0][1], data[1])
-        return TensorTuple(data).to(self.device, non_blocking=self._cuda_nonblocking), data[0].size(0)

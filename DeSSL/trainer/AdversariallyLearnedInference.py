@@ -25,12 +25,15 @@ class AdversariallyLearnedInference(SemiBase):
 
     def __init__(self,
                  train_and_val_loader: Tuple[DataLoader, DataLoader],
-                 optimizer: dict,
+                 optimizerD: dict,
+                 optimizerG: dict,
                  lr_schedular: dict,
                  model_dict: nn.ModuleDict,
                  consistency_weight: SchedulerBase):
-        super().__init__(train_and_val_loader, optimizer, lr_schedular)
+        super().__init__(train_and_val_loader, None, lr_schedular)
         self.model = model_dict
+        self._optimizerD = optimizerD
+        self._optimizerG = optimizerG
         self.consistency_weight = consistency_weight
 
     def discriminator_update(self, input: Tensor, z: Tensor, d_target: ones_like | zeros_like, class_target: Optional[Tensor] = None):
@@ -76,36 +79,41 @@ class AdversariallyLearnedInference(SemiBase):
                      on_epoch=True, logger=True)
             return lossG
 
-    def test_iteration(self, data: Tuple[Tensor, Tensor]):
-        input, target = data
+    def on_train_batch_end(self,
+                           outputs: STEP_OUTPUT,
+                           batch: Any,
+                           batch_idx: int,
+                           dataloader_idx: int) -> None:
+        self.consistency_weight.step()
+
+    def validation_step(self, batch, batch_idx):
+        input, target = batch
         z = self.model['generator_z'](input)
-        output, _ = self.model['discriminator_x_z'](
+        class_out, _ = self.model['discriminator_x_z'](
             self.model['discriminator_x'](input), self.model['discriminator_z'](z))
-        loss = self.loss_f(output, target)
-        if self._is_debug and torch.isnan(loss):
-            self.logger.warning("loss is NaN")
-        self.reporter.add('accuracy', accuracy(output, target))
-        self.reporter.add('loss', loss.detach_())
-        if self._report_topk is not None:
-            for top_k in self._report_topk:
-                self.reporter.add(
-                    f'accuracy@{top_k}', accuracy(output, target, top_k))
+        loss_val = F.cross_entropy(class_out, target)
+        super().validation_step(loss_val, class_out, target)
 
-    def iteration(self,
-                  data: Tuple[Tensor, Tensor]
-                  ) -> None:
-        if self.is_train:
-            self.train_iteration(data)
-            self.consistency_weight.step()
-        else:
-            self.test_iteration(data)
-
-    def state_dict(self
-                   ) -> Mapping[str, Any]:
-
-        return {'model': self.accessible_model.state_dict(),
-                'optim': self.optimizer.state_dict(),
-                'scheduler': self.scheduler.state_dict(),
-                'epoch': self.epoch,
-                'use_sync_bn': self._use_sync_bn
-                }
+    def configure_optimizers(self):
+        optimizer_fn = self._optimizerD['optimizer']
+        kwargs = {}
+        for k, v in self._optimizerD.items():
+            if k != 'optimizer':
+                kwargs[k] = v
+        optimizerD = optimizer_fn(self.model['discriminator_x'].parameters(
+        ) + self.model['discriminator_z'].parameters() + self.model['discriminator_x_z'].parameters(), **kwargs)
+        optimizer_fn = self._optimizerG['optimizer']
+        kwargs = {}
+        for k, v in self._optimizerG.items():
+            if k != 'optimizer':
+                kwargs[k] = v
+        optimizerG = optimizer_fn(self.model['generator_x'].parameters(
+        ) + self.model['generator_z'].parameters(),  **kwargs)
+        lr_scheduler_fn = self._lr_schedular['lr_scheduler']
+        kwargs = {}
+        for k, v in self._lr_schedular.items():
+            if k != 'lr_scheduler':
+                kwargs[k] = v
+        lrD_scheduler = lr_scheduler_fn(optimizerD, **kwargs)
+        lrG_scheduler = lr_scheduler_fn(optimizerG, **kwargs)
+        return [optimizerD, optimizerG], [lrD_scheduler, lrG_scheduler]

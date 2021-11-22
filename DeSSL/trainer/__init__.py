@@ -7,7 +7,7 @@ while True:
     from .Ladder import Ladder
     from .MeanTeacher import MeanTeacher
     from .InterpolationConsistency import InterpolationConsistency
-    # from .AdversariallyLearnedInference import AdversariallyLearnedInference
+    from .AdversariallyLearnedInference import AdversariallyLearnedInference
     # from .MixMatch import MixMatch
     # from .VariationalAutoEncoder import VariationalAutoEncoder
     break

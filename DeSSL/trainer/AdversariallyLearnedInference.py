@@ -36,7 +36,7 @@ class AdversariallyLearnedInference(SemiBase):
         self._optimizerG = optimizerG
         self.consistency_weight = consistency_weight
 
-    def discriminator_update(self, input: Tensor, z: Tensor, d_target: ones_like | zeros_like, class_target: Optional[Tensor] = None):
+    def discriminator_update(self, input: Tensor, z: Tensor, d_target: Callable, class_target: Optional[Tensor] = None):
         input = input.detach()
         z = z.detach()
         class_output, d_output = self.model['discriminator_x_z'](
@@ -47,7 +47,7 @@ class AdversariallyLearnedInference(SemiBase):
             lossD += F.cross_entropy(class_output, class_target)
         return lossD
 
-    def generator_update(self, input: Tensor, z: Tensor, d_target: ones_like | zeros_like, class_target: Optional[Tensor] = None):
+    def generator_update(self, input: Tensor, z: Tensor, d_target: Callable, class_target: Optional[Tensor] = None):
         _, d_output = self.model['discriminator_x_z'](
             self.model['discriminator_x'](input), self.model['discriminator_z'](z))
         d_target = d_target(d_output)

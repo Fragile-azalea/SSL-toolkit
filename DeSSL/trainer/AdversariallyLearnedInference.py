@@ -28,10 +28,10 @@ class AdversariallyLearnedInference(SemiBase):
                  optimizerD: dict,
                  optimizerG: dict,
                  lr_schedular: dict,
-                 model_dict: nn.ModuleDict,
+                 model_dict: dict,
                  consistency_weight: SchedulerBase):
         super().__init__(train_and_val_loader, None, lr_schedular)
-        self.model = model_dict
+        self.model = nn.ModuleDict(model_dict)
         self._optimizerD = optimizerD
         self._optimizerG = optimizerG
         self.consistency_weight = consistency_weight
@@ -43,11 +43,11 @@ class AdversariallyLearnedInference(SemiBase):
             self.model['discriminator_x'](input), self.model['discriminator_z'](z))
         d_target = d_target(d_output)
         lossD = self.consistency_weight() * nn.BCEWithLogitsLoss()(d_output, d_target)
-        if d_target:
+        if class_target is not None:
             lossD += F.cross_entropy(class_output, class_target)
         return lossD
 
-    def generator_update(self, input: Tensor, z: Tensor, d_target: Callable, class_target: Optional[Tensor] = None):
+    def generator_update(self, input: Tensor, z: Tensor, d_target: Callable):
         _, d_output = self.model['discriminator_x_z'](
             self.model['discriminator_x'](input), self.model['discriminator_z'](z))
         d_target = d_target(d_output)
@@ -100,15 +100,15 @@ class AdversariallyLearnedInference(SemiBase):
         for k, v in self._optimizerD.items():
             if k != 'optimizer':
                 kwargs[k] = v
-        optimizerD = optimizer_fn(self.model['discriminator_x'].parameters(
-        ) + self.model['discriminator_z'].parameters() + self.model['discriminator_x_z'].parameters(), **kwargs)
+        optimizerD = optimizer_fn(list(self.model['discriminator_x'].parameters(
+        )) + list(self.model['discriminator_z'].parameters()) + list(self.model['discriminator_x_z'].parameters()), **kwargs)
         optimizer_fn = self._optimizerG['optimizer']
         kwargs = {}
         for k, v in self._optimizerG.items():
             if k != 'optimizer':
                 kwargs[k] = v
-        optimizerG = optimizer_fn(self.model['generator_x'].parameters(
-        ) + self.model['generator_z'].parameters(),  **kwargs)
+        optimizerG = optimizer_fn(list(self.model['generator_x'].parameters(
+        )) + list(self.model['generator_z'].parameters()),  **kwargs)
         lr_scheduler_fn = self._lr_schedular['lr_scheduler']
         kwargs = {}
         for k, v in self._lr_schedular.items():

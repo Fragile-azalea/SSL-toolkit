@@ -8,6 +8,7 @@ from DeSSL.scheduler import SchedulerBase
 from torch import nn, cat, no_grad, zeros, randperm
 from torch import float as float_tensor
 from .SemiBase import SemiBase
+from DeSSL.transforms import one_hot_mix_loss, mixup_for_one_hot
 from torch.distributions.beta import Beta
 
 __all__ = ['MixMatch']
@@ -20,11 +21,9 @@ class MixMatch(SemiBase):
     Args:
         model: The backbone model of trainer.
         optimizer: The optimizer of trainer.
-        loss_f: The classfication loss of trainer.
         temperature: The temperature of sharpen function. Corresponding to ``T`` in the original paper.
         beta: The hyperparameter of beta function. Corresponding to :math:`\alpha` in the original paper.
         consistency_weight: The consistency schedule of trainer. Corresponding to :math:`\lambda_\mathcal{u}` in the original paper.
-        dataset_type: The type of dataset. Choose ``mix`` or ``split`` corresponding to dataset type.
     '''
 
     def __init__(self,
@@ -57,16 +56,10 @@ class MixMatch(SemiBase):
         '''
         all_target = cat((zeros((batch_size, fake_target.size(1)), device=label_target.get_device(
         )).scatter_(1, label_target.view(-1, 1), 1), fake_target), dim=0)
-
-        rand_data = all_data[randperm(all_data.size(0))]
-        rand_target = all_target[randperm(all_target.size(0))]
-
         alpha = self.beta.sample((all_target.size(0),)).to(
             label_target.get_device())
-        alpha = alpha.max(1 - alpha).view(-1, 1, 1, 1)
-        mix_data = alpha * all_data + (1 - alpha) * rand_data
-        alpha = alpha.view(-1, 1)
-        mix_target = alpha * all_target + (1 - alpha) * rand_target
+        alpha = alpha.max(1 - alpha)
+        mix_data, mix_target = mixup_for_one_hot(all_data, all_target, alpha)
         return mix_data[:batch_size], mix_data[batch_size:].split(batch_size), mix_target[:batch_size], mix_target[batch_size:].split(batch_size)
 
     def training_step(self, batch, batch_idx):
@@ -75,8 +68,7 @@ class MixMatch(SemiBase):
         with no_grad():
             mix_input, mix_unlabel_list, mix_target, mix_fake_target_list = self.generate_mixmatch(
                 label_input, label_target, augment_unlabel_list)
-        output = nn.LogSoftmax(dim=1)(self.model(mix_input))
-        loss_train = -(output * mix_target).sum(dim=1).mean()
+        loss_train = one_hot_mix_loss(self.model(mix_input), mix_target)
         for mix_unlabel, mix_fake_target in zip(mix_unlabel_list, mix_fake_target_list):
             fake_output = self.model(mix_unlabel)
             loss_train += self.consistency_weight() * nn.MSELoss()(fake_output,

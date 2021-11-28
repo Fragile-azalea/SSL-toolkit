@@ -8,6 +8,6 @@ while True:
     from .MeanTeacher import MeanTeacher
     from .InterpolationConsistency import InterpolationConsistency
     from .AdversariallyLearnedInference import AdversariallyLearnedInference
-    # from .MixMatch import MixMatch
+    from .MixMatch import MixMatch
     # from .VariationalAutoEncoder import VariationalAutoEncoder
     break

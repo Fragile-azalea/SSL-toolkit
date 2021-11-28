@@ -1,28 +1,32 @@
 import torch
 from torch import nn
-from typing import Optional, Tuple
+from typing import Optional, Tuple, Union
 from . import TRANSFORM_REGISTRY
 
 
 __all__ = ['mixup_for_one_hot', 'mixup_for_integer',
-           'OneHotMixLoss', 'IntegerMixLoss']
+           'OneHotMixLoss', 'IntegerMixLoss', 'one_hot_mix_loss']
 
 
 def mixup(input: torch.Tensor,
-          gamma: float,
+          gamma: Union[float, torch.Tensor],
           indices: torch.Tensor
           ) -> torch.Tensor:
 
     if input.size(0) != indices.size(0):
         raise RuntimeError("Size mismatch!")
+    if isinstance(gamma, torch.Tensor):
+        shape = [-1, ] + [1, ] * (len(input.shape) - 1)
+        gamma = gamma.view(shape)
+
     perm_input = input[indices]
-    return input.mul(gamma).add(perm_input, alpha=1 - gamma)
+    return input * gamma + perm_input * (1 - gamma)
 
 
 @TRANSFORM_REGISTRY.register
 def mixup_for_one_hot(input: torch.Tensor,
                       target: torch.Tensor,
-                      gamma: float,
+                      gamma: Union[float, torch.Tensor],
                       indices: Optional[torch.Tensor] = None
                       ) -> Tuple[torch.Tensor, torch.Tensor]:
     r'''
@@ -93,6 +97,7 @@ class OneHotMixLoss(nn.Module):
     '''
 
     def __init__(self):
+        self.logSoftmax = nn.LogSoftmax(dim=-1)
         super(OneHotMixLoss, self).__init__()
 
     def forward(self, mix_input: torch.Tensor, mix_target: torch.Tensor) -> torch.Tensor:
@@ -104,8 +109,16 @@ class OneHotMixLoss(nn.Module):
             Returns:
                 The cross entropy loss.
         '''
-        log_prob = nn.functional.log_softmax(mix_input, dim=-1)
+        log_prob = self.logSoftmax(mix_input)
         return (log_prob * mix_target).sum(dim=1).mean().neg()
+
+
+def one_hot_mix_loss(mix_input, mix_target, is_logit=True):
+    if is_logit:
+        log_prob = nn.functional.log_softmax(mix_input, dim=-1)
+    else:
+        log_prob = mix_input.log()
+    return (log_prob * mix_target).sum(dim=1).mean().neg()
 
 
 class IntegerMixLoss(nn.Module):

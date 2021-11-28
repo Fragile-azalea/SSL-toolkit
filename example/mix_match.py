@@ -43,7 +43,7 @@ def main(args):
 
 
 if __name__ == '__main__':
-    parser = loadding_config('config/mean_teacher.yml')
+    parser = loadding_config('config/mix_match.yml')
     parser = pl.Trainer.add_argparse_args(parser)
     parser.set_defaults(profiler="simple", max_epochs=150)
     args = parser.parse_args()

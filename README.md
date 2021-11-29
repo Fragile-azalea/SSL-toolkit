@@ -45,19 +45,24 @@ We have examples in the directory [examples](https://github.com/Fragile-azalea/S
 ```python
 ......
 def main(args):
-    mnist = SEMI_DATASET_REGISTRY(args.dataset)(args.root, 10) # instantiate semi-labeled dataset
+    # Section 1: instantiate semi-labeled dataset
+    mnist = SEMI_DATASET_REGISTRY(args.dataset)(args.root, 10)
+    # Section 2: instantiate dataloader
     train_loader, test_loader, num_classes = mnist(
-        args.batch_size, num_workers=args.num_workers) # instantiate dataloader
-    optimizer = {'optimizer': Adam, 'lr': args.lr_256 * args.batch_size / 256} # define optimizer
+        args.batch_size, num_workers=args.num_workers) 
+    # Section 2: define optimizer
+    optimizer = {'optimizer': Adam, 'lr': args.lr_256 * args.batch_size / 256}
+    # Section 3: define learn rate
     lr_scheduler = {'lr_scheduler': LambdaLR, 'lr_lambda': lambda epoch: epoch *
-                    0.18 + 0.1 if epoch < 5 else (1. if epoch < 50 else 1.5 - epoch / 100)} #define learn rate
-
-    lenet = MODEL_REGISTRY(args.model)(**vars(args)) # instantiate model
+                    0.18 + 0.1 if epoch < 5 else (1. if epoch < 50 else 1.5 - epoch / 100)}
+    # Section 4: instantiate model
+    lenet = MODEL_REGISTRY(args.model)(**vars(args))
+    # Section 5: instantiate trainer
     ladder = Ladder((train_loader, test_loader), optimizer,
-                    lr_scheduler, lenet, args.lam_list) # instantiate trainer
-
+                    lr_scheduler, lenet, args.lam_list)
+    # Section 6: training !
     trainer = pl.Trainer.from_argparse_args(args)
-    trainer.fit(ladder) #training !
+    trainer.fit(ladder)
 ```
 
 In the directory [examples](https://github.com/Fragile-azalea/SSL-toolkit/tree/main/example), you can find all the necessary running scripts to reproduce the benchmarks with specified hyper-parameters.

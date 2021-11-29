@@ -40,13 +40,27 @@ pytest .
 
 You can find the tutorial and API documentation on the website: [DeSSL Documentation](https://ssl-toolkit.readthedocs.io/en/latest/) .
 
-We have examples in the directory `examples`.  A example usage is 
+We have examples in the directory [examples](https://github.com/Fragile-azalea/SSL-toolkit/tree/main/example).  A example usage is 
 
 ```python
-# example code
+......
+def main(args):
+    mnist = SEMI_DATASET_REGISTRY(args.dataset)(args.root, 10) # instantiate semi-labeled dataset
+    train_loader, test_loader, num_classes = mnist(
+        args.batch_size, num_workers=args.num_workers) # instantiate dataloader
+    optimizer = {'optimizer': Adam, 'lr': args.lr_256 * args.batch_size / 256} # define optimizer
+    lr_scheduler = {'lr_scheduler': LambdaLR, 'lr_lambda': lambda epoch: epoch *
+                    0.18 + 0.1 if epoch < 5 else (1. if epoch < 50 else 1.5 - epoch / 100)} #define learn rate
+
+    lenet = MODEL_REGISTRY(args.model)(**vars(args)) # instantiate model
+    ladder = Ladder((train_loader, test_loader), optimizer,
+                    lr_scheduler, lenet, args.lam_list) # instantiate trainer
+
+    trainer = pl.Trainer.from_argparse_args(args)
+    trainer.fit(ladder) #training !
 ```
 
-In the directory `examples`, you can find all the necessary running scripts to reproduce the benchmarks with specified hyper-parameters.
+In the directory [examples](https://github.com/Fragile-azalea/SSL-toolkit/tree/main/example), you can find all the necessary running scripts to reproduce the benchmarks with specified hyper-parameters.
 
 ## Contact
 
@@ -54,11 +68,14 @@ If you have any problem with our code or have some suggestions, including the fu
 
 Xiangli Yang (xlyang@std.uestc.edu.cn)
 
-Xinglin Pan ()
+Xinglin Pan
 
 or describe it in Issues.
 
 ## Citation
+
+Falcon, W., & The PyTorch Lightning team. (2019). PyTorch Lightning (Version 1.4) [Computer software]. https://doi.org/10.5281/zenodo.3828935
+
 
 
 

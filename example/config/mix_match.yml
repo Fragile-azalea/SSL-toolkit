@@ -4,3 +4,5 @@ model: "LeNet5"
 num_workers: 0
 lr_256: 0.005
 num_labels_per_class: 50
+temperature: 0.5
+beta: 0.2

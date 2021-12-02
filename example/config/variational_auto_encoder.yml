@@ -1,12 +1,11 @@
-root: '/home/kp600168/.torch/data/'
-batch_size: 128
-lr_256: 0.002
-epochs: 150
-dataset: 'semi_10_mnist'
+root: "/hdd1/public_data/"
+batch_size: 256
+model: "LeNet5"
 num_workers: 0
-model: 'toynet'
-vae: 'VAE'
-
-hydra:
-  run:
-    dir: ./outputs/${hydra.job.name}/${now:%Y-%m-%d_%H-%M-%S}
+lr_256: 0.005
+num_labels_per_class: 50
+temperature: 0.5
+beta: 0.2
+dataset: semi_mnist
+vae: vae
+model: toyNet 

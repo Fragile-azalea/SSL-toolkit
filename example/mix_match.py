@@ -30,16 +30,16 @@ def main(args):
     lr_scheduler = {'lr_scheduler': LambdaLR,
                     'lr_lambda': lambda epoch: epoch * 0.18 + 0.1 if epoch < 5 else 1.}
     model = MODEL_REGISTRY(args.model)(num_classes=num_classes)
-    mean_teacher = MixMatch((train_loader, test_loader),
-                            optimizer,
-                            lr_scheduler,
-                            model,
-                            0.5,
-                            0.2,
-                            SCHEDULER_REGISTRY('identity')(1.))
+    mix_match = MixMatch((train_loader, test_loader),
+                         optimizer,
+                         lr_scheduler,
+                         model,
+                         args.temperature,
+                         args.beta,
+                         SCHEDULER_REGISTRY('identity')(1.))
 
     trainer = pl.Trainer.from_argparse_args(args)
-    trainer.fit(mean_teacher)
+    trainer.fit(mix_match)
 
 
 if __name__ == '__main__':

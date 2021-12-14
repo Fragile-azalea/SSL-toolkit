@@ -65,7 +65,7 @@ def main(args):
     trainer.fit(ladder)
 ```
 
-In the directory [examples](https://github.com/Fragile-azalea/SSL-toolkit/tree/main/example), you can find all the necessary running scripts to reproduce the benchmarks with specified hyper-parameters.
+In the directory [examples](https://github.com/Fragile-azalea/SSL-toolkit/tree/main/example), you can find all the necessary running scripts to reproduce the benchmarks with specified hyperparameters.
 
 ## Contact
 

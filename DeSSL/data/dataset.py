@@ -1,5 +1,5 @@
 from . import SEMI_DATASET_REGISTRY
-from typing import Callable, Optional, Tuple, List, Union
+from typing import Callable, Optional, Tuple, List, Union, Type
 from torch.utils.data import Dataset, Subset, DataLoader
 from torchvision.datasets import CIFAR10, SVHN, MNIST
 from torchvision import transforms as tf
@@ -87,7 +87,7 @@ class SemiDataset:
         dataset: An instantiable class representing a `Dataset <https://pytorch.org/docs/stable/data.html#torch.utils.data.Dataset>`_.
         num_classes: The number of class.
         label_transform: A function/transform that takes in a labeled image and returns a transformed version. E.g, `transforms.RandomCrop <https://pytorch.org/vision/stable/transforms.html#torchvision.transforms.RandomCrop>`_.
-        unlabel_transform: A function/transform that takes in a unlabeled image and returns a transformed version. E.g, `transforms.RandomCrop <https://pytorch.org/vision/stable/transforms.html#torchvision.transforms.RandomCrop>`_.
+        unlabel_transform: A function/transform that takes in an unlabeled image and returns a transformed version. E.g, `transforms.RandomCrop <https://pytorch.org/vision/stable/transforms.html#torchvision.transforms.RandomCrop>`_.
         test_transform: A function/transform that takes in a test image and returns a transformed version. E.g, `transforms.RandomCrop <https://pytorch.org/vision/stable/transforms.html#torchvision.transforms.RandomCrop>`_.
         norm: Normalization after all transform.
         download:  If true, downloads the dataset from the internet and puts it in root directory. If dataset is already downloaded, it is not downloaded again.
@@ -100,7 +100,7 @@ class SemiDataset:
     def __init__(self,
                  root: str,
                  num_labels_per_class: int,
-                 dataset: Dataset,
+                 dataset: Type[Dataset],
                  num_classes: int,
                  label_transform: Optional[Callable] = None,
                  unlabel_transform: Optional[Callable] = None,

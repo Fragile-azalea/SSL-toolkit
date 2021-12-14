@@ -14,7 +14,7 @@ def loadding_config(cfg_path: str) -> argparse.ArgumentParser:
         cfg_path: The path of yaml file.
 
     Returns:
-        An ArgumentParser that describes hyper parameters.
+        An ArgumentParser that describes hyperparameters.
     '''
     with open(cfg_path, 'r') as fin:
         cfg = yaml.load_all(fin.read(), Loader=yaml.FullLoader)

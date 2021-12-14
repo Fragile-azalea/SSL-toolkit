@@ -3,6 +3,7 @@ import os
 import torch
 from torchvision.datasets import MNIST, FashionMNIST
 from inspect import signature
+from typing import Type
 
 __all__ = [
     'accelerator',
@@ -12,9 +13,9 @@ __all__ = [
 
 
 def accelerator(device: torch.device,
-                mnist: MNIST,
+                mnist: Type[MNIST],
                 mean: float = 0.5,
-                std: float = 1.) -> MNIST:
+                std: float = 1.) -> Type[MNIST]:
     r'''
     An accelerator for MNIST-like dataset.
 
@@ -98,7 +99,7 @@ def accelerated_mnist(*args, **kwargs) -> MNIST:
 
 def accelerated_fashionmnist(*args, **kwargs) -> MNIST:
     r'''
-    The partical function is an initialization of AcceleratedMNIST which has ``mnist=FashionMNIST``, ``mean=0.286``, ``std=0.352`` supplied.
+    The partial function is an initialization of AcceleratedMNIST which has ``mnist=FashionMNIST``, ``mean=0.286``, ``std=0.352`` supplied.
     '''
     name = list(signature(accelerator).parameters.keys())
 

@@ -1,7 +1,16 @@
 from torch import nn
 import torch
 from . import MODEL_REGISTRY
-from math import prod
+from sys import version_info
+if version_info.minor < 8:
+    from typing import List
+    from functools import reduce
+    from operator import mul
+
+    def prod(input: List) -> int:
+        return reduce(mul, input, 1)
+else:
+    from math import prod
 from typing import List
 from functools import partial
 

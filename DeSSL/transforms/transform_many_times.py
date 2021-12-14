@@ -26,7 +26,7 @@ class IdentityAndManyTimes:
         self.n = n
 
     def __call__(self, inp):
-        return self.norm(inp), *(self.transform(inp) for _ in range(self.n))
+        return (self.norm(inp), *(self.transform(inp) for _ in range(self.n)))
 
 
 @TRANSFORM_REGISTRY.register
@@ -55,7 +55,7 @@ class ManyTimes:
             Args:
                 inp: something importance.
         '''
-        return *(self.transform(inp) for _ in range(self.n)),
+        return (*(self.transform(inp) for _ in range(self.n)),)
 
     def __str__(self):
         return 'transform:%s\ntimes:%d' % (str(self.transform), self.n)

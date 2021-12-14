@@ -190,9 +190,10 @@ class SemiDataset:
                 num_iteration += 1
         train_loader = SemiDataLoader(
             label_loader, unlabel_loader, num_iteration)
-        ret = [train_loader, test_loader]
         if return_num_classes:
-            ret.append(self.num_classes)
+            ret = (train_loader, test_loader, self.num_classes)
+        else:
+            ret = (train_loader, test_loader)
         return ret
 
     __call__ = get_dataloader

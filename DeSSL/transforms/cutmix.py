@@ -50,7 +50,7 @@ def cutmix_for_one_hot(input: torch.Tensor,
         indices: indices[i] denotes the cutmix target of data i. If ``indices=None``, then cutmix generates indices by torch.perm. 
 
     Example:
-        >>> from allinone.transforms import cutmix_for_one_hot
+        >>> from DeSSL.transforms import cutmix_for_one_hot
         >>> input = torch.randn([256, 3, 64, 64])
         >>> target = torch.rand([256, 10])
         >>> gamma = 0.995
@@ -84,7 +84,7 @@ def cutmix_for_integer(input: torch.Tensor,
         indices: indices[i] denotes the cutmix target of data i. If ``indices=None``, then cutmix generates indices by torch.perm. 
 
     Example:
-        >>> from allinone.transforms import cutmix_for_integer
+        >>> from DeSSL.transforms import cutmix_for_integer
         >>> input = torch.randn([256, 3, 64, 64])
         >>> target = torch.rand([256, 10]).argmax(dim=-1)
         >>> gamma = 0.995

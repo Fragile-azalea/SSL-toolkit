@@ -73,9 +73,9 @@ def accelerator(device: torch.device,
     return accelerated_mnist
 
 
-def accelerated_mnist(*args, **kwargs) -> MNIST:
+def accelerated_mnist(*args, **kwargs) -> Type[MNIST]:
     r'''
-    The partical function is an initialization of AcceleratedMNIST which has ``mnist=MNIST``, ``mean=0.1307``, ``std=0.3081`` supplied.
+    The partial function is an initialization of AcceleratedMNIST which has ``mnist=MNIST``, ``mean=0.1307``, ``std=0.3081`` supplied.
 
     Example:
         >>> from DeSSL.data import accelerated_mnist
@@ -97,7 +97,7 @@ def accelerated_mnist(*args, **kwargs) -> MNIST:
     return accelerator(**kwargs)
 
 
-def accelerated_fashionmnist(*args, **kwargs) -> MNIST:
+def accelerated_fashionmnist(*args, **kwargs) -> Type[MNIST]:
     r'''
     The partial function is an initialization of AcceleratedMNIST which has ``mnist=FashionMNIST``, ``mean=0.286``, ``std=0.352`` supplied.
     '''

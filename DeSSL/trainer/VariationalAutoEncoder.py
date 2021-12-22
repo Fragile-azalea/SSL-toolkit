@@ -24,14 +24,14 @@ def _loss(output, target, mu, logvar):
 
 @ SEMI_TRAINER_REGISTRY.register
 class VariationalAutoEncoder(SemiBase):
-    r'''
+    r"""
     Reproduced Code based on `Semi-Supervised Learning with Deep Generative Models <https://arxiv.org/abs/1406.5298>`_.
     Args:
         encoder_model: An inference model to classify.
         vae_model: An vae model to reconstruct images as an auxiliary task.
         optimizer: The optimizer of trainer.
         loss_f: The classfication loss of trainer.
-    '''
+    """
 
     def __init__(self,
                  train_and_val_loader: Tuple[DataLoader, DataLoader],

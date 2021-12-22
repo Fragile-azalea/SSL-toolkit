@@ -18,9 +18,9 @@ def reset_all_parameters(module):
 
 @MODEL_REGISTRY.register
 class Generator_z(nn.Module):
-    '''
+    """
     The Generator of z for CIFAR10 reported by `Adversarially Learned Inference <https://arxiv.org/pdf/1606.00704>`_.
-    '''
+    """
 
     def __init__(self):
         super(Generator_z, self).__init__()
@@ -53,9 +53,9 @@ class Generator_z(nn.Module):
 
 @MODEL_REGISTRY.register
 class Generator_x(nn.Module):
-    '''
+    """
     The Generator of x for CIFAR10 reported by `Adversarially Learned Inference <https://arxiv.org/pdf/1606.00704>`_.
-    '''
+    """
 
     def __init__(self):
         super(Generator_x, self).__init__()
@@ -104,9 +104,9 @@ class Maxout(nn.Module):
 
 @MODEL_REGISTRY.register
 class Discriminator_x(nn.Module):
-    '''
+    """
     The Discriminator of x for CIFAR10 reported by `Adversarially Learned Inference <https://arxiv.org/pdf/1606.00704>`_.
-    '''
+    """
 
     def __init__(self):
         super(Discriminator_x, self).__init__()
@@ -130,9 +130,9 @@ class Discriminator_x(nn.Module):
 
 @MODEL_REGISTRY.register
 class Discriminator_z(nn.Module):
-    '''
+    """
     The Discriminator of z for CIFAR10 reported by `Adversarially Learned Inference <https://arxiv.org/pdf/1606.00704>`_.
-    '''
+    """
 
     def __init__(self):
         super(Discriminator_z, self).__init__()
@@ -150,9 +150,9 @@ class Discriminator_z(nn.Module):
 
 @MODEL_REGISTRY.register
 class Discriminator_x_z(nn.Module):
-    '''
+    """
     The Discriminator of x and z for CIFAR10 reported by `Adversarially Learned Inference <https://arxiv.org/pdf/1606.00704>`_.
-    '''
+    """
 
     def __init__(self, num_classes: int = 10):
         super(Discriminator_x_z, self).__init__()

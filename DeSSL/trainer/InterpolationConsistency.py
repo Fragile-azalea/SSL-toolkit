@@ -21,7 +21,7 @@ def _update_teacher(student, teacher, alpha):
 
 @SEMI_TRAINER_REGISTRY.register
 class InterpolationConsistency(SemiBase):
-    r'''
+    r"""
     Reproduced trainer based on `Interpolation Consistency Training for Semi-Supervised Learning <https://arxiv.org/abs/1903.03825>`_.
     Args:
         model: The backbone model of trainer.
@@ -30,7 +30,7 @@ class InterpolationConsistency(SemiBase):
         consistency_weight: The consistency schedule of trainer. Corresponding to :math:`w(t)` in the original paper.
         alpha: The EMA schedule of trainer. Corresponding to :math:`\alpha` in the original paper.
         beta: The hyperparameter of beta function. Corresponding to :math:`\alpha` in the original paper.
-    '''
+    """
 
     def __init__(self,
                  train_and_val_loader: Tuple[DataLoader, DataLoader],

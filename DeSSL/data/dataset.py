@@ -1,23 +1,22 @@
+from torchvision import datasets, transforms
 from . import SEMI_DATASET_REGISTRY
 from typing import Callable, Optional, Tuple, List, Union, Type
 from torch.utils.data import Dataset, Subset, DataLoader
-from torchvision.datasets import CIFAR10, SVHN, MNIST
+from torchvision.datasets import CIFAR10, SVHN, MNIST, ImageFolder
 from torchvision import transforms as tf
 from torch import Tensor
 import numpy as np
 from inspect import signature
 
-__all__ = ['SemiDataset', 'SemiDataLoader',
-           'semi_cifar10', 'semi_svhn', 'semi_mnist']
+__all__ = ['SemiDataset', 'SemiDataLoader', 'semi_cifar10',
+           'semi_svhn', 'semi_mnist', 'semi_imagenet']
 
 
 def get_label_list(dataset: Dataset) -> (np.array):
-    label_list = []
-    for _, label in dataset:
-        if isinstance(label, Tensor):
-            label = label.item()
-        label_list.append(label)
-    label_list = np.array(label_list)
+    if isinstance(datasets.targets, Tensor) and datasets.targets.is_cuda:
+        label_list = np.array(datasets.targets.cpu())
+    else:
+        label_list = np.array(datasets.targets)
     return label_list
 
 
@@ -69,7 +68,7 @@ class SemiDataLoader:
 
 
 class SemiDataset:
-    r'''
+    r"""
     A class representing a semi-supervised dataset.
 
     Example:
@@ -95,7 +94,7 @@ class SemiDataset:
 
     Returns:
         A semi-supervised dataset.
-    '''
+    """
 
     def __init__(self,
                  root: str,
@@ -116,15 +115,23 @@ class SemiDataset:
         unlabel_transform = compose_transform_and_norm(unlabel_transform, norm)
         test_transform = compose_transform_and_norm(test_transform, norm)
 
-        base_dataset = dataset(
-            root, transform=label_transform, download=download)  # instantiate train dataset
+        # instantiate train dataset
+        if ImageFolder == dataset:
+            base_dataset = dataset(root + "/train", transforms=label_transform)
+        else:
+            base_dataset = dataset(
+                root, transform=label_transform, download=download)
         label_list = get_label_list(base_dataset)  # get indices list
         label_indices, unlabel_indices = get_label_and_unlabel_indices(
             label_list, num_labels_per_class, num_classes)  # sample labeled data from train data
         # instantiate labeled dataset
         self.label_dataset = Subset(base_dataset, label_indices)
         self.length = len(label_indices) + len(unlabel_indices)
-        unlabel_base_dataset = dataset(root, transform=unlabel_transform)
+        if ImageFolder == dataset:
+            unlabel_base_dataset = dataset(
+                root + "/train", transforms=unlabel_transform)
+        else:
+            unlabel_base_dataset = dataset(root, transform=unlabel_transform)
         unlabel_base_dataset.targets = [-100] * self.length
         # instantiate unlabeled dataset
         if include_labeled_data:
@@ -133,8 +140,12 @@ class SemiDataset:
             self.unlabel_dataset = Subset(
                 unlabel_base_dataset, unlabel_indices)
         # instantiate test dataset
-        self.test_dataset = dataset(
-            root, train=False, transform=test_transform, download=download)
+        if ImageFolder == dataset:
+            self.test_dataset = dataset(
+                root + "/val", transforms=test_transform)
+        else:
+            self.test_dataset = dataset(
+                root, train=False, transform=test_transform, download=download)
         self.num_classes = num_classes
 
     def get_dataloader(self,
@@ -147,7 +158,7 @@ class SemiDataset:
                        pin_memory: bool = True,
                        drop_last: bool = False,
                        return_num_classes: bool = True) -> Union[Tuple[SemiDataLoader, DataLoader], Tuple[SemiDataLoader, DataLoader, int]]:
-        r'''
+        r"""
         Get Dataloader.
 
         Args:
@@ -163,7 +174,7 @@ class SemiDataset:
 
         Returns:
             A semi-supervised training dataloader and a testing dataloader.
-        '''
+        """
         shared_dict = {'num_workers': num_workers,
                        'pin_memory': pin_memory,
                        'drop_last': drop_last
@@ -201,8 +212,8 @@ class SemiDataset:
 
 @SEMI_DATASET_REGISTRY.register
 def semi_svhn(*args, **kwargs) -> SemiDataset:
-    r'''
-    The partical function is an initialization of SemiDataset which has ``dataset=SVHN``, ``num_classes=10``, ``norm=tf.Compose([tf.ToTensor(), tf.Normalize((0.4390, 0.4443, 0.4692), (0.1189, 0.1222, 0.1049))])`` supplied.
+    r"""
+    The partial function is an initialization of SemiDataset which has ``dataset=SVHN``, ``num_classes=10``, ``norm=tf.Compose([tf.ToTensor(), tf.Normalize((0.4390, 0.4443, 0.4692), (0.1189, 0.1222, 0.1049))])`` supplied.
 
     Example:
         >>> from DeSSL.data import semi_cifar10
@@ -216,7 +227,7 @@ def semi_svhn(*args, **kwargs) -> SemiDataset:
         >>> # initialize a semi CIFAR10 with 1000 labeled images for each class.
         >>> semi_cifar = SEMI_DATASET_REGISTRY('semi_cifar10')(root, 1000)
 
-    '''
+    """
     name = list(signature(SemiDataset.__init__).parameters.keys())[1:]
 
     kwargs = {**dict(zip(name, args)),
@@ -230,9 +241,9 @@ def semi_svhn(*args, **kwargs) -> SemiDataset:
 
 @SEMI_DATASET_REGISTRY.register
 def semi_cifar10(*args, **kwargs) -> SemiDataset:
-    r'''
-    The partical function is an initialization of SemiDataset which has ``dataset=CIFAR10``, ``num_classes=10``, ``norm=tf.Compose([tf.ToTensor(), tf.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))])`` supplied.
-    '''
+    r"""
+    The partial function is an initialization of SemiDataset which has ``dataset=CIFAR10``, ``num_classes=10``, ``norm=tf.Compose([tf.ToTensor(), tf.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))])`` supplied.
+    """
     name = list(signature(SemiDataset.__init__).parameters.keys())[1:]
 
     kwargs = {**dict(zip(name, args)),
@@ -246,9 +257,9 @@ def semi_cifar10(*args, **kwargs) -> SemiDataset:
 
 @SEMI_DATASET_REGISTRY.register
 def semi_mnist(*args, **kwargs) -> SemiDataset:
-    r'''
-    The partical function is an initialization of SemiDataset which has ``dataset=MNIST``, ``num_classes=10``, ``norm=tf.Compose([tf.ToTensor(), tf.Normalize((0.1307), (0.3081))])`` supplied.
-    '''
+    r"""
+    The partial function is an initialization of SemiDataset which has ``dataset=MNIST``, ``num_classes=10``, ``norm=tf.Compose([tf.ToTensor(), tf.Normalize((0.1307), (0.3081))])`` supplied.
+    """
     name = list(signature(SemiDataset.__init__).parameters.keys())[1:]
 
     kwargs = {**dict(zip(name, args)),
@@ -256,5 +267,21 @@ def semi_mnist(*args, **kwargs) -> SemiDataset:
               'dataset': MNIST,
               'num_classes': 10,
               'norm': tf.Compose([tf.ToTensor(), tf.Normalize((0.1307), (0.3081))]),
+              }
+    return SemiDataset(**kwargs)
+
+
+@SEMI_DATASET_REGISTRY.register
+def semi_imagenet(*args, **kwargs) -> SemiDataset:
+    r"""
+    The partial function is an initialization of SemiDataset which has ``dataset=ImageFolder``, ``num_classes=1000``, ``norm=tf.Compose([tf.ToTensor(), tf.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))])`` supplied.
+    """
+    name = list(signature(SemiDataset.__init__).parameters.keys())[1:]
+
+    kwargs = {**dict(zip(name, args)),
+              **kwargs,
+              'dataset': ImageFolder,
+              'num_classes': 1000,
+              'norm': tf.Compose([tf.ToTensor(), tf.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))]),
               }
     return SemiDataset(**kwargs)

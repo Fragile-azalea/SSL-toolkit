@@ -9,61 +9,61 @@ __all__ = ['resnet18', 'resnet34', 'resnet50', 'resnet101', 'resnet152',
 
 @MODEL_REGISTRY.register
 def resnet18(pretrained: bool = False, progress: bool = True, **kwargs: Any) -> ResNet:
-    '''
+    """
     ResNet-18 model from "Deep Residual Learning for Image Recognition" <https://arxiv.org/pdf/1512.03385.pdf>_.
 
     Args:
         pretrained: If True, returns a model pre-trained on ImageNet
         progress: If True, displays a progress bar of the download to stderr
-    '''
+    """
     return models.resnet18(pretrained, progress, **kwargs)
 
 
 @MODEL_REGISTRY.register
 def resnet34(pretrained: bool = False, progress: bool = True, **kwargs: Any) -> ResNet:
-    '''
+    """
     ResNet-34 model from "Deep Residual Learning for Image Recognition" <https://arxiv.org/pdf/1512.03385.pdf>_.
 
     Args:
         pretrained: If True, returns a model pre-trained on ImageNet
         progress: If True, displays a progress bar of the download to stderr
-    '''
+    """
     return models.resnet34(pretrained, progress, **kwargs)
 
 
 @MODEL_REGISTRY.register
 def resnet50(pretrained: bool = False, progress: bool = True, **kwargs: Any) -> ResNet:
-    '''
+    """
     ResNet-50 model from "Deep Residual Learning for Image Recognition" <https://arxiv.org/pdf/1512.03385.pdf>_.
 
     Args:
         pretrained: If True, returns a model pre-trained on ImageNet
         progress: If True, displays a progress bar of the download to stderr
-    '''
+    """
     return models.resnet50(pretrained, progress, **kwargs)
 
 
 @MODEL_REGISTRY.register
 def resnet101(pretrained: bool = False, progress: bool = True, **kwargs: Any) -> ResNet:
-    '''
+    """
     ResNet-101 model from "Deep Residual Learning for Image Recognition" <https://arxiv.org/pdf/1512.03385.pdf>_.
 
     Args:
         pretrained: If True, returns a model pre-trained on ImageNet
         progress: If True, displays a progress bar of the download to stderr
-    '''
+    """
     return models.resnet101(pretrained, progress, **kwargs)
 
 
 @MODEL_REGISTRY.register
 def resnet152(pretrained: bool = False, progress: bool = True, **kwargs: Any) -> ResNet:
-    '''
+    """
     ResNet-152 model from "Deep Residual Learning for Image Recognition" <https://arxiv.org/pdf/1512.03385.pdf>_.
 
     Args:
         pretrained: If True, returns a model pre-trained on ImageNet
         progress: If True, displays a progress bar of the download to stderr
-    '''
+    """
     return models.resnet152(pretrained, progress, **kwargs)
 
 

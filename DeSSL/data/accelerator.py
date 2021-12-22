@@ -16,7 +16,7 @@ def accelerator(device: torch.device,
                 mnist: Type[MNIST],
                 mean: float = 0.5,
                 std: float = 1.) -> Type[MNIST]:
-    r'''
+    r"""
     An accelerator for MNIST-like dataset.
 
     Note:
@@ -36,7 +36,7 @@ def accelerator(device: torch.device,
 
     Returns:
         An AcceleratedMNIST class.
-    '''
+    """
     accelerated_mnist = type('Accelerated' + mnist.__name__, (mnist,), {})
 
     def __init__(self, *args, **kwargs):
@@ -74,7 +74,7 @@ def accelerator(device: torch.device,
 
 
 def accelerated_mnist(*args, **kwargs) -> Type[MNIST]:
-    r'''
+    r"""
     The partial function is an initialization of AcceleratedMNIST which has ``mnist=MNIST``, ``mean=0.1307``, ``std=0.3081`` supplied.
 
     Example:
@@ -85,7 +85,7 @@ def accelerated_mnist(*args, **kwargs) -> Type[MNIST]:
 
         >>> from DeSSL.data import ACCELERATOR_REGISTRY
         >>> FastMNIST = ACCELERATOR_REGISTRY('mnist')(torch.device('cuda:0'))
-    '''
+    """
     name = list(signature(accelerator).parameters.keys())
 
     kwargs = {**dict(zip(name, args)),
@@ -98,9 +98,9 @@ def accelerated_mnist(*args, **kwargs) -> Type[MNIST]:
 
 
 def accelerated_fashionmnist(*args, **kwargs) -> Type[MNIST]:
-    r'''
+    r"""
     The partial function is an initialization of AcceleratedMNIST which has ``mnist=FashionMNIST``, ``mean=0.286``, ``std=0.352`` supplied.
-    '''
+    """
     name = list(signature(accelerator).parameters.keys())
 
     kwargs = {**dict(zip(name, args)),

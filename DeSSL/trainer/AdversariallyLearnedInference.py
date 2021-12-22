@@ -14,14 +14,14 @@ __all__ = ['InterpolationConsistency']
 
 @SEMI_TRAINER_REGISTRY.register
 class AdversariallyLearnedInference(SemiBase):
-    r'''
+    r"""
     Reproduced trainer based on `Adversarially Learned Inference <https://arxiv.org/pdf/1606.00704>`_.
     Args:
         model_dict: The ``generator_x``, ``generator_z``, ``discriminator_x``, ``discriminator_z``, and ``discriminator_x_z`` model of trainer.
         optimizer: The optimizer of trainer. 
         loss_f: The classfication loss of trainer.
         consistency_weight: The consistency schedule of trainer. 
-    '''
+    """
 
     def __init__(self,
                  train_and_val_loader: Tuple[DataLoader, DataLoader],

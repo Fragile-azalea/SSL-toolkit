@@ -10,7 +10,7 @@ __all__ = ['TensorCutout', 'ImageCutout']
 
 @TRANSFORM_REGISTRY.register
 class TensorCutout():
-    r'''
+    r"""
     `Cutout <https://arxiv.org/abs/1708.04552>`_ Augmentation for Tensor.
 
     Args:
@@ -22,7 +22,7 @@ class TensorCutout():
 
     Returns:
         An augmented tensor.
-    '''
+    """
 
     def __init__(self, length: int):
         self.length = length
@@ -47,7 +47,7 @@ class TensorCutout():
 
 @TRANSFORM_REGISTRY.register
 class ImageCutout():
-    r'''
+    r"""
     `Cutout <https://arxiv.org/abs/1708.04552>`_ Augmentation for Image.
 
     Args:
@@ -60,7 +60,7 @@ class ImageCutout():
 
     Returns:
         An augmented image.
-    '''
+    """
 
     def __init__(self, length: int, color: Tuple[int, int, int] = (127, 127, 127)):
         self.length = length

@@ -17,12 +17,12 @@ from functools import partial
 
 @MODEL_REGISTRY.register
 class ToyNet(nn.Module):
-    '''
+    """
     The toy NN for measuring the performance of the algorithms on MNIST.
 
     Args:
         num_classes: The number of categories.
-    '''
+    """
 
     def __init__(self, num_classes: int):
         super(ToyNet, self).__init__()
@@ -53,13 +53,13 @@ def batch_normalization(batch, return_mean_and_std=False):
 
 @MODEL_REGISTRY.register
 class Ladder_MLP(nn.Module):
-    '''
+    """
     Args:
         input_shape: The shape of inputs.
         num_neurons: The list of neurons.
         sigma_noise: The list of the :math:`\sigma` of gaussian noise.
         input_sigma_noise: THe :math:`\sigma` of noise added to supervised learning path.
-    '''
+    """
 
     def __init__(
         self,
@@ -180,7 +180,7 @@ class Ladder_MLP(nn.Module):
                                                                         self.a8[::-1],
                                                                         self.a9[::-1]):
             input = net(input)
-            '''Normalization'''
+            """Normalization"""
             input = batch_normalization(input)
             mu = a0 * torch.sigmoid(a1 * input + a2) + a3 * input + a4
             std = a5 * torch.sigmoid(a6 * input + a7) + a8 * input + a9

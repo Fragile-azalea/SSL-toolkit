@@ -6,9 +6,9 @@ from . import MODEL_REGISTRY
 
 @MODEL_REGISTRY.register
 class VAE(nn.Module):
-    '''
+    """
     Based on `VAE <https://github.com/pytorch/examples/blob/master/vae/main.py>`_.
-    '''
+    """
 
     def __init__(self):
         super(VAE, self).__init__()

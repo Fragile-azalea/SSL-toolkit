@@ -19,14 +19,14 @@ def _update_teacher(student, teacher, alpha):
 
 @SEMI_TRAINER_REGISTRY.register
 class MeanTeacher(SemiBase):
-    r'''
+    r"""
     Reproduced trainer based on `Mean teachers are better role models: Weight-averaged consistency targets improve semi-supervised deep learning results <https://arxiv.org/abs/1703.01780>`_.
 
     Args:
         model: The backbone model of trainer.
         consistency_weight: The consistency schedule of trainer. Corresponding to ``consistency cost coefficient`` in the original paper.
         alpha: The EMA schedule of trainer. Corresponding to :math:`\alpha` in the original paper.
-    '''
+    """
 
     def __init__(self,
                  train_and_val_loader: Tuple[DataLoader, DataLoader],

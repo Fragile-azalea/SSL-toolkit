@@ -15,21 +15,21 @@ __all__ = [
 
 
 class SchedulerBase:
-    '''
+    """
     The scheduler works for providing dyniamcal (or static) hyperparmeters. (e.g., learning rate) 
-    '''
+    """
 
     def step(self) -> None:
-        '''
+        """
             Update Scheduler.
-        '''
+        """
         self.epoch += 1
 
 
 @SCHEDULER_REGISTRY.register
 @dataclass
 class Linear(SchedulerBase):
-    '''
+    """
     The Linear scheduler.
 
     Args:
@@ -39,7 +39,7 @@ class Linear(SchedulerBase):
 
     Returns:
         initial + speed * epoch
-    '''
+    """
     initial: float = 0.
     speed: float = 0.
     epoch: int = 0
@@ -51,7 +51,7 @@ class Linear(SchedulerBase):
 @SCHEDULER_REGISTRY.register
 @dataclass
 class Identity(SchedulerBase):
-    '''
+    """
     The static identity cheduler.
 
     Args:
@@ -60,7 +60,7 @@ class Identity(SchedulerBase):
 
     Returns:
         value
-    '''
+    """
     value: float = 0
     epoch: int = 0
 
@@ -71,7 +71,7 @@ class Identity(SchedulerBase):
 @SCHEDULER_REGISTRY.register
 @dataclass
 class GaussianKernel(SchedulerBase):
-    r'''
+    r"""
     The gaussian kernel scheduler.
 
     Args:
@@ -81,7 +81,7 @@ class GaussianKernel(SchedulerBase):
 
     Returns:
         :math:`exp \left( {\frac{(\text{epoch} - \mu) ^ 2}{\sigma}} \right)`
-    '''
+    """
     mu: float = 0.
     sigma: float = 1.
     epoch: int = 0
@@ -93,7 +93,7 @@ class GaussianKernel(SchedulerBase):
 @SCHEDULER_REGISTRY.register
 @dataclass
 class Lambda(SchedulerBase):
-    r'''
+    r"""
     The Lambda scheduler.
 
     Args:
@@ -102,7 +102,7 @@ class Lambda(SchedulerBase):
 
     Returns:
         lamb(epoch)
-    '''
+    """
     lamb: Callable
     epoch: int = 0
 

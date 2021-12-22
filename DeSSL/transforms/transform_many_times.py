@@ -8,14 +8,14 @@ __all__ = ['ManyTimes', 'Twice']
 
 @TRANSFORM_REGISTRY.register
 class IdentityAndManyTimes:
-    '''
+    """
     This class changes an image to a normalized tensor image and a series of augmented image.
 
     Args:
         transform: A list of image augmentation.
         norm: A list of image normalization.
         n: The times that the transform perform.
-    '''
+    """
 
     def __init__(self,
                  transform: list,
@@ -31,7 +31,7 @@ class IdentityAndManyTimes:
 
 @TRANSFORM_REGISTRY.register
 class ManyTimes:
-    '''
+    """
     This class transfers an image to a series of augmented images.
 
     Args:
@@ -40,7 +40,7 @@ class ManyTimes:
 
     Returns:
         The tuple of augmented images.
-    '''
+    """
 
     def __init__(self,
                  transform: Callable,
@@ -49,12 +49,12 @@ class ManyTimes:
         self.n = n
 
     def __call__(self, inp) -> tuple:
-        '''
+        """
             Call of this class.
 
             Args:
                 inp: something importance.
-        '''
+        """
         return (*(self.transform(inp) for _ in range(self.n)),)
 
     def __str__(self):
@@ -63,7 +63,7 @@ class ManyTimes:
 
 @TRANSFORM_REGISTRY.register
 def Twice(transform: Callable) -> ManyTimes:
-    '''
+    """
     The easy call method of ManyTimes(transform, 2).
 
     Args:
@@ -71,5 +71,5 @@ def Twice(transform: Callable) -> ManyTimes:
 
     Returns:
         The class of ManyTimes(transform, 2).
-    '''
+    """
     return ManyTimes(transform, 2)

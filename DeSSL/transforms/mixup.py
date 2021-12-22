@@ -29,7 +29,7 @@ def mixup_for_one_hot(input: torch.Tensor,
                       gamma: Union[float, torch.Tensor],
                       indices: Optional[torch.Tensor] = None
                       ) -> Tuple[torch.Tensor, torch.Tensor]:
-    r'''
+    r"""
     `Mixup <https://arxiv.org/abs/1710.09412>`_ Augmentation for Tensor.
 
     Args:
@@ -47,7 +47,7 @@ def mixup_for_one_hot(input: torch.Tensor,
 
     Returns:
         Mixed tensor and mixed targets.
-    '''
+    """
 
     if input.device != target.device:
         raise RuntimeError("Device mismatch!")
@@ -63,7 +63,7 @@ def mixup_for_integer(input: torch.Tensor,
                       gamma: float,
                       indices: Optional[torch.Tensor] = None
                       ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
-    r'''
+    r"""
     `Mixup <https://arxiv.org/abs/1710.09412>`_ Augmentation for Tensor.
 
     Args:
@@ -81,7 +81,7 @@ def mixup_for_integer(input: torch.Tensor,
 
     Returns:
         Mixed tensor, targets and perm_targets.
-    '''
+    """
     if input.device != target.device:
         raise RuntimeError("Device mismatch!")
     if indices is None:
@@ -91,24 +91,24 @@ def mixup_for_integer(input: torch.Tensor,
 
 
 class OneHotMixLoss(nn.Module):
-    r'''
+    r"""
     Creates a criterion that measures the cross entropy loss between each element in
     the input and **one-hot** target.
-    '''
+    """
 
     def __init__(self):
-        self.logSoftmax = nn.LogSoftmax(dim=-1)
         super(OneHotMixLoss, self).__init__()
+        self.logSoftmax = nn.LogSoftmax(dim=-1)
 
     def forward(self, mix_input: torch.Tensor, mix_target: torch.Tensor) -> torch.Tensor:
-        r'''
+        r"""
             Args:
                 mix_input: The input tensor.
                 mix_target: The target tensor.
 
             Returns:
                 The cross entropy loss.
-        '''
+        """
         log_prob = self.logSoftmax(mix_input)
         return (log_prob * mix_target).sum(dim=1).mean().neg()
 
@@ -122,17 +122,17 @@ def one_hot_mix_loss(mix_input, mix_target, is_logit=True):
 
 
 class IntegerMixLoss(nn.Module):
-    r'''
+    r"""
     Creates a criterion that measures the cross entropy loss between each element in
     the input and **integer** target.
-    '''
+    """
 
     def __init__(self):
         super(IntegerMixLoss, self).__init__()
         self.crl = nn.CrossEntropyLoss()
 
     def forward(self, mix_input: torch.Tensor, gamma: float, target: torch.LongTensor, perm_target: torch.LongTensor):
-        r'''
+        r"""
             Args:
                 mix_input: The input tensor.
                 gamma: The interpolation coefficient.
@@ -141,5 +141,5 @@ class IntegerMixLoss(nn.Module):
 
             Returns:
                 The cross entropy loss.
-        '''
+        """
         return gamma * self.crl(mix_input, target) + (1. - gamma) * self.crl(mix_input, perm_target)

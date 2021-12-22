@@ -7,7 +7,7 @@ __all__ = ['loadding_config']
 
 
 def loadding_config(cfg_path: str) -> argparse.ArgumentParser:
-    '''
+    """
     load a config from Yaml file.
 
     Args:
@@ -15,7 +15,7 @@ def loadding_config(cfg_path: str) -> argparse.ArgumentParser:
 
     Returns:
         An ArgumentParser that describes hyperparameters.
-    '''
+    """
     with open(cfg_path, 'r') as fin:
         cfg = yaml.load_all(fin.read(), Loader=yaml.FullLoader)
         cfg = [x for x in cfg][0]

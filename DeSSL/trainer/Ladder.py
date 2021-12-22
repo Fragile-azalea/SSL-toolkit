@@ -9,13 +9,13 @@ from . import SemiBase
 
 @SEMI_TRAINER_REGISTRY.register
 class Ladder(SemiBase):
-    r'''
+    r"""
     Reproduced trainer based on `Semi-Supervised Learning with Ladder Networks <https://arxiv.org/abs/1507.02672>`_.
 
     Args:
         model: The backbone model of trainer.
         lam_list: The order list of regularization coefficient, which describes how important to recovery signals.  Corresponding to :math:`\lambda^i` in the original paper.
-    '''
+    """
 
     def __init__(self,
                  train_and_val_loader: Tuple[DataLoader, DataLoader],

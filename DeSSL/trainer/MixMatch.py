@@ -16,7 +16,7 @@ __all__ = ['MixMatch']
 
 @SEMI_TRAINER_REGISTRY.register
 class MixMatch(SemiBase):
-    r'''
+    r"""
     Reproduced trainer based on `MixMatch: A Holistic Approach to Semi-Supervised Learning <https://arxiv.org/abs/1905.02249>`_.
     Args:
         model: The backbone model of trainer.
@@ -24,7 +24,7 @@ class MixMatch(SemiBase):
         temperature: The temperature of sharpen function. Corresponding to ``T`` in the original paper.
         beta: The hyperparameter of beta function. Corresponding to :math:`\alpha` in the original paper.
         consistency_weight: The consistency schedule of trainer. Corresponding to :math:`\lambda_\mathcal{u}` in the original paper.
-    '''
+    """
 
     def __init__(self,
                  train_and_val_loader: Tuple[DataLoader, DataLoader],
@@ -50,10 +50,10 @@ class MixMatch(SemiBase):
         fake_target = fake_target.repeat(num_list, 1)
 
         all_data = cat((label_data, *augment_unlabel_list), dim=0)
-        '''
+        """
         change one-hot label_target to (batch_size, num_classes)
         combine one-hot label_target and fake_target
-        '''
+        """
         all_target = cat((zeros((batch_size, fake_target.size(1)), device=label_target.get_device(
         )).scatter_(1, label_target.view(-1, 1), 1), fake_target), dim=0)
         alpha = self.beta.sample((all_target.size(0),)).to(

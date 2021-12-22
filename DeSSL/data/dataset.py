@@ -117,7 +117,7 @@ class SemiDataset:
 
         # instantiate train dataset
         if ImageFolder == dataset:
-            base_dataset = dataset(root + "/train", transforms=label_transform)
+            base_dataset = dataset(root + "/train", transform=label_transform)
         else:
             base_dataset = dataset(
                 root, transform=label_transform, download=download)
@@ -129,7 +129,7 @@ class SemiDataset:
         self.length = len(label_indices) + len(unlabel_indices)
         if ImageFolder == dataset:
             unlabel_base_dataset = dataset(
-                root + "/train", transforms=unlabel_transform)
+                root + "/train", transform=unlabel_transform)
         else:
             unlabel_base_dataset = dataset(root, transform=unlabel_transform)
         unlabel_base_dataset.targets = [-100] * self.length
@@ -142,7 +142,7 @@ class SemiDataset:
         # instantiate test dataset
         if ImageFolder == dataset:
             self.test_dataset = dataset(
-                root + "/val", transforms=test_transform)
+                root + "/val", transform=test_transform)
         else:
             self.test_dataset = dataset(
                 root, train=False, transform=test_transform, download=download)

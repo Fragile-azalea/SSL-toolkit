@@ -1,7 +1,4 @@
-from datetime import date
 import unittest
-
-from DeSSL import transforms
 
 
 class ImageNetTestCase(unittest.TestCase):
@@ -11,8 +8,15 @@ class ImageNetTestCase(unittest.TestCase):
         from DeSSL import loadding_config
         parser = loadding_config('config/base.yml')
         args = parser.parse_args([])
-        imagenet = semi_imagenet(args.root, args.num_labels_per_class, label_transform=tf.RandomResizedCrop(
-            (224, 224)), test_transform=[tf.CenterCrop((256, 256)), tf.Resize((224, 224))])
+        imagenet = semi_imagenet(args.root + "/imagenet",
+                                 args.num_labels_per_class,
+                                 label_transform=tf.RandomResizedCrop(
+                                     (224, 224)),
+                                 unlabel_transform=tf.RandomResizedCrop(
+                                     (224, 224)),
+                                 test_transform=tf.Compose(
+                                     [tf.CenterCrop((256, 256)), tf.Resize((224, 224))])
+                                 )
         train_loader, test_loader, classes = imagenet(
             args.batch_size, num_workers=args.num_workers)
         for label, unlabel in train_loader:

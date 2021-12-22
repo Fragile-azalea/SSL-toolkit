@@ -13,10 +13,10 @@ __all__ = ['SemiDataset', 'SemiDataLoader', 'semi_cifar10',
 
 
 def get_label_list(dataset: Dataset) -> (np.array):
-    if isinstance(datasets.targets, Tensor) and datasets.targets.is_cuda:
-        label_list = np.array(datasets.targets.cpu())
+    if isinstance(dataset.targets, Tensor) and dataset.targets.is_cuda:
+        label_list = np.array(dataset.targets.cpu())
     else:
-        label_list = np.array(datasets.targets)
+        label_list = np.array(dataset.targets)
     return label_list
 
 
